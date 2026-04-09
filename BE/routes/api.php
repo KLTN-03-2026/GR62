@@ -1,9 +1,6 @@
 <?php
 
-<<<<<<< HEAD
 /** @noinspection ALL */
-=======
->>>>>>> c606c9cbf773a0fc18264653c9cf0b16906731fd
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ChucVuController;
