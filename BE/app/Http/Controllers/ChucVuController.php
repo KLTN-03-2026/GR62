@@ -6,6 +6,7 @@ use App\Models\ChucVu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PhanQuyen;
+
 use App\Http\Requests\ChucVuStoreRequest;
 use App\Http\Requests\ChucVuUpdateRequest;
 use App\Http\Requests\ChucVuDestroyRequest;
@@ -41,22 +42,6 @@ class ChucVuController extends Controller
                 'status' => true,
                 'message' => 'Cập nhật thành công',
                 'data' => $data
-            ]);
-        }
-        return response()->json([
-            'status' => false,
-            'message' => 'Không tìm thấy dữ liệu'
-        ]);
-    }
-
-    public function destroy(ChucVuDestroyRequest $request)
-    {
-        $data = ChucVu::where('id', $request->id)->first();
-        if ($data) {
-            $data->delete();
-            return response()->json([
-                'status' => true,
-                'message' => 'Xóa thành công'
             ]);
         }
         return response()->json([
