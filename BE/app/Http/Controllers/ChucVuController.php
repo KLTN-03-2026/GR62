@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChucVuRequest;
 use App\Models\ChucVu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class ChucVuController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(ChucVuRequest $request)
     {
         $data = ChucVu::create($request->all());
         return response()->json([
@@ -28,7 +29,7 @@ class ChucVuController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(ChucVuRequest $request)
     {
         $data = ChucVu::where('id', $request->id)->first();
         if ($data) {
@@ -45,7 +46,7 @@ class ChucVuController extends Controller
         ]);
     }
 
-    public function destroy(Request $request)
+    public function destroy(ChucVuRequest $request)
     {
         $data = ChucVu::where('id', $request->id)->first();
         if ($data) {
@@ -61,7 +62,7 @@ class ChucVuController extends Controller
         ]);
     }
 
-    public function search(Request $request)
+    public function search(ChucVuRequest $request)
     {
         $query = ChucVu::query();
         if ($request->has('keyword') && $request->keyword != '') {
