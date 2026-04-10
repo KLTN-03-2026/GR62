@@ -60,6 +60,8 @@ Route::post('/nguoi-dung/change-status', [NguoiDungController::class, 'changeSta
 Route::post('/nguoi-dung/login', [NguoiDungController::class, 'login']);
 Route::post('/nguoi-dung/logout', [NguoiDungController::class, 'logout']);
 Route::post('/nguoi-dung/register', [NguoiDungController::class, 'register']);
+Route::post('/nguoi-dung/quen-mat-khau', [NguoiDungController::class, 'quenMatKhau']);
+Route::post('/nguoi-dung/reset-password', [NguoiDungController::class, 'resetPassword']);
 // 5.1 Face ID User
 Route::post('/nguoi-dung/xac-thuc-khuon-mat', [NguoiDungController::class, 'xacThucKhuonMat']);
 

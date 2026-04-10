@@ -6,6 +6,16 @@ use App\Models\NguoiDung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PhanQuyen;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\QuenMatKhauMail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\NguoiDung\StoreNguoiDungRequest;
+use App\Http\Requests\NguoiDung\UpdateNguoiDungRequest;
+use App\Http\Requests\NguoiDung\LoginNguoiDungRequest;
+use App\Http\Requests\NguoiDung\RegisterNguoiDungRequest;
+use App\Http\Requests\NguoiDung\QuenMatKhauRequest;
+use App\Http\Requests\NguoiDung\ResetPasswordRequest;
 
 class NguoiDungController extends Controller
 {
@@ -18,7 +28,7 @@ class NguoiDungController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreNguoiDungRequest $request)
     {
         $data = NguoiDung::create($request->all());
         return response()->json([
@@ -28,7 +38,7 @@ class NguoiDungController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(UpdateNguoiDungRequest $request)
     {
         $data = NguoiDung::where('id', $request->id)->first();
         if ($data) {
@@ -96,13 +106,8 @@ class NguoiDungController extends Controller
         ]);
     }
 
-    public function login(Request $request)
+    public function login(LoginNguoiDungRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
-
         $user = NguoiDung::where('email', $request->email)->first();
 
         if (!$user || !\Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
@@ -142,25 +147,8 @@ class NguoiDungController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register(RegisterNguoiDungRequest $request)
     {
-        $request->validate([
-            'ho_va_ten' => 'required|string|max:255',
-            'so_dien_thoai' => 'required|string|max:15',
-            'email' => 'required|email|unique:nguoi_dungs,email',
-            'password' => 'required|string|min:8',
-            're_password' => 'required|string|min:8',
-            'id_chuc_vu' => 'nullable|exists:chuc_vus,id',
-            'id_doi_tac' => 'nullable|exists:doi_tacs,id',
-        ]);
-
-        if ($request->password !== $request->re_password) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Mật khẩu nhập lại không khớp!'
-            ], 400);
-        }
-
         $user = NguoiDung::create([
             'ho_va_ten' => $request->ho_va_ten,
             'so_dien_thoai' => $request->so_dien_thoai,
@@ -249,6 +237,45 @@ class NguoiDungController extends Controller
             'success' => false,
             'message' => 'Người dùng không tồn tại'
         ], 404);
+    }
+
+
+    public function quenMatKhau(QuenMatKhauRequest $request)
+    {
+        $user = NguoiDung::where('email', $request->email)->first();
+        $otp = Str::upper(Str::random(6));
+        $user->ma_quen_mat_khau = $otp;
+        $user->save();
+
+        Mail::to($user->email)->send(new QuenMatKhauMail($otp, $user->ho_va_ten));
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Mã xác nhận đã được gửi đến email của bạn'
+        ]);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $user = NguoiDung::where('email', $request->email)
+                         ->where('ma_quen_mat_khau', $request->ma_quen_mat_khau)
+                         ->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Mã xác nhận không chính xác!'
+            ], 400);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->ma_quen_mat_khau = null;
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Mật khẩu đã được cập nhật thành công'
+        ]);
     }
 
     /**
