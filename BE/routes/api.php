@@ -64,6 +64,12 @@ Route::post('/nguoi-dung/quen-mat-khau', [NguoiDungController::class, 'quenMatKh
 Route::post('/nguoi-dung/reset-password', [NguoiDungController::class, 'resetPassword']);
 // 5.1 Face ID User
 Route::post('/nguoi-dung/xac-thuc-khuon-mat', [NguoiDungController::class, 'xacThucKhuonMat']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/nguoi-dung/profile', [NguoiDungController::class, 'getProfile']);
+    Route::post('/nguoi-dung/update-avatar', [NguoiDungController::class, 'updateAvatar']);
+    Route::post('/nguoi-dung/change-password', [NguoiDungController::class, 'changePassword']);
+    Route::post('/nguoi-dung/update-profile', [NguoiDungController::class, 'updateProfile']);
+});
 
 // 6. Gói
 Route::get('/goi/data', [GoiController::class, 'index']);

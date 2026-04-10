@@ -16,6 +16,8 @@ use App\Http\Requests\NguoiDung\LoginNguoiDungRequest;
 use App\Http\Requests\NguoiDung\RegisterNguoiDungRequest;
 use App\Http\Requests\NguoiDung\QuenMatKhauRequest;
 use App\Http\Requests\NguoiDung\ResetPasswordRequest;
+use App\Http\Requests\NguoiDung\ChangePasswordRequest;
+use App\Http\Requests\NguoiDung\UpdateProfileRequest;
 
 class NguoiDungController extends Controller
 {
@@ -275,6 +277,119 @@ class NguoiDungController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Mật khẩu đã được cập nhật thành công'
+        ]);
+    }
+
+
+    public function getProfile()
+    {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chưa đăng nhập'
+            ], 401);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data'   => [
+                'ho_va_ten' => $user->ho_va_ten,
+                'email'     => $user->email,
+                'avatar'    => $user->avatar ? url($user->avatar) : null
+            ]
+        ]);
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chưa đăng nhập'
+            ], 401);
+        }
+
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            $path = $file->move(public_path('uploads/avatars'), $filename);
+            
+            // Xóa ảnh cũ nếu có
+            if ($user->avatar && file_exists(public_path($user->avatar))) {
+                unlink(public_path($user->avatar));
+            }
+
+            $user->avatar = 'uploads/avatars/' . $filename;
+            $user->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Cập nhật ảnh đại diện thành công',
+                'avatar' => url($user->avatar)
+            ]);
+        }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Lỗi khi tải ảnh'
+        ], 400);
+    }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        /** @var \App\Models\NguoiDung $user */
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chưa đăng nhập'
+            ], 401);
+        }
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Mật khẩu hiện tại không chính xác'
+            ], 400);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Đổi mật khẩu thành công'
+        ]);
+    }
+
+    public function updateProfile(UpdateProfileRequest $request)
+    {
+        /** @var \App\Models\NguoiDung $user */
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chưa đăng nhập'
+            ], 401);
+        }
+
+        $user->ho_va_ten = $request->ho_va_ten;
+        $user->email = $request->email;
+        $user->save();
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Cập nhật thông tin hồ sơ thành công',
+            'data'    => [
+                'ho_va_ten' => $user->ho_va_ten,
+                'email'     => $user->email
+            ]
         ]);
     }
 
