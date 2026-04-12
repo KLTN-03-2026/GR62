@@ -108,7 +108,7 @@
                                 </small>
                             </div>
                             
-                            <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=150&q=80"
+                            <img :src="avatar_url"
                                 alt="Profile" class="rounded-circle border border-2 shadow-sm" width="46" height="46"
                                 :style="{ borderColor: '#fff !important', outline: da_xac_minh ? '2px solid #ea580c' : '2px solid #cbd5e1' }">
                         </div>
@@ -224,7 +224,7 @@
                                         </div>
                                         <div class="rounded-3 overflow-hidden"
                                             style="width: 55px; height: 55px; background-color: #334155; border: 2px solid #334155;">
-                                            <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=150&q=80"
+                                            <img :src="avatar_url"
                                                 class="w-100 h-100 object-fit-cover" alt="Face Scanned"
                                                 style="filter: contrast(1.1) brightness(0.9);">
                                         </div>
@@ -595,6 +595,34 @@
                             tùy chọn xác thực sinh trắc học của bạn.</p>
 
                         <!-- Profile Information -->
+                            <!-- Avatar Upload Section -->
+                            <div class="row mb-5 align-items-center">
+                                <div class="col-auto">
+                                    <div class="position-relative">
+                                        <img :src="avatar_preview || avatar_url" 
+                                            alt="Profile" class="rounded-circle border border-4 shadow-sm" width="100" height="100" 
+                                            style="border-color: #fff !important; outline: 2px solid #ea580c; object-fit: cover;">
+                                        <button @click="$refs.avatarInput.click()" 
+                                            class="btn btn-sm btn-dark position-absolute bottom-0 end-0 rounded-circle d-flex align-items-center justify-content-center shadow"
+                                            style="width: 32px; height: 32px; border: 2px solid #fff;">
+                                            <i class="bx bx-camera fs-6"></i>
+                                        </button>
+                                        <input type="file" ref="avatarInput" @change="handleAvatarChange" class="d-none" accept="image/*">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h6 class="fw-bold mb-1 text-dark">Ảnh đại diện</h6>
+                                    <p class="text-muted small mb-0">Hỗ trợ JPG, PNG. Kích thước tối đa 2MB.</p>
+                                    <button v-if="avatar_file" @click="capNhatAvatar" :disabled="isUploadingAvatar" 
+                                        class="btn btn-sm text-white fw-bold px-3 py-1 mt-2 animate__animated animate__fadeIn"
+                                        style="background-color: #ea580c; border-radius: 8px; font-size: 0.8rem;">
+                                        <span v-if="isUploadingAvatar" class="spinner-border spinner-border-sm me-1"></span>
+                                        Xác nhận lưu
+                                    </button>
+                                </div>
+                            </div>
+
+                        <!-- Profile Information -->
                         <div class="card border-0 shadow-sm p-4 p-md-5 mb-4" style="border-radius: 16px;">
                             <div class="d-flex align-items-center mb-4">
                                 <div class="d-flex justify-content-center align-items-center rounded me-3"
@@ -622,8 +650,11 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button class="btn text-white fw-bold px-4 py-2"
-                                    style="background-color: #ea580c; border-radius: 10px; font-size: 0.95rem;">Cập nhật hồ sơ</button>
+                                <button @click="capNhatHoSo" :disabled="isUpdatingProfile" class="btn text-white fw-bold px-4 py-2"
+                                    style="background-color: #ea580c; border-radius: 10px; font-size: 0.95rem;">
+                                    <span v-if="isUpdatingProfile" class="spinner-border spinner-border-sm me-2"></span>
+                                    Cập nhật hồ sơ
+                                </button>
                             </div>
                         </div>
 
@@ -663,8 +694,11 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button class="btn text-white fw-bold px-4 py-2"
-                                    style="background-color: #ea580c; border-radius: 10px; font-size: 0.95rem;">Thay đổi mật khẩu</button>
+                                <button @click="doiMatKhau" :disabled="isChangingPassword" class="btn text-white fw-bold px-4 py-2"
+                                    style="background-color: #ea580c; border-radius: 10px; font-size: 0.95rem;">
+                                    <span v-if="isChangingPassword" class="spinner-border spinner-border-sm me-2"></span>
+                                    Thay đổi mật khẩu
+                                </button>
                             </div>
                         </div>
 
@@ -833,6 +867,11 @@ export default {
     data() {
         return {
             currentTab: 'dashboard',
+            user: {
+                ho_va_ten: '',
+                email: '',
+                hinh_anh: ''
+            },
             dem_thoi_gian: 0, // Biến đếm thời gian quét
             giay_can_thiet: 15,
             settings: {
@@ -848,6 +887,12 @@ export default {
                 email_khach_moi: ''
             },
             isCreating: false,
+            isUploadingAvatar: false,
+            isChangingPassword: false,
+            isUpdatingProfile: false,
+            avatar_url: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=150&q=80',
+            avatar_file: null,
+            avatar_preview: null,
             ma_phong_tham_gia: '', // Lưu mã phòng người dùng nhập vào
             isJoining: false,
             // --- Khối 1: Các biến trạng thái AI ---
@@ -869,6 +914,7 @@ export default {
         }
     },
     mounted() {
+        this.layThongTinHoSo();
         const user = JSON.parse(localStorage.getItem('thong_tin_user'));
         if (user && user.du_lieu_khuon_mat) {
             this.da_xac_minh_phu = true;
@@ -922,6 +968,142 @@ export default {
             }
 
             this.$router.push('/');
+        },
+        async layThongTinHoSo() {
+            try {
+                const token = localStorage.getItem('token_nguoi_dung');
+                if (!token) return;
+
+                const response = await axios.get(`${apiUrl}/nguoi-dung/profile`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (response.data.status) {
+                    const data = response.data.data;
+                    this.settings.ho_va_ten = data.ho_va_ten;
+                    this.settings.email = data.email;
+                    this.user.ho_va_ten = data.ho_va_ten;
+                    this.user.email = data.email;
+                    if (data.avatar) {
+                        this.avatar_url = data.avatar;
+                    }
+                }
+            } catch (error) {
+                console.error("Lỗi lấy thông tin hồ sơ:", error);
+            }
+        },
+        handleAvatarChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    if (this.$toast) this.$toast.error("Ảnh không được vượt quá 2MB!");
+                    return;
+                }
+                this.avatar_file = file;
+                this.avatar_preview = URL.createObjectURL(file);
+            }
+        },
+        async capNhatAvatar() {
+            if (!this.avatar_file) return;
+
+            this.isUploadingAvatar = true;
+            try {
+                const token = localStorage.getItem('token_nguoi_dung');
+                const formData = new FormData();
+                formData.append('avatar', this.avatar_file);
+
+                const response = await axios.post(`${apiUrl}/nguoi-dung/update-avatar`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if (response.data.status) {
+                    this.avatar_url = response.data.avatar;
+                    this.avatar_file = null;
+                    this.avatar_preview = null;
+                    if (this.$toast) this.$toast.success("Cập nhật ảnh đại diện thành công!");
+                }
+            } catch (error) {
+                console.error("Lỗi cập nhật ảnh:", error);
+                if (this.$toast) this.$toast.error("Không thể cập nhật ảnh đại diện.");
+            } finally {
+                this.isUploadingAvatar = false;
+            }
+        },
+        async doiMatKhau() {
+            if (!this.settings.current_password || !this.settings.new_password || !this.settings.confirm_password) {
+                if (this.$toast) this.$toast.warning("Vui lòng nhập đầy đủ thông tin mật khẩu!");
+                return;
+            }
+
+            this.isChangingPassword = true;
+            try {
+                const token = localStorage.getItem('token_nguoi_dung');
+                const response = await axios.post(`${apiUrl}/nguoi-dung/change-password`, {
+                    current_password: this.settings.current_password,
+                    new_password: this.settings.new_password,
+                    confirm_password: this.settings.confirm_password
+                }, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (response.data.status) {
+                    if (this.$toast) this.$toast.success("Đổi mật khẩu thành công!");
+                    // Reset fields
+                    this.settings.current_password = '';
+                    this.settings.new_password = '';
+                    this.settings.confirm_password = '';
+                }
+            } catch (error) {
+                let message = "Có lỗi xảy ra khi đổi mật khẩu.";
+                if (error.response && error.response.data && error.response.data.message) {
+                    message = error.response.data.message;
+                }
+                if (this.$toast) this.$toast.error(message);
+            } finally {
+                this.isChangingPassword = false;
+            }
+        },
+        async capNhatHoSo() {
+            if (!this.settings.ho_va_ten || !this.settings.email) {
+                if (this.$toast) this.$toast.warning("Họ tên và Email không được để trống!");
+                return;
+            }
+
+            this.isUpdatingProfile = true;
+            try {
+                const token = localStorage.getItem('token_nguoi_dung');
+                const response = await axios.post(`${apiUrl}/nguoi-dung/update-profile`, {
+                    ho_va_ten: this.settings.ho_va_ten,
+                    email: this.settings.email
+                }, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (response.data.status) {
+                    if (this.$toast) this.$toast.success("Cập nhật hồ sơ thành công!");
+                    
+                    // Cập nhật state nội bộ để giao diện đổi ngay lập tức
+                    this.user.ho_va_ten = response.data.data.ho_va_ten;
+                    this.user.email = response.data.data.email;
+                    
+                    // Cập nhật lại thông tin user trong LocalStorage để các component khác đồng bộ
+                    let userLocal = JSON.parse(localStorage.getItem('thong_tin_user')) || {};
+                    userLocal.ho_va_ten = response.data.data.ho_va_ten;
+                    userLocal.email = response.data.data.email;
+                    localStorage.setItem('thong_tin_user', JSON.stringify(userLocal));
+                }
+            } catch (error) {
+                let message = "Có lỗi xảy ra khi cập nhật hồ sơ.";
+                if (error.response && error.response.data && error.response.data.message) {
+                    message = error.response.data.message;
+                }
+                if (this.$toast) this.$toast.error(message);
+            } finally {
+                this.isUpdatingProfile = false;
+            }
         },
         toggleDropdown() {
             this.showDropdown = !this.showDropdown;
