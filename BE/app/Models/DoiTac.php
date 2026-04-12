@@ -20,6 +20,8 @@ class DoiTac extends Authenticatable
         'password',
         'dia_chi',
         'trang_thai',
+        'hinh_anh',
+        'du_lieu_khuon_mat',
     ];
 
     protected $hidden = [
