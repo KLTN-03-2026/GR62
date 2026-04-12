@@ -1,14 +1,10 @@
 <template>
-    <div>
-        <h1>Lấy Lại Mật Khẩu</h1>
-    </div>
+    <div>Redirecting...</div>
 </template>
-
 <script>
 export default {
-    name: 'LayLaiMatKhau'
+    mounted() {
+        this.$router.push('/nguoi-dung/quen-mat-khau');
+    }
 }
 </script>
-
-<style scoped>
-</style>

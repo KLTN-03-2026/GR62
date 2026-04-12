@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChiTietPhanQuyenCreateRequest;
+use App\Http\Requests\ChiTietPhanQuyenDeleteRequest;
+use App\Http\Requests\ChiTietPhanQuyenRequest;
+use App\Http\Requests\ChiTietPhanQuyenUpdateRequest;
 use App\Models\ChiTietPhanQuyen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +22,7 @@ class ChiTietPhanQuyenController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(ChiTietPhanQuyenCreateRequest $request)
     {
         $data = ChiTietPhanQuyen::create($request->all());
         return response()->json([
@@ -28,7 +32,7 @@ class ChiTietPhanQuyenController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(ChiTietPhanQuyenUpdateRequest $request)
     {
         $data = ChiTietPhanQuyen::where('id', $request->id)->first();
         if ($data) {
@@ -45,7 +49,7 @@ class ChiTietPhanQuyenController extends Controller
         ]);
     }
 
-    public function destroy(Request $request)
+    public function destroy(ChiTietPhanQuyenDeleteRequest $request)
     {
         $data = ChiTietPhanQuyen::where('id', $request->id)->first();
         if ($data) {
