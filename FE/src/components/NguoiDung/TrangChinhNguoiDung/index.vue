@@ -54,11 +54,11 @@
                     <div class="text-start mb-2">
                         <h6 class="fw-bolder mb-1" style="color: #ea580c; font-size: 0.75rem; letter-spacing: 0.5px;">
 
-                            GÓI PRO</h6>
+                            NÂNG CẤP GÓI</h6>
                         <p class="small text-muted mb-3 lh-sm" style="font-size: 0.8rem; color: #64748b !important;">
-                            Theo dõi khuôn mặt AI không giới hạn & lưu trữ.</p>
+                            Trải Nghiệm Phòng Họp Mượt Mà & Không Giới Hạn Thành Viên.</p>
                     </div>
-                    <button class="btn w-100 fw-bold text-white shadow-sm"
+                    <button class="btn w-100 fw-bold text-white shadow-sm" data-bs-toggle="modal" data-bs-target="#NangCapGoi"
                         style="background-color: #ea580c; font-size: 0.85rem; padding: 10px 0; border-radius: 8px;">Nâng cấp
                         gói</button>
                 </div>
@@ -772,6 +772,70 @@
             </div>
         </main>
     </div>
+    <!-- Modal Nâng Cấp Gói -->
+    <div class="modal fade" id="NangCapGoi" tabindex="-1" aria-labelledby="NangCapGoiLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                <div class="modal-header bg-white border-0 px-4 py-3">
+                    <div>
+                        <h2 class="modal-title fw-bolder mb-1" id="NangCapGoiLabel" style="font-size: 1.25rem; color: #0f172a;">Nâng cấp gói</h2>
+                        <p class="small text-muted mb-0">Lựa chọn gói phù hợp để mở khóa trải nghiệm họp trực tuyến nâng cao.</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-slate-50 px-4 py-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card h-100 rounded-4 shadow-sm" style="border: 1px solid rgba(234, 88, 12, 0.15);">
+                                <div class="card-body d-flex flex-column">
+                                    <div>
+                                        <div class="badge rounded-pill px-3 py-2 mb-3 fw-bold text-white" style="background-color: #ea580c;">Gói Pro</div>
+                                        <h3 class="fw-bolder mt-2" style="color: #0f172a;">Dành cho người dùng</h3>
+                                        <p class="text-muted mt-2" style="font-size: 0.95rem; line-height: 1.6;">Trải nghiệm phòng họp mượt mà với các tính năng cá nhân cơ bản và hỗ trợ ghi chú.</p>
+                                        <div class="d-flex align-items-baseline mb-4 gap-2">
+                                            <span class="fs-2 fw-bolder" style="color: #0f172a; line-height: 1;">9.999</span>
+                                            <span class="text-muted mb-2" style="font-size: 0.95rem; line-height: 1.1;">đ/tháng</span>
+                                        </div>
+                                        <ul class="list-unstyled text-muted small mb-4" style="line-height: 1.8;">
+                                            <li><i class="bx bx-check-circle me-2 text-success"></i>Phòng họp không giới hạn</li>
+                                            <li><i class="bx bx-check-circle me-2 text-success"></i>Hỗ trợ ghi âm và lưu trữ</li>
+                                            <li><i class="bx bx-check-circle me-2 text-success"></i>Face ID cơ bản</li>
+                                        </ul>
+                                    </div>
+                                    <button type="button" class="btn w-100 text-white fw-bold mt-auto" style="background-color: #ea580c; border-radius: 12px;">Chọn Gói Pro</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100 rounded-4 shadow-sm" style="border: 1px solid rgba(15, 23, 42, 0.08);">
+                                <div class="card-body d-flex flex-column">
+                                    <div>
+                                        <div class="badge rounded-pill px-3 py-2 mb-3 fw-bold text-white" style="background-color: #0f172a;">Gói Enterprise</div>
+                                        <h3 class="fw-bolder mt-2 text-nowrap" style="color: #0f172a;">Dành cho doanh nghiệp</h3>
+                                        <p class="text-muted mt-2" style="font-size: 0.95rem; line-height: 1.6;">Quản lý đội ngũ, bảo mật nâng cao và trải nghiệm họp chuyên nghiệp cho doanh nghiệp.</p>
+                                        <div class="d-flex align-items-end gap-2 mb-4">
+                                            <span class="fs-2 fw-bolder" style="color: #0f172a;">99.999</span>
+                                            <span class="text-muted mb-2" style="font-size: 0.95rem; line-height: 1.1;">đ/tháng</span>
+                                        </div>
+                                        <ul class="list-unstyled text-muted small mb-4" style="line-height: 1.8;">
+                                            <li><i class="bx bx-check-circle me-2 text-success"></i>Phòng họp nhiều thành viên</li>
+                                            <li><i class="bx bx-check-circle me-2 text-success"></i>Hỗ trợ ưu tiên & báo cáo</li>
+                                            <li><i class="bx bx-check-circle me-2 text-success"></i>Face ID + bảo mật nâng cao</li>
+                                        </ul>
+                                    </div>
+                                    <button type="button" class="btn w-100 text-white fw-bold mt-auto" style="background-color: #0f172a; border-radius: 12px;">Chọn Gói Enterprise</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-white border-0 px-4 py-3 justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary fw-semibold" data-bs-dismiss="modal" style="border-radius: 12px;">Đóng</button>
+                    <button type="button" class="btn text-white fw-bold" style="background-color: #ea580c; border-radius: 12px;">Liên hệ tư vấn</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal xác thực khuôn mặt -->
       <div v-if="showJoinAuthModal" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3" style="background-color: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
         <div class="card border-0 shadow-lg p-4 text-center animate__animated animate__fadeInUp" style="border-radius: 24px; width: 420px; background-color: #1e293b; border: 1px solid #334155 !important;">
@@ -821,7 +885,7 @@
                 </div>
             </template>
         </div>
-    </div>
+      </div>
 </template>
 
 <script>
@@ -866,6 +930,7 @@ export default {
             authStream: null,
             authInterval: null,
             isMatched: false, // biến này để tránh quét trúng nhiều lần
+            list_goi:[]
         }
     },
     mounted() {
@@ -877,6 +942,7 @@ export default {
         window.addEventListener('click', () => {
             this.showDropdown = false;
         });
+        this.getGoi();
     },
     computed: {
         id_nguoi_dung() {
@@ -913,6 +979,19 @@ export default {
         }
     },
     methods: {
+        getGoi(){
+            axios
+                .get(`${apiUrl}/goi/data`)
+                .then((res) =>  {
+                    if(res.data.status)
+                    {
+                        this.list_goi = res.data.data
+                    }
+                    else{
+                        this.$toast.info(res.data.message)
+                    }
+                })
+        },
         dang_xuat() {
             localStorage.removeItem('token_nguoi_dung');
             localStorage.removeItem('thong_tin_user');
