@@ -17,7 +17,7 @@ const checkAdmin = (to, from, next) => {
 const checkUserMeeting = (to, from, next) => {
     // 1. Kiểm tra xem đã đăng nhập chưa
     const thong_tin = localStorage.getItem('thong_tin_user');
-    
+
     // 2. Kiểm tra xem có vé (token) LiveKit chưa
     const livekitToken = sessionStorage.getItem('livekit_token');
 
@@ -134,7 +134,7 @@ const routes = [
         path: '/phong-hop/:id', // :id là tham số động (mã phòng)
         component: () => import('../components/NguoiDung/PhongHopVideo/index.vue'),
         meta: { layout: 'black' }, // Dùng layout đen cho ngầu, giống Zoom
-        beforeEnter: checkUserMeeting 
+        beforeEnter: checkUserMeeting
     },
 
     //Doi Tac
@@ -158,6 +158,17 @@ const routes = [
         component: () => import('../components/DoiTac/LayLaiMatKhau/index.vue'),
         meta: { layout: 'black' }
     },
+    {
+        path: '/doi-tac/trang-chinh',
+        component: () => import('../components/DoiTac/TrangChinhDoiTac/index.vue'),
+        meta: { layout: 'black' }
+    },
+    {
+        path: '/doi-tac/profile',
+        component: () => import('../components/DoiTac/Profile/index.vue'),
+        meta: { layout: 'black' }
+    },
+
 
 
 ]

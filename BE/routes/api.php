@@ -51,6 +51,17 @@ Route::post('/doi-tac/delete', [DoiTacController::class, 'destroy']);
 Route::post('/doi-tac/tim-kiem', [DoiTacController::class, 'search']);
 Route::post('/doi-tac/change-status', [DoiTacController::class, 'changeStatus']);
 
+Route::post('/doi-tac/login', [DoiTacController::class, 'login']);
+Route::post('/doi-tac/register', [DoiTacController::class, 'register']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/doi-tac/me', [DoiTacController::class, 'getProfile']);
+    Route::post('/doi-tac/profile/update', [DoiTacController::class, 'updateProfile']);
+    Route::post('/doi-tac/profile/update-avatar', [DoiTacController::class, 'updateAvatar']);
+    Route::post('/doi-tac/profile/update-face-data', [DoiTacController::class, 'updateFaceData']);
+    Route::post('/doi-tac/profile/change-password', [DoiTacController::class, 'changePassword']);
+});
+
 // 5. Người Dùng
 Route::get('/nguoi-dung/data', [NguoiDungController::class, 'index']);
 Route::post('/nguoi-dung/create', [NguoiDungController::class, 'store']);

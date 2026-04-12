@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             NguoiDungSeeder::class,
+            DoiTacSeeder::class,
         ]);
     }
 }
