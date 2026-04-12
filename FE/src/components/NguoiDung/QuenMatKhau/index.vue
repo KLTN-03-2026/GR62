@@ -1,140 +1,120 @@
 <template>
-    <div class="user-login-wrapper">
-        <!-- AI Background Image -->
-        <div class="bg-image-layer"></div>
-        <div class="bg-overlay"></div>
+    <div class="user-recovery-wrapper">
+        <!-- Background Elements -->
+        <div class="sky-container">
+            <div class="star-field"></div>
+            <div class="grid-overlay"></div>
+            <div class="aurora aurora-recovery"></div>
+        </div>
 
-        <!-- Canvas for Particles -->
-        <canvas id="particle-canvas" ref="particleCanvas"></canvas>
-
-        <div class="login-container">
-            <div class="glass-card">
-                <div class="row g-0">
-                    <!-- Left Side: Branding -->
-                    <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-center p-5 branding-section">
-                        <div class="branding-content">
-                            <div class="logo-box mb-4">
-                                <div class="logo-icon">
-                                    <i class="bx bx-lock-open-alt"></i>
+        <div class="recovery-content-container">
+            <div class="main-glass-card shadow-lg">
+                <div class="row g-0 h-100">
+                    <!-- Left: Interactive Branding -->
+                    <div
+                        class="col-lg-5 d-none d-lg-flex flex-column justify-content-center p-5 branding-panel text-white">
+                        <div class="branding-content-wrapper d-flex flex-column align-items-center gap-5">
+                            <div class="brand-top d-flex flex-column align-items-center">
+                                <div class="logo-morph">
+                                    <div class="nebula"></div>
+                                    <i class="bx bx-key"></i>
                                 </div>
-                                <span class="brand-name">AI-Meet</span>
+                                <h2 class="brand-text">AI-Meet</h2>
                             </div>
-                            <h1 class="main-title">Khôi Phục<br>Truy Cập.</h1>
-                            <p class="description">
-                                Đừng lo lắng, chúng tôi sẽ giúp bạn lấy lại quyền truy cập vào tài khoản phòng họp thông minh của mình.
-                            </p>
-                            <div class="feature-list mt-5">
-                                <div class="feature-item">
-                                    <i class="bx bx-mail-send"></i>
-                                    <span>Gửi mã xác thực qua Email</span>
-                                </div>
-                                <div class="feature-item">
-                                    <i class="bx bx-shield-quarter"></i>
-                                    <span>Bảo mật 2 lớp an toàn</span>
-                                </div>
-                                <div class="feature-item">
-                                    <i class="bx bx-refresh"></i>
-                                    <span>Khôi phục trong 30 giây</span>
-                                </div>
+
+                            <div class="brand-center">
+                                <h1 class="hero-title">Khôi phục<br><span class="text-gradient">Quyền truy cập</span></h1>
+                                <p class="mt-3 opacity-75">Hệ thống bảo mật sinh trắc học và OTP đa tầng bảo vệ bạn.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Side: Form -->
-                    <div class="col-lg-6 form-section">
-                        <div class="form-content p-4 p-xl-5">
-                            <div v-if="step === 1" class="fade-in">
+                    <!-- Right: Aesthetic Recovery Form -->
+                    <div class="col-lg-7 form-panel">
+                        <div class="form-body p-4 p-xl-5">
+                            <!-- Step 1: Send Code -->
+                            <div v-if="step === 1" class="step-fade">
                                 <div class="form-header mb-5">
-                                    <h2 class="form-title">Quên Mật Khẩu?</h2>
-                                    <p class="form-subtitle">Nhập email của bạn để nhận mã xác nhận khôi phục.</p>
+                                    <h3 class="welcome-text">Quên mật khẩu?</h3>
+                                    <p class="sub-text">Đừng lo, hãy nhập email để nhận mã xác minh OTP.</p>
                                 </div>
 
-                                <form @submit.prevent="sendResetCode" class="auth-form">
-                                    <div class="input-group-custom">
-                                        <label>Email Của Bạn</label>
-                                        <div class="input-wrapper">
-                                            <i class="bx bxs-envelope"></i>
+                                <form @submit.prevent="sendResetCode" class="neon-form">
+                                    <div class="creative-input mb-4">
+                                        <label>EMAIL KHÔI PHỤC</label>
+                                        <div class="input-glow-wrapper">
+                                            <i class="bx bx-envelope"></i>
                                             <input 
                                                 v-model="email" 
                                                 type="email" 
-                                                placeholder="example@gmail.com"
+                                                placeholder="your-email@aimet.com"
                                                 required
                                             >
                                         </div>
                                     </div>
 
-                                    <button type="submit" class="btn-submit" :disabled="isLoading">
-                                        <span v-if="!isLoading">Gửi Mã Xác Nhận</span>
-                                        <span v-else class="loader"></span>
-                                        <i v-if="!isLoading" class="bx bx-paper-plane ms-2"></i>
+                                    <button type="submit" class="cyber-button mt-4" :disabled="isLoading">
+                                        <div class="btn-inner">
+                                            <span v-if="!isLoading">Gửi Mã Xác Minh</span>
+                                            <span v-else class="loader"></span>
+                                            <i v-if="!isLoading" class="bx bx-paper-plane"></i>
+                                        </div>
+                                        <div class="btn-glow"></div>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Step 2: Reset Password -->
+                            <div v-if="step === 2" class="step-fade">
+                                <div class="form-header mb-4">
+                                    <h3 class="welcome-text">Đặt lại mật khẩu</h3>
+                                    <p class="sub-text">Mã xác minh đã gửi tới: <b class="text-white">{{ email }}</b></p>
+                                </div>
+
+                                <form @submit.prevent="resetPassword" class="neon-form">
+                                    <div class="creative-input mb-3">
+                                        <label>MÃ OTP (6 CHỮ SỐ)</label>
+                                        <div class="input-glow-wrapper">
+                                            <i class="bx bx-hash"></i>
+                                            <input v-model="resetData.ma_quen_mat_khau" type="text" placeholder="######" required maxlength="6">
+                                        </div>
+                                    </div>
+
+                                    <div class="creative-input mb-3">
+                                        <label>MẬT KHẨU MỚI</label>
+                                        <div class="input-glow-wrapper">
+                                            <i class="bx bx-lock-alt"></i>
+                                            <input v-model="resetData.password" type="password" placeholder="••••••••" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="creative-input mb-4">
+                                        <label>XÁC NHẬN MẬT KHẨU</label>
+                                        <div class="input-glow-wrapper">
+                                            <i class="bx bx-shield-check"></i>
+                                            <input v-model="resetData.confirm_password" type="password" placeholder="••••••••" required>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="cyber-button" :disabled="isLoading">
+                                        <div class="btn-inner">
+                                            <span v-if="!isLoading">Cập Nhật Mật Khẩu</span>
+                                            <span v-else class="loader"></span>
+                                            <i v-if="!isLoading" class="bx bx-check-double"></i>
+                                        </div>
+                                        <div class="btn-glow"></div>
                                     </button>
 
-                                    <div class="text-center mt-4">
-                                        <router-link to="/nguoi-dung/dang-nhap" class="back-link">
-                                            <i class="bx bx-left-arrow-alt"></i> Quay lại đăng nhập
-                                        </router-link>
+                                    <div class="text-center mt-3">
+                                        <button @click="step = 1" type="button" class="btn-link-action">Thay đổi email?</button>
                                     </div>
                                 </form>
                             </div>
 
-                            <div v-if="step === 2" class="fade-in">
-                                <div class="form-header mb-5">
-                                    <h2 class="form-title">Đặt Lại Mật Khẩu</h2>
-                                    <p class="form-subtitle">Mã xác nhận đã được gửi đến <strong>{{ email }}</strong></p>
-                                </div>
-
-                                <form @submit.prevent="resetPassword" class="auth-form">
-                                    <div class="input-group-custom">
-                                        <label>Mã Xác Nhận (OTP)</label>
-                                        <div class="input-wrapper">
-                                            <i class="bx bx-key"></i>
-                                            <input 
-                                                v-model="resetData.ma_quen_mat_khau" 
-                                                type="text" 
-                                                placeholder="Nhập 6 chữ số"
-                                                required
-                                            >
-                                        </div>
-                                    </div>
-
-                                    <div class="input-group-custom mt-3">
-                                        <label>Mật Khẩu Mới</label>
-                                        <div class="input-wrapper">
-                                            <i class="bx bxs-lock-alt"></i>
-                                            <input 
-                                                v-model="resetData.password" 
-                                                type="password" 
-                                                placeholder="••••••••"
-                                                required
-                                            >
-                                        </div>
-                                    </div>
-
-                                    <div class="input-group-custom mt-3">
-                                        <label>Xác Nhận Mật Khẩu</label>
-                                        <div class="input-wrapper">
-                                            <i class="bx bxs-check-shield"></i>
-                                            <input 
-                                                v-model="resetData.confirm_password" 
-                                                type="password" 
-                                                placeholder="••••••••"
-                                                required
-                                            >
-                                        </div>
-                                    </div>
-
-                                    <button type="submit" class="btn-submit" :disabled="isLoading">
-                                        <span v-if="!isLoading">Cập Nhật Mật Khẩu</span>
-                                        <span v-else class="loader"></span>
-                                        <i v-if="!isLoading" class="bx bx-check-double ms-2"></i>
-                                    </button>
-
-                                    <div class="text-center mt-4">
-                                        <button @click="step = 1" type="button" class="btn-link-custom">
-                                            Thanh đổi email nhận mã?
-                                        </button>
-                                    </div>
-                                </form>
+                            <div class="mt-5 text-center switch-auth">
+                                <router-link to="/nguoi-dung/dang-nhap" class="back-link">
+                                    <i class="bx bx-left-arrow-alt"></i> Quay lại Đăng nhập
+                                </router-link>
                             </div>
                         </div>
                     </div>
@@ -145,6 +125,7 @@
 </template>
 
 <script>
+const apiUrl = import.meta.env.VITE_API_URL;
 import axios from 'axios';
 export default {
     name: 'QuenMatKhau',
@@ -158,218 +139,216 @@ export default {
                 confirm_password: ''
             },
             isLoading: false,
-            animationId: null
         }
-    },
-    mounted() {
-        setTimeout(() => {
-            this.initParticles();
-        }, 100);
     },
     methods: {
         async sendResetCode() {
             this.isLoading = true;
             try {
-                const res = await axios.post('http://localhost:8000/api/nguoi-dung/quen-mat-khau', { email: this.email });
+                const res = await axios.post(`${apiUrl}/nguoi-dung/quen-mat-khau`, { email: this.email });
                 if (res.data.status) {
-                    this.$toast.success(res.data.message);
+                    if (this.$toast) this.$toast.success(res.data.message);
                     this.step = 2;
+                } else {
+                    if (this.$toast) this.$toast.error(res.data.message);
                 }
             } catch (error) {
-                this.$toast.error(error.response?.data?.message || "Lỗi khi gửi mã!");
+                if (this.$toast) this.$toast.error(error.response?.data?.message || "Lỗi hệ thống khi gửi mã!");
             } finally {
                 this.isLoading = false;
             }
         },
         async resetPassword() {
+            if (this.resetData.password !== this.resetData.confirm_password) {
+                if (this.$toast) this.$toast.error('Mật khẩu không trùng khớp!');
+                return;
+            }
             this.isLoading = true;
             try {
-                const payload = {
-                    email: this.email,
-                    ...this.resetData
-                };
-                const res = await axios.post('http://localhost:8000/api/nguoi-dung/reset-password', payload);
+                const payload = { email: this.email, ...this.resetData };
+                const res = await axios.post(`${apiUrl}/nguoi-dung/reset-password`, payload);
                 if (res.data.status) {
-                    this.$toast.success(res.data.message);
+                    if (this.$toast) this.$toast.success(res.data.message);
                     this.$router.push('/nguoi-dung/dang-nhap');
+                } else {
+                   if (this.$toast) this.$toast.error(res.data.message);
                 }
             } catch (error) {
-                this.$toast.error(error.response?.data?.message || "Lỗi khi đặt lại mật khẩu!");
+                if (this.$toast) this.$toast.error(error.response?.data?.message || "Lỗi khi đặt lại mật khẩu!");
             } finally {
                 this.isLoading = false;
             }
-        },
-        initParticles() {
-            const canvas = this.$refs.particleCanvas;
-            if(!canvas) return;
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-            
-            const handleResize = () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            };
-            window.addEventListener('resize', handleResize);
-            handleResize();
-
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.size = Math.random() * 2 + 1;
-                    this.speedX = (Math.random() - 0.5) * 0.6;
-                    this.speedY = (Math.random() - 0.5) * 0.6;
-                    this.opacity = Math.random() * 0.5 + 0.2;
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.x > canvas.width) this.x = 0;
-                    else if (this.x < 0) this.x = canvas.width;
-                    if (this.y > canvas.height) this.y = 0;
-                    else if (this.y < 0) this.y = canvas.height;
-                }
-                draw() {
-                    ctx.fillStyle = `rgba(249, 115, 22, ${this.opacity})`;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            for (let i = 0; i < 40; i++) particles.push(new Particle());
-
-            const animate = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => { p.update(); p.draw(); });
-                this.animationId = requestAnimationFrame(animate);
-            };
-            animate();
         }
     }
 }
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
-.user-login-wrapper {
+.user-recovery-wrapper {
     min-height: 100vh;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #020617;
-    font-family: 'Inter', sans-serif;
+    background-color: #050810;
+    font-family: 'Outfit', sans-serif;
     position: relative;
     overflow: hidden;
     padding: 20px;
 }
 
-.bg-image-layer {
+/* Sky Background Elements */
+.sky-container {
     position: absolute;
     inset: 0;
-    background-image: url('https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=1920&q=80');
-    background-size: cover;
-    background-position: center;
-    filter: blur(8px) brightness(0.3);
-    transform: scale(1.1);
     z-index: 0;
 }
 
-.bg-overlay {
+.star-field {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, rgba(2, 6, 23, 0.9) 100%);
-    z-index: 1;
+    background-image: 
+        radial-gradient(1.5px 1.5px at 150px 50px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 300px 200px, #fff, rgba(0,0,0,0));
+    background-size: 400px 400px;
+    opacity: 0.2;
 }
 
-#particle-canvas {
+.grid-overlay {
     position: absolute;
     inset: 0;
-    z-index: 1;
-    pointer-events: none;
+    background-image: 
+        linear-gradient(rgba(126, 34, 206, 0.05) 1.5px, transparent 1.5px),
+        linear-gradient(90deg, rgba(126, 34, 206, 0.05) 1.5px, transparent 1.5px);
+    background-size: 60px 60px;
+    perspective: 1000px;
+    transform: perspective(600px) rotateX(45deg) scale(2);
+    transform-origin: center bottom;
 }
 
-.login-container {
+.aurora-recovery {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #7e22ce 0%, transparent 60%);
+    top: -10%;
+    left: 20%;
+    filter: blur(100px);
+    opacity: 0.25;
+}
+
+.recovery-content-container {
     width: 100%;
-    max-width: 1000px;
-    z-index: 2;
-    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 1100px;
+    z-index: 10;
+    animation: scale-up 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes scale-up {
+    from { opacity: 0; scale: 0.95; }
+    to { opacity: 1; scale: 1; }
 }
 
-.glass-card {
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(15px);
+.main-glass-card {
+    background: rgba(10, 15, 30, 0.82);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 32px;
+    border-radius: 40px;
     overflow: hidden;
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
 }
 
-.branding-section {
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.8) 100%);
+/* Branding Panel */
+.branding-panel {
+    background: linear-gradient(135deg, rgba(126, 34, 206, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
     border-right: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
-.logo-icon {
-    background: #f97316;
-    color: white;
-    width: 44px; height: 44px;
-    display: flex; justify-content: center; align-items: center;
-    border-radius: 12px; font-size: 24px;
-    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
+.logo-morph {
+    width: 50px; height: 50px; background: #7e22ce;
+    border-radius: 14px; display: flex; justify-content: center; align-items: center;
+    font-size: 28px; position: relative; overflow: hidden;
 }
 
-.brand-name { color: white; font-size: 24px; font-weight: 700; margin-left: 12px; }
-
-.main-title { color: white; font-size: 44px; font-weight: 800; line-height: 1.1; margin: 24px 0; }
-
-.description { color: #94a3b8; font-size: 16px; line-height: 1.6; max-width: 400px; }
-
-.feature-item { display: flex; align-items: center; gap: 12px; color: #cbd5e1; margin-bottom: 16px; }
-.feature-item i { color: #f97316; font-size: 20px; }
-
-.form-title { color: white; font-size: 30px; font-weight: 700; margin-bottom: 8px; }
-.form-subtitle { color: #64748b; font-size: 15px; }
-
-.input-group-custom label { display: block; color: #cbd5e1; font-size: 14px; margin-bottom: 8px; }
-
-.input-wrapper { position: relative; display: flex; align-items: center; }
-.input-wrapper i { position: absolute; left: 18px; color: #64748b; font-size: 20px; }
-.input-wrapper input {
-    width: 100%; background: rgba(30, 41, 59, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px; padding: 15px 15px 15px 50px;
-    color: white; outline: none; transition: 0.3s;
+.logo-morph .nebula {
+    position: absolute; width: 140%; height: 140%;
+    background: radial-gradient(circle, #2563eb 0%, transparent 50%);
+    animation: nebula-rotate 3.5s linear infinite;
 }
-.input-wrapper input:focus { border-color: #f97316; background: rgba(30, 41, 59, 0.8); }
 
-.btn-submit {
-    width: 100%; margin-top: 30px; padding: 16px;
-    background: #f97316; color: white; border: none;
-    border-radius: 16px; font-weight: 700; font-size: 16px;
-    cursor: pointer; transition: 0.3s;
-    display: flex; justify-content: center; align-items: center;
+@keyframes nebula-rotate { to { transform: rotate(360deg); } }
+
+.brand-text { margin-top: 10px; font-weight: 800; font-size: 22px; color: white; }
+.hero-title { font-size: 42px; font-weight: 800; line-height: 1.1; font-family: 'Space Grotesk', sans-serif; }
+
+.text-gradient {
+    background: linear-gradient(90deg, #c084fc, #60a5fa, #c084fc);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: text-pulse 4s linear infinite;
 }
-.btn-submit:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(249, 115, 22, 0.2); }
 
-.back-link { color: #64748b; text-decoration: none; font-size: 14px; transition: 0.3s; }
-.back-link:hover { color: #f97316; }
+@keyframes text-pulse { to { background-position: 200% center; } }
 
-.btn-link-custom { background: none; border: none; color: #f97316; font-size: 14px; cursor: pointer; }
+/* Form Panel */
+.form-panel { background: rgba(5, 8, 16, 0.4); }
 
-.fade-in { animation: fadeIn 0.5s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+.welcome-text { color: white; font-size: 32px; font-weight: 800; }
+.sub-text { color: #64748b; }
 
-.loader {
-    width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%; border-top-color: #fff; animation: spin 1s linear infinite;
+.creative-input label {
+    display: block; color: #475569; font-size: 11px; font-weight: 700;
+    letter-spacing: 1.2px; margin-bottom: 8px;
 }
+
+.input-glow-wrapper { position: relative; display: flex; align-items: center; }
+.input-glow-wrapper i { position: absolute; left: 16px; color: #334155; font-size: 18px; }
+
+.input-glow-wrapper input {
+    width: 100%; background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px; padding: 14px 20px 14px 48px; color: white; transition: 0.3s;
+}
+
+.input-glow-wrapper input::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.input-glow-wrapper input:focus {
+    background: rgba(255, 255, 255, 0.05); border-color: #7e22ce;
+    box-shadow: 0 0 20px rgba(126, 34, 206, 0.15); outline: none;
+}
+
+.input-glow-wrapper input:focus + i { color: #7e22ce; }
+
+/* Cyber Button */
+.cyber-button {
+    width: 100%; background: #7e22ce; border: none; border-radius: 16px;
+    position: relative; cursor: pointer; overflow: hidden; transition: 0.3s;
+}
+
+.btn-inner { padding: 16px; display: flex; justify-content: center; align-items: center; gap: 10px; color: white; font-weight: 700; position: relative; z-index: 2; }
+.btn-glow { position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transform: translateX(-100%); transition: 0.5s; }
+
+.cyber-button:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(126, 34, 206, 0.3); }
+.cyber-button:hover .btn-glow { transform: translateX(100%); }
+
+.btn-link-action { background: none; border: none; color: #7e22ce; font-weight: 600; font-size: 13px; cursor: pointer; }
+.btn-link-action:hover { text-decoration: underline; }
+
+.back-link { color: #64748b; text-decoration: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.back-link:hover { color: #7e22ce; }
+
+.step-fade { animation: fade-in 0.5s ease-out; }
+@keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.loader { width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
