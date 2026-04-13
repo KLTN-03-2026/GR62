@@ -40,6 +40,21 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
+        'doi_tac' => [
+            'driver' => 'session',
+            'provider' => 'doi_tacs',
+        ],
+
+        'nguoi_dung' => [
+            'driver' => 'session',
+            'provider' => 'nguoi_dungs',
+        ],
     ],
 
     /*
@@ -65,10 +80,20 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
+        'doi_tacs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\DoiTac::class,
+        ],
+
+        'nguoi_dungs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\NguoiDung::class,
+        ],
     ],
 
     /*
