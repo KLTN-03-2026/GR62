@@ -1,6 +1,8 @@
+<?php
 namespace App\Http\Controllers;
 
 use App\Models\DoiTac;
+use App\Models\NguoiDung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -85,10 +87,6 @@ class DoiTacController extends Controller
 
     public function getProfile(Request $request)
     {
-        \Illuminate\Support\Facades\Log::info('getProfile request received', [
-            'user_id' => Auth::guard('sanctum')->id(),
-            'token' => $request->bearerToken()
-        ]);
         $user = Auth::guard('sanctum')->user();
         if (!$user) {
             return response()->json([
@@ -98,7 +96,8 @@ class DoiTacController extends Controller
         }
 
         // Đồng bộ hóa trường hinh_anh cho NguoiDung nếu dùng chung component profile
-        if ($user instanceof \App\Models\NguoiDung) {
+        // Đồng thời giữ nguyên danh tính thực của người đăng nhập (Personal ID)
+        if ($user instanceof NguoiDung) {
             $user->hinh_anh = $user->avatar;
         }
 
@@ -110,8 +109,8 @@ class DoiTacController extends Controller
 
     public function updateAvatar(Request $request)
     {
-        $doi_tac = Auth::guard('sanctum')->user();
-        if (!$doi_tac) {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
             return response()->json([
                 'status'  => false,
                 'message' => 'Token không hợp lệ'
@@ -120,21 +119,39 @@ class DoiTacController extends Controller
 
         if ($request->hasFile('hinh_anh')) {
             $file = $request->file('hinh_anh');
-            $filename = time() . '_' . $doi_tac->id . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/avatars'), $filename);
-
-            // Xóa ảnh cũ
-            if ($doi_tac->hinh_anh && file_exists(public_path('uploads/avatars/' . $doi_tac->hinh_anh))) {
-                unlink(public_path('uploads/avatars/' . $doi_tac->hinh_anh));
+            $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            
+            $path = public_path('uploads/avatars');
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
             }
+            
+            $file->move($path, $filename);
 
-            $doi_tac->hinh_anh = $filename;
-            $doi_tac->save();
+            // Xác định trường cần cập nhật dựa trên loại model
+            if ($user instanceof NguoiDung) {
+                // Xóa ảnh cũ của NguoiDung
+                if ($user->avatar && file_exists(public_path($user->avatar))) {
+                    unlink(public_path($user->avatar));
+                }
+                $user->avatar = 'uploads/avatars/' . $filename;
+                $user->save();
+                // Trả về hinh_anh để đồng bộ với phía FE đang dùng hinh_anh
+                $return_filename = $user->avatar;
+            } else {
+                // Xóa ảnh cũ của DoiTac
+                if ($user->hinh_anh && file_exists(public_path('uploads/avatars/' . $user->hinh_anh))) {
+                    unlink(public_path('uploads/avatars/' . $user->hinh_anh));
+                }
+                $user->hinh_anh = $filename;
+                $user->save();
+                $return_filename = $filename;
+            }
 
             return response()->json([
                 'status'    => true,
                 'message'   => 'Cập nhật ảnh đại diện thành công',
-                'hinh_anh'  => $filename
+                'hinh_anh'  => $return_filename
             ]);
         }
 

@@ -220,18 +220,34 @@ export default {
         async fetchProfile() {
             try {
                 const token = localStorage.getItem('token_doi_tac') || localStorage.getItem('token_nguoi_dung');
+                if (!token) {
+                    this.$toast.error("Vui lòng đăng nhập để xem hồ sơ.");
+                    this.$router.push('/nguoi-dung/dang-nhap');
+                    return;
+                }
                 const res = await axios.get(`${apiUrl}/doi-tac/me`, {
                     headers: { Authorization: 'Bearer ' + token }
                 });
                 if (res.data.status) {
                     this.doi_tac = res.data.data;
-                    if (this.doi_tac.hinh_anh) {
-                        this.avatarPreview = `${apiUrl.replace('/api', '')}/uploads/avatars/` + this.doi_tac.hinh_anh;
+                    const hinh_anh = this.doi_tac.hinh_anh;
+                    if (hinh_anh) {
+                        const baseUrl = apiUrl.replace('/api', '');
+                        if (hinh_anh.startsWith('http')) {
+                            this.avatarPreview = hinh_anh;
+                        } else if (hinh_anh.startsWith('uploads/')) {
+                            this.avatarPreview = `${baseUrl}/` + hinh_anh;
+                        } else {
+                            this.avatarPreview = `${baseUrl}/uploads/avatars/` + hinh_anh;
+                        }
                     }
                 }
             } catch (e) {
                 console.error("Profile Load Error:", e);
                 const msg = e.response?.data?.message || "Không thể tải thông tin hồ sơ.";
+                if (e.response?.status === 401) {
+                    this.$router.push('/nguoi-dung/dang-nhap');
+                }
                 this.$toast.error(msg);
             }
         },
@@ -297,7 +313,15 @@ export default {
                     headers: { Authorization: 'Bearer ' + token }
                 });
                 if (res.data.status) {
-                    this.avatarPreview = `${apiUrl.replace('/api', '')}/uploads/avatars/` + res.data.hinh_anh;
+                    const hinh_anh = res.data.hinh_anh;
+                    const baseUrl = apiUrl.replace('/api', '');
+                    if (hinh_anh.startsWith('http')) {
+                        this.avatarPreview = hinh_anh;
+                    } else if (hinh_anh.startsWith('uploads/')) {
+                        this.avatarPreview = `${baseUrl}/` + hinh_anh;
+                    } else {
+                        this.avatarPreview = `${baseUrl}/uploads/avatars/` + hinh_anh;
+                    }
                     this.$toast.success("Đã cập nhật ảnh đại diện.");
                 }
             } catch (e) {
