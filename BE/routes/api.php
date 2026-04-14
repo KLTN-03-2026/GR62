@@ -19,6 +19,9 @@ use App\Http\Controllers\Api\SepayPollingController;
 //SEPAY
 Route::post('/sepay/create-order', [SepayPollingController::class, 'createOrder']);
 Route::get('/sepay/status/{orderCode}', [SepayPollingController::class, 'checkStatus']);
+// Thanh Toán
+
+
 // Admin
 Route::post('/admin/login', [AdminController::class, 'login']);
 // Route::get('/admin/data-chi-tiet/{admin}', [AdminController::class, 'show']);
@@ -135,4 +138,7 @@ Route::post('/hoa-don/create', [HoaDonController::class, 'store']);
 Route::post('/hoa-don/update', [HoaDonController::class, 'update']);
 Route::post('/hoa-don/delete', [HoaDonController::class, 'destroy']);
 Route::post('/hoa-don/tim-kiem', [HoaDonController::class, 'search']);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
