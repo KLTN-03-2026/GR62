@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('gois', function (Blueprint $table) {
             $table->id();
             $table->string('ten_goi');
+            $table->decimal('gia_goi', 15, 2)->default(0);
             $table->integer('so_nguoi_toi_da')->default(0);
             $table->integer('so_phong_toi_da')->default(0);
             $table->integer('thoi_han')->default(0);

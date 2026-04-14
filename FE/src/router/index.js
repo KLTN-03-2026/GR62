@@ -129,6 +129,11 @@ const routes = [
         component: () => import('../components/NguoiDung/TrangChinhNguoiDung/index.vue'),
         meta: { layout: 'black' }
     },
+    {
+        path: '/nguoi-dung/thanh-toan/:id_goi?',
+        component: () => import('../components/NguoiDung/ThanhToan/index.vue'),
+        meta: { layout: 'black' }
+    },
     // Phong Hop
     {
         path: '/phong-hop/:id', // :id là tham số động (mã phòng)

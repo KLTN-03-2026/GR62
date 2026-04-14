@@ -18,6 +18,21 @@ class GoiController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $data = Goi::find($id);
+        if ($data) {
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+        }
+        return response()->json([
+            'status' => false,
+            'message' => 'Không tìm thấy dữ liệu'
+        ], 404);
+    }
+
     public function store(Request $request)
     {
         $data = Goi::create($request->all());

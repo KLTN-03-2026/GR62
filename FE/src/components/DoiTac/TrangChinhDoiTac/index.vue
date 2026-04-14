@@ -43,8 +43,8 @@
                 <!-- Header -->
                 <header class="content-header p-4 d-flex justify-content-between align-items-center">
                     <div class="date-header">
-                        <h5 class="mb-0 fw-bold">{{ currentTime }}</h5>
-                        <p class="mb-0 text-muted small">{{ currentDate }}</p>
+                        <h5 class="mb-0 fw-bold animate__animated animate__fadeIn" style="font-variant-numeric: tabular-nums;">{{ currentTime }}</h5>
+                        <p class="mb-0 text-muted small" style="font-weight: 500;">{{ currentDate }}</p>
                     </div>
                     <div class="header-actions d-flex align-items-center gap-3">
                         <div class="search-bar-zoom d-none d-md-flex">
@@ -382,6 +382,7 @@ export default {
             avatarUrl: 'https://i.pravatar.cc/150?u=partner',
             currentTime: '',
             currentDate: '',
+            timer: null,
             meetingId: '',
             newMeetingData: { video: true, usePMI: false },
             scheduleData: { topic: '', date: '', time: '', duration: '30', password: '' },
@@ -408,8 +409,13 @@ export default {
     },
     mounted() {
         this.updateTime();
-        setInterval(this.updateTime, 1000);
+        this.timer = setInterval(this.updateTime, 1000);
         this.fetchPartnerData();
+    },
+    beforeUnmount() {
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
     },
     methods: {
         async fetchPartnerData() {
@@ -427,8 +433,21 @@ export default {
         },
         updateTime() {
             const now = new Date();
-            this.currentTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-            this.currentDate = now.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            this.currentTime = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: true 
+            });
+            
+            const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+            const dayName = days[now.getDay()];
+            const dateStr = now.toLocaleDateString('vi-VN', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric' 
+            });
+            this.currentDate = `${dayName}, ${dateStr}`;
         },
         createMeeting() {
             // This is now triggered via data-bs-toggle in template

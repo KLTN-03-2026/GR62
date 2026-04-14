@@ -1,4 +1,4 @@
-<template>
+~<template>
     <div class="d-flex vh-100 w-100 overflow-hidden"
         style="background-color: #f8fafc; font-family: 'Inter', sans-serif;">
         <!-- Left Sidebar -->
@@ -24,7 +24,6 @@
                         <a href="#" @click.prevent="currentTab = 'dashboard'"
                             :class="['nav-link d-flex align-items-center fw-medium py-2 px-3 rounded-3', currentTab === 'dashboard' ? 'active-tab fw-bold' : 'text-dark text-muted-hover']">
                             <i class='bx bxs-dashboard me-3 fs-5'
-
                                 :style="currentTab === 'dashboard' ? '' : 'color: #64748b;'"></i> Bảng điều khiển
                         </a>
                     </li>
@@ -40,7 +39,6 @@
                         <a href="#" @click.prevent="currentTab = 'settings'"
                             :class="['nav-link d-flex align-items-center fw-medium py-2 px-3 rounded-3', currentTab === 'settings' ? 'active-tab fw-bold' : 'text-dark text-muted-hover']">
                             <i class='bx bx-cog me-3 fs-5'
-
                                 :style="currentTab === 'settings' ? '' : 'color: #64748b;'"></i> Cài đặt
                         </a>
                     </li>
@@ -58,9 +56,10 @@
                         <p class="small text-muted mb-3 lh-sm" style="font-size: 0.8rem; color: #64748b !important;">
                             Trải Nghiệm Phòng Họp Mượt Mà & Không Giới Hạn Thành Viên.</p>
                     </div>
-                    <button class="btn w-100 fw-bold text-white shadow-sm" data-bs-toggle="modal" data-bs-target="#NangCapGoi"
-                        style="background-color: #ea580c; font-size: 0.85rem; padding: 10px 0; border-radius: 8px;">Nâng cấp
-                        gói</button>
+                    <router-link to="/nguoi-dung/thanh-toan" class="btn w-100 fw-bold text-white shadow-sm"
+                        style="background-color: #ea580c; font-size: 0.85rem; padding: 10px 0; border-radius: 8px; text-decoration: none;">
+                        Nâng cấp gói
+                    </router-link>
                 </div>
             </div>
         </aside>
@@ -76,30 +75,33 @@
                     <i class='bx bx-search position-absolute top-50 translate-middle-y text-muted fs-5'
                         style="left: 16px; color: #94a3b8 !important;"></i>
                     <input type="text" class="form-control bg-light border-0 shadow-none ps-5"
-
                         placeholder="Tìm kiếm cuộc họp, bản ghi, hoặc người..."
                         style="border-radius: 12px; font-size: 0.95rem; padding-top: 12px; padding-bottom: 12px; color: #64748b;">
                 </div>
 
                 <!-- Right Actions -->
                 <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border position-relative shadow-sm"
+                    <button
+                        class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border position-relative shadow-sm"
                         style="width: 44px; height: 44px; border-color: #e2e8f0 !important;">
                         <i class='bx bxs-bell fs-5' style="color: #334155;"></i>
                     </button>
-                    <button class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border shadow-sm"
+                    <button
+                        class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border shadow-sm"
                         style="width: 44px; height: 44px; border-color: #e2e8f0 !important;">
                         <i class='bx bxs-message-square-dots fs-5' style="color: #334155;"></i>
                     </button>
 
-                    <div class="position-relative border-start ms-2 ps-4 d-flex align-items-center" style="border-color: #e2e8f0 !important;">
-                        
-                        <div @click.stop="showDropdown = !showDropdown" class="d-flex align-items-center user-profile-link" style="cursor: pointer;">
+                    <div class="position-relative border-start ms-2 ps-4 d-flex align-items-center"
+                        style="border-color: #e2e8f0 !important;">
+
+                        <div @click.stop="showDropdown = !showDropdown"
+                            class="d-flex align-items-center user-profile-link" style="cursor: pointer;">
                             <div class="text-end me-3 d-none d-md-block">
                                 <h6 class="mb-0 fw-bolder" style="font-size: 0.95rem; color: #0f172a;">
                                     {{ ten_nguoi_dung }}
                                 </h6>
-                                
+
                                 <small v-if="da_xac_minh" class="fw-bold" style="font-size: 0.75rem; color: #ea580c;">
                                     <i class='bx bxs-check-shield'></i> Đã xác minh danh tính
                                 </small>
@@ -107,21 +109,24 @@
                                     <i class='bx bx-error-circle'></i> Chưa xác minh
                                 </small>
                             </div>
-                            
-                            <img :src="avatar_url"
-                                alt="Profile" class="rounded-circle border border-2 shadow-sm" width="46" height="46"
+
+                            <img :src="avatar_url" alt="Profile" class="rounded-circle border border-2 shadow-sm"
+                                width="46" height="46"
                                 :style="{ borderColor: '#fff !important', outline: da_xac_minh ? '2px solid #ea580c' : '2px solid #cbd5e1' }">
                         </div>
 
-                        <div v-if="showDropdown" 
-                            class="position-absolute end-0 bg-white shadow-lg border rounded-3 py-2 animate__animated animate__fadeInUp" 
+                        <div v-if="showDropdown"
+                            class="position-absolute end-0 bg-white shadow-lg border rounded-3 py-2 animate__animated animate__fadeInUp"
                             style="top: 120%; width: 180px; z-index: 1050; border-color: #f1f5f9 !important;">
-                            
+
                             <div class="px-3 py-2 border-bottom mb-1">
-                                <span class="text-muted" style="font-size: 0.7rem; text-transform: uppercase; font-weight: 700;">Tài khoản</span>
+                                <span class="text-muted"
+                                    style="font-size: 0.7rem; text-transform: uppercase; font-weight: 700;">Tài
+                                    khoản</span>
                             </div>
 
-                            <button @click="dang_xuat" class="dropdown-item px-3 py-2 d-flex align-items-center text-danger fw-bold border-0 bg-transparent w-100 text-start">
+                            <button @click="dang_xuat"
+                                class="dropdown-item px-3 py-2 d-flex align-items-center text-danger fw-bold border-0 bg-transparent w-100 text-start">
                                 <i class="bx bx-log-out-circle me-2 fs-5"></i>
                                 <span>Đăng xuất</span>
                             </button>
@@ -141,8 +146,8 @@
                         <div class="row mb-4">
                             <div class="col-md-6 d-flex flex-column justify-content-end">
                                 <h2 class="fw-bolder mb-2"
-
-                                    style="color: #0f172a; letter-spacing: -0.5px; font-size: 2rem;">Chào mừng trở lại, Alex!
+                                    style="color: #0f172a; letter-spacing: -0.5px; font-size: 2rem;">Chào mừng trở lại,
+                                    Alex!
                                 </h2>
                                 <p class="mb-0" style="font-size: 1rem; color: #64748b;">Bạn có <strong>3
                                         cuộc họp</strong> được lên lịch cho hôm nay.</p>
@@ -169,7 +174,8 @@
 
                                         <h4 class="fw-bolder mb-2" style="font-size: 1.35rem;">Cuộc họp mới</h4>
                                         <p class="mb-4 text-white"
-                                            style="font-size: 0.95rem; opacity: 0.9; line-height: 1.5;">Bắt đầu cuộc họp tức thì
+                                            style="font-size: 0.95rem; opacity: 0.9; line-height: 1.5;">Bắt đầu cuộc họp
+                                            tức thì
                                             với theo dõi khuôn mặt AI đang hoạt động.</p>
                                     </div>
                                     <div class="mt-auto">
@@ -190,7 +196,8 @@
                                             <i class="bx bxs-keyboard fs-4" style="color: #ea580c;"></i>
                                         </div>
 
-                                        <h4 class="fw-bolder mb-2 text-dark" style="font-size: 1.35rem;">Tham gia cuộc họp
+                                        <h4 class="fw-bolder mb-2 text-dark" style="font-size: 1.35rem;">Tham gia cuộc
+                                            họp
                                         </h4>
                                         <p class="mb-4" style="font-size: 0.95rem; color: #64748b; line-height: 1.5;">
                                             Nhập ID cuộc họp hoặc liên kết để kết nối.</p>
@@ -203,7 +210,6 @@
                                                 style="font-size: 0.9rem; border-radius: 8px; color: #475569;">
                                         </div>
                                         <button class="btn text-white fw-bold px-4"
-
                                             style="background-color: #ea580c; border-radius: 8px;">Tham gia</button>
                                     </div>
                                 </div>
@@ -216,7 +222,8 @@
                                     <div class="d-flex justify-content-between align-items-start mb-4">
                                         <div>
 
-                                            <h4 class="fw-bolder mb-2" style="font-size: 1.3rem;">Trạng thái Face ID</h4>
+                                            <h4 class="fw-bolder mb-2" style="font-size: 1.3rem;">Trạng thái Face ID
+                                            </h4>
                                             <div class="d-flex align-items-center" style="color: #ea580c;">
                                                 <i class='bx bxs-check-shield me-2 fs-5'></i>
                                                 <span class="fw-semibold small">Đã đồng bộ hoàn toàn</span>
@@ -224,9 +231,8 @@
                                         </div>
                                         <div class="rounded-3 overflow-hidden"
                                             style="width: 55px; height: 55px; background-color: #334155; border: 2px solid #334155;">
-                                            <img :src="avatar_url"
-                                                class="w-100 h-100 object-fit-cover" alt="Face Scanned"
-                                                style="filter: contrast(1.1) brightness(0.9);">
+                                            <img :src="avatar_url" class="w-100 h-100 object-fit-cover"
+                                                alt="Face Scanned" style="filter: contrast(1.1) brightness(0.9);">
                                         </div>
                                     </div>
 
@@ -239,12 +245,12 @@
                                         <div class="d-flex justify-content-between align-items-end">
                                             <div>
                                                 <p class="small mb-0 fw-medium"
-
                                                     style="color: #94a3b8; font-size: 0.75rem;">Điểm tin cậy:</p>
                                                 <h5 class="fw-bolder mb-0 mt-1">94.2%</h5>
                                             </div>
                                             <a href="#" class="small text-decoration-none fw-semibold"
-                                                style="color: #ea580c; line-height: 1.3; text-align: right;">Quản lý<br>Sinh trắc học</a>
+                                                style="color: #ea580c; line-height: 1.3; text-align: right;">Quản
+                                                lý<br>Sinh trắc học</a>
                                         </div>
                                     </div>
                                 </div>
@@ -259,8 +265,8 @@
 
                                     <h4 class="fw-bolder mb-0 text-dark" style="font-size: 1.25rem;">Cuộc họp sắp tới
                                     </h4>
-                                    <a href="#" class="fw-bolder text-decoration-none small"
-                                        style="color: #ea580c;">Xem lịch</a>
+                                    <a href="#" class="fw-bolder text-decoration-none small" style="color: #ea580c;">Xem
+                                        lịch</a>
                                 </div>
 
                                 <div class="d-flex flex-column gap-3">
@@ -328,7 +334,8 @@
                                                 </div>
                                             </div>
                                             <button class="btn fw-semibold px-4 py-2 bg-white"
-                                                style="border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">Chi tiết</button>
+                                                style="border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">Chi
+                                                tiết</button>
                                         </div>
                                     </div>
                                 </div>
@@ -404,7 +411,8 @@
 
                                                         Một-một với Sarah</h6>
                                                     <p class="fw-medium mb-0"
-                                                        style="color: #94a3b8; font-size: 0.75rem;">22 tháng 10, 11:30 SA
+                                                        style="color: #94a3b8; font-size: 0.75rem;">22 tháng 10, 11:30
+                                                        SA
                                                         • 30 phút</p>
                                                 </div>
                                             </div>
@@ -413,8 +421,7 @@
                                         <div class="list-group-item text-center p-3 mt-2 border-top-0 rounded-bottom"
                                             style="background-color: #f8fafc; border-radius: 0 0 12px 12px;">
                                             <a href="#" class="fw-bold text-decoration-none small"
-
-                                                    style="color: #64748b;">Xem lịch sử đầy đủ</a>
+                                                style="color: #64748b;">Xem lịch sử đầy đủ</a>
                                         </div>
                                     </div>
                                 </div>
@@ -444,33 +451,42 @@
 
                                     <form @submit.prevent="taoPhongHop">
                                         <div class="mb-4">
-                                            <label class="form-label fw-bold mb-2 text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">TIÊU ĐỀ CUỘC HỌP</label>
+                                            <label class="form-label fw-bold mb-2 text-muted"
+                                                style="font-size: 0.75rem; letter-spacing: 1px;">TIÊU ĐỀ CUỘC
+                                                HỌP</label>
                                             <input type="text" v-model="formTaoPhong.ten_phong" required
                                                 class="form-control form-control-lg bg-light border-0 shadow-none px-3 py-3"
                                                 placeholder="ví dụ, Đồng bộ nhóm hàng tuần"
                                                 style="border-radius: 12px; font-size: 0.95rem; color: #475569;">
                                         </div>
                                         <div class="mb-4">
-                                            <label class="form-label fw-bold mb-2 text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">MÔ TẢ</label>
+                                            <label class="form-label fw-bold mb-2 text-muted"
+                                                style="font-size: 0.75rem; letter-spacing: 1px;">MÔ TẢ</label>
                                             <textarea v-model="formTaoPhong.mo_ta"
                                                 class="form-control form-control-lg bg-light border-0 shadow-none px-3 py-3"
-                                                rows="4" placeholder="Phác thảo chương trình nghị sự cuộc họp hoặc mục tiêu..."
+                                                rows="4"
+                                                placeholder="Phác thảo chương trình nghị sự cuộc họp hoặc mục tiêu..."
                                                 style="border-radius: 12px; font-size: 0.95rem; color: #475569; resize: none;"></textarea>
                                         </div>
                                         <div class="mb-5">
-                                            <label class="form-label fw-bold mb-2 text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">MỜI NGƯỜI THAM GIA</label>
+                                            <label class="form-label fw-bold mb-2 text-muted"
+                                                style="font-size: 0.75rem; letter-spacing: 1px;">MỜI NGƯỜI THAM
+                                                GIA</label>
                                             <div class="position-relative">
-                                                <i class='bx bx-at position-absolute top-50 translate-middle-y fs-5' style="left: 1rem; color: #94a3b8;"></i>
+                                                <i class='bx bx-at position-absolute top-50 translate-middle-y fs-5'
+                                                    style="left: 1rem; color: #94a3b8;"></i>
                                                 <input type="text" v-model="formTaoPhong.email_khach_moi"
                                                     class="form-control form-control-lg bg-light border-0 shadow-none ps-5 py-3"
                                                     placeholder="Thêm địa chỉ email được phân tách bằng dấu phẩy"
                                                     style="border-radius: 12px; font-size: 0.95rem; color: #475569;">
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn text-white fw-bold px-4 py-3 d-flex justify-content-center align-items-center"
+                                        <button type="submit"
+                                            class="btn text-white fw-bold px-4 py-3 d-flex justify-content-center align-items-center"
                                             :disabled="isCreating"
                                             style="background-color: #ea580c; border-radius: 8px; font-size: 1rem; min-width: 180px;">
-                                            <span v-if="isCreating" class="spinner-border spinner-border-sm me-2"></span>
+                                            <span v-if="isCreating"
+                                                class="spinner-border spinner-border-sm me-2"></span>
                                             {{ isCreating ? 'Đang khởi tạo...' : 'Tạo cuộc họp' }}
                                         </button>
                                     </form>
@@ -488,7 +504,8 @@
                                                 placeholder="Ví dụ: u2c-c1t5-etj"
                                                 style="font-size: 0.95rem; border-radius: 8px; color: #475569;">
                                         </div>
-                                        <button @click="kiemTraTruocKhiJoin" :disabled="isJoining" class="btn text-white fw-bold px-4"
+                                        <button @click="kiemTraTruocKhiJoin" :disabled="isJoining"
+                                            class="btn text-white fw-bold px-4"
                                             style="background-color: #ea580c; border-radius: 8px;">
                                             <span v-if="isJoining" class="spinner-border spinner-border-sm"></span>
                                             <span v-else>Join</span>
@@ -522,9 +539,11 @@
                                                             CH • 45 phút</p>
                                                         <div class="d-flex gap-2">
                                                             <span class="badge fw-bold"
-                                                                style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">BẢN GHI</span>
+                                                                style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">BẢN
+                                                                GHI</span>
                                                             <span class="badge fw-bold"
-                                                                style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">BẢN GHI HÌNH</span>
+                                                                style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">BẢN
+                                                                GHI HÌNH</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -546,7 +565,8 @@
                                                         <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
                                                             Missed: Marketing Brainstorm</h6>
                                                         <p class="fw-medium mb-0"
-                                                        style="color: #94a3b8; font-size: 0.75rem;">22 tháng 10, 2:00 CH
+                                                            style="color: #94a3b8; font-size: 0.75rem;">22 tháng 10,
+                                                            2:00 CH
                                                         </p>
                                                     </div>
                                                 </div>
@@ -595,32 +615,33 @@
                             tùy chọn xác thực sinh trắc học của bạn.</p>
 
                         <!-- Profile Information -->
-                            <!-- Avatar Upload Section -->
-                            <div class="row mb-5 align-items-center">
-                                <div class="col-auto">
-                                    <div class="position-relative">
-                                        <img :src="avatar_preview || avatar_url" 
-                                            alt="Profile" class="rounded-circle border border-4 shadow-sm" width="100" height="100" 
-                                            style="border-color: #fff !important; outline: 2px solid #ea580c; object-fit: cover;">
-                                        <button @click="$refs.avatarInput.click()" 
-                                            class="btn btn-sm btn-dark position-absolute bottom-0 end-0 rounded-circle d-flex align-items-center justify-content-center shadow"
-                                            style="width: 32px; height: 32px; border: 2px solid #fff;">
-                                            <i class="bx bx-camera fs-6"></i>
-                                        </button>
-                                        <input type="file" ref="avatarInput" @change="handleAvatarChange" class="d-none" accept="image/*">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <h6 class="fw-bold mb-1 text-dark">Ảnh đại diện</h6>
-                                    <p class="text-muted small mb-0">Hỗ trợ JPG, PNG. Kích thước tối đa 2MB.</p>
-                                    <button v-if="avatar_file" @click="capNhatAvatar" :disabled="isUploadingAvatar" 
-                                        class="btn btn-sm text-white fw-bold px-3 py-1 mt-2 animate__animated animate__fadeIn"
-                                        style="background-color: #ea580c; border-radius: 8px; font-size: 0.8rem;">
-                                        <span v-if="isUploadingAvatar" class="spinner-border spinner-border-sm me-1"></span>
-                                        Xác nhận lưu
+                        <!-- Avatar Upload Section -->
+                        <div class="row mb-5 align-items-center">
+                            <div class="col-auto">
+                                <div class="position-relative">
+                                    <img :src="avatar_preview || avatar_url" alt="Profile"
+                                        class="rounded-circle border border-4 shadow-sm" width="100" height="100"
+                                        style="border-color: #fff !important; outline: 2px solid #ea580c; object-fit: cover;">
+                                    <button @click="$refs.avatarInput.click()"
+                                        class="btn btn-sm btn-dark position-absolute bottom-0 end-0 rounded-circle d-flex align-items-center justify-content-center shadow"
+                                        style="width: 32px; height: 32px; border: 2px solid #fff;">
+                                        <i class="bx bx-camera fs-6"></i>
                                     </button>
+                                    <input type="file" ref="avatarInput" @change="handleAvatarChange" class="d-none"
+                                        accept="image/*">
                                 </div>
                             </div>
+                            <div class="col">
+                                <h6 class="fw-bold mb-1 text-dark">Ảnh đại diện</h6>
+                                <p class="text-muted small mb-0">Hỗ trợ JPG, PNG. Kích thước tối đa 2MB.</p>
+                                <button v-if="avatar_file" @click="capNhatAvatar" :disabled="isUploadingAvatar"
+                                    class="btn btn-sm text-white fw-bold px-3 py-1 mt-2 animate__animated animate__fadeIn"
+                                    style="background-color: #ea580c; border-radius: 8px; font-size: 0.8rem;">
+                                    <span v-if="isUploadingAvatar" class="spinner-border spinner-border-sm me-1"></span>
+                                    Xác nhận lưu
+                                </button>
+                            </div>
+                        </div>
 
                         <!-- Profile Information -->
                         <div class="card border-0 shadow-sm p-4 p-md-5 mb-4" style="border-radius: 16px;">
@@ -634,7 +655,8 @@
                             </div>
                             <div class="row g-3 mb-4">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Họ và tên đầy đủ</label>
+                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Họ và tên
+                                        đầy đủ</label>
                                     <input type="text" v-model="settings.ho_va_ten"
                                         class="form-control form-control-lg bg-light border-0 shadow-none px-3"
                                         placeholder="Họ và tên"
@@ -642,7 +664,8 @@
                                 </div>
                                 <div class="col-md-6">
 
-                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Địa chỉ email</label>
+                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Địa chỉ
+                                        email</label>
                                     <input type="email" v-model="settings.email"
                                         class="form-control form-control-lg bg-light border-0 shadow-none px-3"
                                         placeholder="Email"
@@ -650,7 +673,8 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button @click="capNhatHoSo" :disabled="isUpdatingProfile" class="btn text-white fw-bold px-4 py-2"
+                                <button @click="capNhatHoSo" :disabled="isUpdatingProfile"
+                                    class="btn text-white fw-bold px-4 py-2"
                                     style="background-color: #ea580c; border-radius: 10px; font-size: 0.95rem;">
                                     <span v-if="isUpdatingProfile" class="spinner-border spinner-border-sm me-2"></span>
                                     Cập nhật hồ sơ
@@ -670,7 +694,8 @@
                             </div>
                             <div class="row g-3 mb-4">
                                 <div class="col-md-4">
-                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Mật khẩu hiện tại</label>
+                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Mật khẩu
+                                        hiện tại</label>
                                     <input type="password" v-model="settings.current_password"
                                         class="form-control form-control-lg bg-light border-0 shadow-none px-3"
                                         placeholder="••••••••"
@@ -678,7 +703,8 @@
                                 </div>
                                 <div class="col-md-4">
 
-                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Mật khẩu mới</label>
+                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Mật khẩu
+                                        mới</label>
                                     <input type="password" v-model="settings.new_password"
                                         class="form-control form-control-lg bg-light border-0 shadow-none px-3"
                                         placeholder="••••••••"
@@ -686,7 +712,8 @@
                                 </div>
                                 <div class="col-md-4">
 
-                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Xác nhận mật khẩu</label>
+                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Xác nhận
+                                        mật khẩu</label>
                                     <input type="password" v-model="settings.confirm_password"
                                         class="form-control form-control-lg bg-light border-0 shadow-none px-3"
                                         placeholder="••••••••"
@@ -694,9 +721,11 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button @click="doiMatKhau" :disabled="isChangingPassword" class="btn text-white fw-bold px-4 py-2"
+                                <button @click="doiMatKhau" :disabled="isChangingPassword"
+                                    class="btn text-white fw-bold px-4 py-2"
                                     style="background-color: #ea580c; border-radius: 10px; font-size: 0.95rem;">
-                                    <span v-if="isChangingPassword" class="spinner-border spinner-border-sm me-2"></span>
+                                    <span v-if="isChangingPassword"
+                                        class="spinner-border spinner-border-sm me-2"></span>
                                     Thay đổi mật khẩu
                                 </button>
                             </div>
@@ -718,20 +747,22 @@
                                         <div class="position-relative d-inline-block mb-4">
                                             <div class="rounded-circle d-flex justify-content-center align-items-center shadow-sm"
                                                 style="width: 150px; height: 150px; background-color: #f0fdf4; border: 2px solid #bbf7d0;">
-                                                <i class="bx bx-check-double" style="font-size: 5rem; color: #22c55e;"></i>
+                                                <i class="bx bx-check-double"
+                                                    style="font-size: 5rem; color: #22c55e;"></i>
                                             </div>
                                             <div class="position-absolute bottom-0 end-0 bg-success rounded-circle d-flex justify-content-center align-items-center border border-3 border-white"
                                                 style="width: 40px; height: 40px;">
                                                 <i class="bx bxs-shield-alt-2 text-white"></i>
                                             </div>
                                         </div>
-                                        
+
                                         <h3 class="fw-bolder text-dark mb-2">Tài khoản đã xác thực</h3>
                                         <p class="text-muted mx-auto mb-4" style="max-width: 500px;">
-                                            Hệ thống AI đã ghi nhận mẫu khuôn mặt của bạn. Danh tính của bạn hiện đã được bảo vệ và sẵn sàng cho các cuộc họp bảo mật.
+                                            Hệ thống AI đã ghi nhận mẫu khuôn mặt của bạn. Danh tính của bạn hiện đã
+                                            được bảo vệ và sẵn sàng cho các cuộc họp bảo mật.
                                         </p>
-                                        
-                                        <span class="badge px-4 py-2 fw-bold" 
+
+                                        <span class="badge px-4 py-2 fw-bold"
                                             style="background-color: #dcfce7; color: #15803d; border-radius: 30px; font-size: 0.85rem;">
                                             <i class="bx bxs-lock-alt me-1"></i> Mã hóa sinh trắc học 256-bit
                                         </span>
@@ -740,7 +771,8 @@
 
                                 <template v-else>
                                     <div class="col-md-5 d-flex justify-content-center">
-                                        <div class="position-relative d-flex justify-content-center align-items-center" style="width: 200px; height: 200px;">
+                                        <div class="position-relative d-flex justify-content-center align-items-center"
+                                            style="width: 200px; height: 200px;">
                                             <template v-if="!isScanning">
                                                 <div class="position-absolute rounded-circle"
                                                     style="width: 200px; height: 200px; border: 2px solid #fed7aa; background: #fff7ed;">
@@ -766,24 +798,28 @@
                                             </template>
                                         </div>
                                         <div class="mt-3 text-center" style="min-height: 24px;">
-                                            <small v-if="isScanning" class="status-text-anim" :style="{ color: isScanning ? '#ea580c' : '#64748b' }">
+                                            <small v-if="isScanning" class="status-text-anim"
+                                                :style="{ color: isScanning ? '#ea580c' : '#64748b' }">
                                                 <i class='bx bx-loader-alt bx-spin me-1'></i>
                                                 {{ scanStatus }}
                                             </small>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-7">
                                         <span class="badge mb-3 fw-bold px-3 py-2"
                                             style="background-color: #fef9c3; color: #854d0e; font-size: 0.75rem; border-radius: 20px;">
-                                            <i class="bx bxs-circle me-1" style="font-size: 0.5rem; vertical-align: middle; color: #ca8a04;"></i>
+                                            <i class="bx bxs-circle me-1"
+                                                style="font-size: 0.5rem; vertical-align: middle; color: #ca8a04;"></i>
                                             Yêu cầu xác thực
                                         </span>
-                                        <h4 class="fw-bolder mb-2" style="color: #0f172a; font-size: 1.3rem; line-height: 1.3;">
+                                        <h4 class="fw-bolder mb-2"
+                                            style="color: #0f172a; font-size: 1.3rem; line-height: 1.3;">
                                             Bảo mật cuộc họp với Face ID AI
                                         </h4>
                                         <p class="mb-4" style="color: #64748b; font-size: 0.9rem; line-height: 1.6;">
-                                            Vui lòng xác thực khuôn mặt để kích hoạt các tính năng bảo mật nâng cao và tham gia phòng họp nhanh.
+                                            Vui lòng xác thực khuôn mặt để kích hoạt các tính năng bảo mật nâng cao và
+                                            tham gia phòng họp nhanh.
                                         </p>
 
                                         <div class="d-flex gap-2">
@@ -793,7 +829,8 @@
                                                 <i class="bx bx-scan fs-5"></i> Bắt đầu quét khuôn mặt
                                             </button>
                                             <button v-if="isScanning" @click="stopFaceScan"
-                                                class="btn btn-outline-danger fw-bold px-4 py-3" style="border-radius: 10px;">
+                                                class="btn btn-outline-danger fw-bold px-4 py-3"
+                                                style="border-radius: 10px;">
                                                 Dừng quét
                                             </button>
                                         </div>
@@ -871,14 +908,18 @@
         </div>
     </div>
     <!-- Modal xác thực khuôn mặt -->
-      <div v-if="showJoinAuthModal" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3" style="background-color: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
-        <div class="card border-0 shadow-lg p-4 text-center animate__animated animate__fadeInUp" style="border-radius: 24px; width: 420px; background-color: #1e293b; border: 1px solid #334155 !important;">
+    <div v-if="showJoinAuthModal"
+        class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3"
+        style="background-color: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
+        <div class="card border-0 shadow-lg p-4 text-center animate__animated animate__fadeInUp"
+            style="border-radius: 24px; width: 420px; background-color: #1e293b; border: 1px solid #334155 !important;">
             <template v-if="!isMatched">
                 <h4 class="text-white fw-bolder mb-3">Xác nhận danh tính</h4>
                 <p class="text-secondary small mb-4">Hệ thống đang đối chiếu sinh trắc học để bảo mật cuộc họp.</p>
 
                 <div class="position-relative mx-auto mb-4" style="width: 220px; height: 220px;">
-                    <video ref="authVideo" autoplay muted playsinline class="w-100 h-100 rounded-circle object-fit-cover shadow-lg" 
+                    <video ref="authVideo" autoplay muted playsinline
+                        class="w-100 h-100 rounded-circle object-fit-cover shadow-lg"
                         :style="{ border: authError ? '4px solid #ef4444' : '4px solid #ea580c', transform: 'scaleX(-1)' }"></video>
                     <div v-if="!authError" class="scan-line-circle"></div>
                 </div>
@@ -891,28 +932,32 @@
                     </p>
                 </div>
 
-                <button @click="dongModalXacThucJoin" class="btn btn-link text-secondary text-decoration-none fw-medium">
+                <button @click="dongModalXacThucJoin"
+                    class="btn btn-link text-secondary text-decoration-none fw-medium">
                     Hủy bỏ
                 </button>
             </template>
 
             <template v-else>
                 <div class="py-4 animate__animated animate__zoomIn">
-                    <div class="mx-auto mb-4 d-flex justify-content-center align-items-center rounded-circle" 
+                    <div class="mx-auto mb-4 d-flex justify-content-center align-items-center rounded-circle"
                         style="width: 100px; height: 100px; background-color: #f0fdf4;">
                         <i class='bx bxs-check-shield' style="font-size: 4rem; color: #22c55e;"></i>
                     </div>
-                    
+
                     <h3 class="text-white fw-bolder mb-2">Xác thực thành công!</h3>
-                    <p class="text-secondary mb-4">Chào mừng <b>{{ ten_nguoi_dung }}</b>. Hệ thống đã xác nhận danh tính của bạn.</p>
+                    <p class="text-secondary mb-4">Chào mừng <b>{{ ten_nguoi_dung }}</b>. Hệ thống đã xác nhận danh tính
+                        của bạn.</p>
 
                     <div class="d-grid gap-2">
-                        <button @click="thamGiaPhongHop" :disabled="isJoining" class="btn text-white fw-bold py-3 shadow-lg" 
-                                style="background-color: #ea580c; border-radius: 12px; font-size: 1.1rem;">
+                        <button @click="thamGiaPhongHop" :disabled="isJoining"
+                            class="btn text-white fw-bold py-3 shadow-lg"
+                            style="background-color: #ea580c; border-radius: 12px; font-size: 1.1rem;">
                             <span v-if="isJoining" class="spinner-border spinner-border-sm me-2"></span>
                             <template v-else><i class='bx bx-video me-2'></i> Tham gia phòng họp</template>
                         </button>
-                        <button @click="dongModalXacThucJoin" class="btn btn-link text-secondary text-decoration-none small">
+                        <button @click="dongModalXacThucJoin"
+                            class="btn btn-link text-secondary text-decoration-none small">
                             Để sau
                         </button>
                     </div>
@@ -925,7 +970,7 @@
 <script>
 const apiUrl = import.meta.env.VITE_API_URL;
 import * as faceapi from 'face-api.js';
-import axios  from 'axios';
+import axios from 'axios';
 export default {
     name: 'TrangChinhNguoiDung',
     data() {
@@ -992,19 +1037,19 @@ export default {
     },
     computed: {
         id_nguoi_dung() {
-        // Lấy chuỗi JSON từ localStorage
-        const user_data = localStorage.getItem('thong_tin_user');
-        if (user_data) {
-            try {
-                // Chuyển chuỗi JSON thành object và trả về id
-                const user = JSON.parse(user_data);
-                return user.id; 
-            } catch (e) {
-                console.error('Lỗi đọc dữ liệu người dùng:', e);
-                return null; // Trả về null thay vì 1 để an toàn
+            // Lấy chuỗi JSON từ localStorage
+            const user_data = localStorage.getItem('thong_tin_user');
+            if (user_data) {
+                try {
+                    // Chuyển chuỗi JSON thành object và trả về id
+                    const user = JSON.parse(user_data);
+                    return user.id;
+                } catch (e) {
+                    console.error('Lỗi đọc dữ liệu người dùng:', e);
+                    return null; // Trả về null thay vì 1 để an toàn
+                }
             }
-        }
-        return null; // Nếu chưa đăng nhập
+            return null; // Nếu chưa đăng nhập
         },
         // 1. Lấy toàn bộ thông tin người dùng từ LocalStorage
         thong_tin_dang_nhap() {
@@ -1021,7 +1066,7 @@ export default {
         da_xac_minh() {
             // Nếu cột du_lieu_khuon_mat không trống (null) thì coi như đã xác minh
             // Vue sẽ tự động theo dõi biến da_xac_minh_phu
-        return this.da_xac_minh_phu;
+            return this.da_xac_minh_phu;
         }
     },
     methods: {
@@ -1041,7 +1086,7 @@ export default {
         dang_xuat() {
             localStorage.removeItem('token_nguoi_dung');
             localStorage.removeItem('thong_tin_user');
-            
+
             if (this.$toast) {
                 this.$toast.success("Đã đăng xuất");
             }
@@ -1163,11 +1208,11 @@ export default {
 
                 if (response.data.status) {
                     if (this.$toast) this.$toast.success("Cập nhật hồ sơ thành công!");
-                    
+
                     // Cập nhật state nội bộ để giao diện đổi ngay lập tức
                     this.user.ho_va_ten = response.data.data.ho_va_ten;
                     this.user.email = response.data.data.email;
-                    
+
                     // Cập nhật lại thông tin user trong LocalStorage để các component khác đồng bộ
                     let userLocal = JSON.parse(localStorage.getItem('thong_tin_user')) || {};
                     userLocal.ho_va_ten = response.data.data.ho_va_ten;
@@ -1212,7 +1257,7 @@ export default {
 
             this.isScanning = true;
             this.scanStatus = 'Dang mo camera...';
-            
+
             try {
                 // Bat webcam
                 this.luong_video = await navigator.mediaDevices.getUserMedia({ video: {} });
@@ -1242,57 +1287,57 @@ export default {
         bat_dau_nhan_dien() {
             const video = this.$refs.videoElement;
             const canvas = this.$refs.overlayCanvas;
-            
+
             const kich_thuoc_hien_thi = { width: 200, height: 200 };
             canvas.width = kich_thuoc_hien_thi.width;
             canvas.height = kich_thuoc_hien_thi.height;
             faceapi.matchDimensions(canvas, kich_thuoc_hien_thi);
 
             this.vong_lap_nhan_dien = setInterval(async () => {
-            const ket_qua = await faceapi.detectAllFaces(
-                video, 
-                new faceapi.TinyFaceDetectorOptions()
-            ).withFaceLandmarks().withFaceDescriptors();
+                const ket_qua = await faceapi.detectAllFaces(
+                    video,
+                    new faceapi.TinyFaceDetectorOptions()
+                ).withFaceLandmarks().withFaceDescriptors();
 
-            this.detectedFaces = ket_qua.length;
+                this.detectedFaces = ket_qua.length;
 
-            // Xóa vẽ ô vuông xanh (Xóa dòng drawDetections cũ)
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Xóa vẽ ô vuông xanh (Xóa dòng drawDetections cũ)
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (ket_qua.length === 1) {
-                // Tăng biến đếm
-                this.dem_thoi_gian++;
-                
-                // Tính toán phần trăm
-                let phan_tram = Math.min(Math.round((this.dem_thoi_gian / this.giay_can_thiet) * 100), 100);
-                
-                // CẬP NHẬT TRẠNG THÁI (Chỉ cập nhật dòng này khi có 1 mặt)
-                this.scanStatus = `Đang phân tích sinh trắc học... ${phan_tram}%`;
+                if (ket_qua.length === 1) {
+                    // Tăng biến đếm
+                    this.dem_thoi_gian++;
 
-                if (this.dem_thoi_gian >= this.giay_can_thiet && !this.faceSaved) {
-                    this.faceSaved = true;
-                    this.scanStatus = "Xác nhận thực thể sống thành công!";
-                    const véc_tơ_khuon_mat = Array.from(ket_qua[0].descriptor);
-                    this.gui_du_lieu_len_laravel(véc_tơ_khuon_mat);
-                }
-            } else {
-                // RESET nếu không thấy mặt hoặc quá nhiều mặt
-                this.dem_thoi_gian = 0; 
-                if (ket_qua.length === 0) {
-                    this.scanStatus = 'Vui lòng đưa mặt vào khung hình';
+                    // Tính toán phần trăm
+                    let phan_tram = Math.min(Math.round((this.dem_thoi_gian / this.giay_can_thiet) * 100), 100);
+
+                    // CẬP NHẬT TRẠNG THÁI (Chỉ cập nhật dòng này khi có 1 mặt)
+                    this.scanStatus = `Đang phân tích sinh trắc học... ${phan_tram}%`;
+
+                    if (this.dem_thoi_gian >= this.giay_can_thiet && !this.faceSaved) {
+                        this.faceSaved = true;
+                        this.scanStatus = "Xác nhận thực thể sống thành công!";
+                        const véc_tơ_khuon_mat = Array.from(ket_qua[0].descriptor);
+                        this.gui_du_lieu_len_laravel(véc_tơ_khuon_mat);
+                    }
                 } else {
-                    this.scanStatus = 'Cảnh báo: Phát hiện quá nhiều người!';
+                    // RESET nếu không thấy mặt hoặc quá nhiều mặt
+                    this.dem_thoi_gian = 0;
+                    if (ket_qua.length === 0) {
+                        this.scanStatus = 'Vui lòng đưa mặt vào khung hình';
+                    } else {
+                        this.scanStatus = 'Cảnh báo: Phát hiện quá nhiều người!';
+                    }
                 }
-            }
-        }, 200);
+            }, 200);
         },
         // --- Khối 5: Gui du lieu ve Database (Laravel) ---
         async gui_du_lieu_len_laravel(mang_so) {
             try {
                 this.scanStatus = 'Dang luu vao he thong...';
                 // Dung ngay viec quet de tranh gui API nhieu lan
-                clearInterval(this.vong_lap_nhan_dien); 
+                clearInterval(this.vong_lap_nhan_dien);
 
                 const phan_hoi = await axios.post(`${apiUrl}/nguoi-dung/xac-thuc-khuon-mat`, {
                     id: this.id_nguoi_dung,
@@ -1302,17 +1347,17 @@ export default {
                 if (phan_hoi.status === 200) {
                     this.scanStatus = 'Cap nhat thanh cong!';
                     this.$toast.success("Xác Thực Thành Công");
-                    
-                  // 1. Cập nhật LocalStorage (để dành cho lần sau vào lại trang)
+
+                    // 1. Cập nhật LocalStorage (để dành cho lần sau vào lại trang)
                     const user = JSON.parse(localStorage.getItem('thong_tin_user'));
                     if (user) {
                         user.du_lieu_khuon_mat = JSON.stringify(mang_so);
                         localStorage.setItem('thong_tin_user', JSON.stringify(user));
                     }
-                    
+
                     // 2. QUAN TRỌNG: Cập nhật biến phụ để giao diện đổi NGAY LẬP TỨC
                     this.da_xac_minh_phu = true;
-                    
+
                     // 3. Tat camera va don dep
                     this.stopFaceScan();
                 }
@@ -1329,14 +1374,14 @@ export default {
                 }
 
                 // QUAN TRỌNG: Cho phép người dùng thử lại nếu bị báo trùng (có thể do quét nhầm người khác)
-                this.faceSaved = false; 
+                this.faceSaved = false;
                 this.isScanning = false; // Dừng camera để họ bấm quét lại từ đầu
                 console.error(loi);
             }
         },
         // Khối 6: Quản Lý Phòng Họp
         async taoPhongHop() {
-        // Kiểm tra validation cơ bản
+            // Kiểm tra validation cơ bản
             if (!this.formTaoPhong.ten_phong.trim()) {
                 if (this.$toast) this.$toast.error("Vui lòng nhập tiêu đề cuộc họp!");
                 return;
@@ -1353,7 +1398,7 @@ export default {
                 const payload = {
                     ten_phong: this.formTaoPhong.ten_phong,
                     id_chu_phong: this.id_nguoi_dung,
-                    so_nguoi_toi_da: 100, 
+                    so_nguoi_toi_da: 100,
                     // mo_ta: this.formTaoPhong.mo_ta (Nếu DB bạn có cột này thì bật lên)
                 };
 
@@ -1361,7 +1406,7 @@ export default {
 
                 if (response.data.status) {
                     if (this.$toast) this.$toast.success("Khởi tạo phòng họp thành công!");
-                    
+
                     const phongMoi = response.data.data;
                     console.log("Mã phòng vừa tạo:", phongMoi.ma_phong);
 
@@ -1395,12 +1440,12 @@ export default {
                 if (this.$toast) this.$toast.warning("Vui lòng nhập mã phòng họp!");
                 return;
             }
-            
+
             // 2. BẢO MẬT BẰNG AI: Chặn cửa nếu chưa quét Face ID
             if (!this.da_xac_minh) {
                 if (this.$toast) this.$toast.error("Bảo mật: Vui lòng xác thực khuôn mặt trước khi vào họp!");
                 // Tự động chuyển họ về tab Dashboard để quét mặt
-                this.currentTab = 'dashboard'; 
+                this.currentTab = 'dashboard';
                 return;
             }
             this.isJoining = true;
@@ -1417,7 +1462,7 @@ export default {
                 if (response.data.status) {
                     // 4. Lấy token thành công
                     const token = response.data.token;
-                    
+
                     // Lưu token tạm thời vào sessionStorage để mang sang trang Video Call
                     sessionStorage.setItem('livekit_token', token);
                     sessionStorage.setItem('livekit_room', this.ma_phong_tham_gia.trim());
@@ -1446,9 +1491,9 @@ export default {
                 this.currentTab = 'dashboard';
                 return;
             }
-            
+
             this.isJoining = true;
-           try{
+            try {
                 // Gọi API để kiểm tra mã phòng tồn tại hay không
                 const response = await axios.post(`${apiUrl}/phong-hop/kiem-tra-phong-hop`, {
                     ma_phong: this.ma_phong_tham_gia.trim()
@@ -1482,7 +1527,7 @@ export default {
             if (!tai_xong) return;
 
             this.authScanStatus = 'Đang kết nối camera...';
-            
+
             try {
                 this.authStream = await navigator.mediaDevices.getUserMedia({ video: {} });
                 const video = this.$refs.authVideo;
@@ -1498,8 +1543,7 @@ export default {
             }
         },
 
-        tienHanhSoSanhKhuonMat(video) 
-        {
+        tienHanhSoSanhKhuonMat(video) {
             // Lấy véc-tơ chuẩn đã lưu trong LocalStorage (được đồng bộ từ DB)
             const userData = JSON.parse(localStorage.getItem('thong_tin_user'));
             const savedVectorArray = JSON.parse(userData.du_lieu_khuon_mat);
@@ -1510,19 +1554,19 @@ export default {
 
             this.authInterval = setInterval(async () => {
                 // 1. CHẶN NGAY TỪ ĐẦU: Nếu đã khớp rồi thì dừng mọi xử lý quét mặt
-                if (this.isMatched) return; 
+                if (this.isMatched) return;
 
                 // Lấy véc-tơ của khuôn mặt hiện tại trên camera
                 const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
-                                                .withFaceLandmarks()
-                                                .withFaceDescriptors();
+                    .withFaceLandmarks()
+                    .withFaceDescriptors();
 
                 if (detections.length === 1) {
                     const liveDescriptor = detections[0].descriptor;
-                    
+
                     // SO SÁNH: Tính khoảng cách Euclidean giữa 2 véc-tơ
                     const distance = faceapi.euclideanDistance(savedDescriptor, liveDescriptor);
-                    
+
                     // Ngưỡng 0.5 là mức độ an toàn cao (càng nhỏ càng giống)
                     if (distance < 0.50) {
                         this.isMatched = true; // Đánh dấu đã quét trúng
@@ -1531,16 +1575,16 @@ export default {
 
                         this.authError = false;
                         this.authScanStatus = "Xác nhận thành công!";
-                        
+
                         // Tắt camera modal
-                        this.dongModalXacThucJoin(false); 
-                        
-                        
+                        this.dongModalXacThucJoin(false);
+
+
                         // Đợi 800ms để nhả camera phần cứng, sau đó mới gọi API và chuyển trang
-                        
-                        
+
+
                         // ĐÃ XÓA CÁC DÒNG CODE BỊ LẶP Ở ĐÂY
-                    } 
+                    }
                     else {
                         this.authError = true;
                         this.authScanStatus = "Khuôn mặt không khớp dữ liệu gốc!";
@@ -1583,7 +1627,7 @@ export default {
                     sessionStorage.setItem('livekit_token', response.data.token);
                     sessionStorage.setItem('livekit_room', this.ma_phong_tham_gia.trim());
                     if (this.$toast) this.$toast.success("Đang tham gia phòng họp");
-                    
+
                     // Ẩn modal và sang phòng
                     this.showJoinAuthModal = false;
                     window.location.href = `/phong-hop/${this.ma_phong_tham_gia.trim()}`;
@@ -1596,7 +1640,7 @@ export default {
                 if (this.$toast) {
                     this.$toast.error(message);
                 }
-                
+
                 //phòng không tồn tại,  đóng Modal xác thực để người dùng nhập lại
                 this.dongModalXacThucJoin(true);
             } finally {
@@ -1614,7 +1658,7 @@ export default {
                 clearInterval(this.vong_lap_nhan_dien);
                 this.vong_lap_nhan_dien = null;
             }
-            
+
             // Tat camera
             if (this.luong_video) {
                 this.luong_video.getTracks().forEach(track => track.stop());
@@ -1647,7 +1691,8 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 .user-profile-link:hover h6 {
-    color: #ea580c !important; /* Đổi màu tên khi rê chuột vào */
+    color: #ea580c !important;
+    /* Đổi màu tên khi rê chuột vào */
 }
 
 .dropdown-item {
@@ -1655,8 +1700,10 @@ export default {
 }
 
 .dropdown-item:hover {
-    background-color: #fff1f2; /* Màu đỏ rất nhạt */
-    color: #be123c !important; /* Đỏ đậm hơn khi hover */
+    background-color: #fff1f2;
+    /* Màu đỏ rất nhạt */
+    color: #be123c !important;
+    /* Đỏ đậm hơn khi hover */
 }
 
 /* Hiệu ứng hiện ra mượt mà nếu không dùng thư viện animate.css */
@@ -1665,30 +1712,57 @@ export default {
 }
 
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
 /* Thanh laser cho khung hinh tron */
 .scan-line-circle {
     position: absolute;
-    width: 180px; /* Nho hon khung hinh mot chut */
+    width: 180px;
+    /* Nho hon khung hinh mot chut */
     height: 3px;
     background: linear-gradient(to right, transparent, #ea580c, transparent);
     box-shadow: 0 0 12px #ea580c;
     z-index: 12;
     animation: scan-vertical 2s ease-in-out infinite;
 }
+
 .status-text-anim {
     font-weight: bold;
     color: #ea580c;
     transition: all 0.3s ease;
 }
+
 @keyframes scan-vertical {
-    0% { top: 10%; opacity: 0; }
-    50% { top: 50%; opacity: 1; }
-    90% { top: 90%; opacity: 0; }
-    100% { top: 10%; opacity: 0; }
+    0% {
+        top: 10%;
+        opacity: 0;
+    }
+
+    50% {
+        top: 50%;
+        opacity: 1;
+    }
+
+    90% {
+        top: 90%;
+        opacity: 0;
+    }
+
+    100% {
+        top: 10%;
+        opacity: 0;
+    }
 }
+
 /* Basic reset */
 * {
     font-family: 'Inter', sans-serif;
