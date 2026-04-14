@@ -71,7 +71,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Tên Gói</label>
-                            <input v-model="create_goi.ten_goi" type="text" class="form-control" />
+                            <input v-model="create_goi.ten_goi" type="text" class="form-control"  />
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Số Người Tối Đa</label>

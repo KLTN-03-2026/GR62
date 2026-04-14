@@ -8,6 +8,7 @@ class Goi extends Model
 {
     protected $fillable = [
         'ten_goi',
+        'gia_goi',
         'so_nguoi_toi_da',
         'so_phong_toi_da',
         'thoi_han',

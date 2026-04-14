@@ -1,11 +1,23 @@
 <template>
     <div class="row">
         <!-- Tiêu đề & Thống kê Tóm tắt -->
-        <div class="col-12 mb-4 text-center mt-3">
-            <h3 class="mb-0 text-uppercase fw-bold text-primary" style="letter-spacing: 1px;">Biểu Đồ & Thống Kê Nền
-                Tảng</h3>
-            <p class="text-secondary mt-2">Bảng điều khiển quản trị trực quan với các báo cáo động</p>
-            <hr class="mx-auto" style="width: 200px; border-width: 3px; border-radius: 5px; opacity: 0.2">
+        <div class="col-12 mb-4 d-flex justify-content-between align-items-end mt-3 px-4">
+            <div class="text-start">
+                <h3 class="mb-0 text-uppercase fw-bold text-primary" style="letter-spacing: 1px;">Biểu Đồ & Thống Kê Nền Tảng</h3>
+                <p class="text-secondary mt-2 mb-0">Bảng điều khiển quản trị trực quan với các báo cáo động</p>
+            </div>
+            <div class="text-end d-none d-md-block">
+                <p class="text-muted fw-bold mb-1" style="font-size: 0.7rem; letter-spacing: 1px; color: #64748b !important;">GIỜ HỆ THỐNG</p>
+                <h4 class="mb-0 fw-bold text-dark animate__animated animate__fadeIn" style="font-size: 1.6rem; letter-spacing: -1px; font-variant-numeric: tabular-nums;">
+                    {{ current_time }}
+                </h4>
+                <div class="text-muted small mt-1" style="font-weight: 500;">
+                    {{ current_date }}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 px-4">
+            <hr class="mt-0 mb-4" style="border-width: 2px; opacity: 0.1">
         </div>
 
         <!-- WOW CHART -->
@@ -219,6 +231,9 @@ export default {
             list_chat_room: [],
             list_chuc_vu: [],
             list_chuc_nang: [],
+            current_time: '',
+            current_date: '',
+            timer: null,
 
             chartSeries: [],
             chartOptions: {
@@ -282,6 +297,13 @@ export default {
     },
     mounted() {
         this.loadData();
+        this.updateTime();
+        this.timer = setInterval(this.updateTime, 1000);
+    },
+    beforeUnmount() {
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
     },
     methods: {
         loadData() {
@@ -443,6 +465,24 @@ export default {
 
             // Re-assign to trigger reactivity
             this.chartOptions = newOptions;
+        },
+        updateTime() {
+            const now = new Date();
+            this.current_time = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: true 
+            });
+            
+            const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+            const dayName = days[now.getDay()];
+            const dateStr = now.toLocaleDateString('vi-VN', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric' 
+            });
+            this.current_date = `${dayName}, ${dateStr}`;
         }
     }
 }

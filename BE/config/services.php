@@ -34,5 +34,11 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'sepay' => [
+        'token' => env('SEPAY_API_TOKEN'),
+        'base_url' => env('SEPAY_BASE_URL', 'https://my.sepay.vn/userapi'),
+        'bank_account' => env('SEPAY_BANK_ACCOUNT'),
+        'bank_name' => env('SEPAY_BANK_NAME'),
+    ],
 
 ];

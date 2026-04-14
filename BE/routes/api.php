@@ -13,6 +13,7 @@ use App\Http\Controllers\PhongHopController;
 use App\Http\Controllers\ChiTietPhongHopController;
 use App\Http\Controllers\ChatRoomController;
 use App\Http\Controllers\HoaDonController;
+use App\Http\Controllers\Api\SepayPollingController;
 
 // Admin
 Route::post('/admin/login', [AdminController::class, 'login']);
@@ -84,6 +85,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // 6. Gói
 Route::get('/goi/data', [GoiController::class, 'index']);
+Route::get('/goi/detail/{id}', [GoiController::class, 'show']);
 Route::post('/goi/create', [GoiController::class, 'store']);
 Route::post('/goi/update', [GoiController::class, 'update']);
 Route::post('/goi/delete', [GoiController::class, 'destroy']);
@@ -129,3 +131,8 @@ Route::post('/hoa-don/create', [HoaDonController::class, 'store']);
 Route::post('/hoa-don/update', [HoaDonController::class, 'update']);
 Route::post('/hoa-don/delete', [HoaDonController::class, 'destroy']);
 Route::post('/hoa-don/tim-kiem', [HoaDonController::class, 'search']);
+
+//SEPAY
+
+Route::post('/sepay/create-order', [SepayPollingController::class, 'createOrder']);
+Route::get('/sepay/status/{orderCode}', [SepayPollingController::class, 'checkStatus']);
