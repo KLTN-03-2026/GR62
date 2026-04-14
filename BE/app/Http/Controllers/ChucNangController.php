@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChucNangCreateRequest;
+use App\Http\Requests\ChucNangDeleteRequest;
+use App\Http\Requests\ChucNangSearchRequest;
+use App\Http\Requests\ChucNangUpdateRequest;
 use App\Models\ChucNang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +22,7 @@ class ChucNangController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(ChucNangCreateRequest $request)
     {
         $data = ChucNang::create($request->all());
         return response()->json([
@@ -28,7 +32,7 @@ class ChucNangController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(ChucNangUpdateRequest $request)
     {
         $data = ChucNang::where('id', $request->id)->first();
         if ($data) {
@@ -45,7 +49,7 @@ class ChucNangController extends Controller
         ]);
     }
 
-    public function destroy(Request $request)
+    public function destroy(ChucNangDeleteRequest $request)
     {
         $data = ChucNang::where('id', $request->id)->first();
         if ($data) {
@@ -61,12 +65,12 @@ class ChucNangController extends Controller
         ]);
     }
 
-    public function search(Request $request)
+    public function search(ChucNangSearchRequest $request)
     {
         $query = ChucNang::query();
         if ($request->has('keyword') && $request->keyword != '') {
             $keyword = $request->keyword;
-            $query->where(function($q) use ($keyword) {
+            $query->where(function ($q) use ($keyword) {
                 $q->where('ten_chuc_nang', 'like', '%' . $keyword . '%');
                 $q->orWhere('ma_chuc_nang', 'like', '%' . $keyword . '%');
             });
