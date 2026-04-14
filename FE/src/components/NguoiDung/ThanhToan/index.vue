@@ -190,8 +190,13 @@ export default {
             status: 'pending',
             timer: null,
             isCreating: false,
-            id_goi: parseInt(this.$route.params.id_goi) || 2,
+            id_goi: 2, // Default will be overridden in created
             goiInfo: null,
+        }
+    },
+    created() {
+        if (this.$route && this.$route.params && this.$route.params.id_goi) {
+            this.id_goi = parseInt(this.$route.params.id_goi) || 2;
         }
     },
     computed: {

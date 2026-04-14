@@ -1,6 +1,7 @@
 <template>
-    <div class="d-flex vh-100 w-100 overflow-hidden"
-        style="background-color: #f8fafc; font-family: 'Inter', sans-serif;">
+    <div class="trang-chinh-wrapper">
+        <div class="d-flex vh-100 w-100 overflow-hidden"
+            style="background-color: #f8fafc; font-family: 'Inter', sans-serif;">
         <!-- Left Sidebar -->
         <aside class="bg-white border-end d-flex flex-column flex-shrink-0" style="width: 260px;">
             <!-- Logo -->
@@ -900,6 +901,7 @@
                 </div>
             </template>
         </div>
+    </div>
     </div>
 </template>
 
