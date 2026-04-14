@@ -1,181 +1,215 @@
 <template>
-    <div class="partner-dashboard-wrapper">
-        <!-- Main Content Area -->
+    <div class="partner-dashboard-wrapper h-100">
         <div class="main-layout d-flex h-100">
-            <!-- Sidebar (Classic Zoom-style with Labels) -->
-            <aside class="sidebar-zoom d-flex flex-column py-4">
+            <!-- Sidebar (AI-Meet Business Branding) -->
+            <aside class="sidebar-business d-flex flex-column py-5 shadow-sm">
                 <div class="logo-section px-4 mb-5">
-                    <div class="logo-circle shadow-glow">
-                        <img src="../../../assets/images/logo.pnj.png" alt="" style="height: 50px; width: 50px;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="logo-icon-business">
+                            <i class="bx bxs-component fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-800 text-dark tracking-tighter">AI-Meet Business</h5>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 1.5px;">Đối tác cao cấp</small>
+                        </div>
                     </div>
-                    <span class="ms-3 fw-800 fs-5 text-primary">Đối Tác</span>
                 </div>
 
-                <div class="nav-links d-flex flex-column gap-2 px-3 flex-grow-1">
-                    <button class="nav-item active">
-                        <i class="bx bx-home-alt-2"></i>
-                        <span>Trang chủ</span>
+                <div class="nav-links d-flex flex-column gap-3 px-3 flex-grow-1 mt-3">
+                    <button class="nav-business-item active">
+                        <i class="bx bxs-dashboard"></i>
+                        <span>Tổng quan</span>
                     </button>
-                    <button @click="$router.push('/doi-tac/phong-hop')" class="nav-item">
-                        <i class="bx bx-video"></i>
-                        <span>Phòng họp</span>
+                    <button @click="$router.push('/doi-tac/phong-hop')" class="nav-business-item">
+                        <i class="bx bxs-video"></i>
+                        <span>Tham gia cuộc họp</span>
                     </button>
-                    <button @click="$router.push('/doi-tac/profile')" class="nav-item">
-                        <i class="bx bx-user-circle"></i>
-                        <span>Hồ sơ</span>
+                    <button class="nav-business-item">
+                        <i class="bx bxs-bar-chart-alt-2"></i>
+                        <span>Báo cáo</span>
                     </button>
-                    <button class="nav-item">
-                        <i class="bx bx-history"></i>
-                        <span>Lịch sử</span>
+                    <button @click="$router.push('/doi-tac/profile')" class="nav-business-item">
+                        <i class="bx bxs-cog"></i>
+                        <span>Cài đặt</span>
                     </button>
                 </div>
 
-                <div class="px-3 mt-auto">
-                    <button @click="logout" class="nav-item text-danger border-0 w-100 justify-content-start">
-                        <i class="bx bx-log-out"></i>
+                <div class="px-3 mt-auto pt-5 border-top border-light">
+                    <button class="nav-business-item mb-2 border-0 bg-transparent w-100">
+                        <i class="bx bx-help-circle"></i>
+                        <span>Hỗ trợ</span>
+                    </button>
+                    <button @click="logout" class="nav-business-item text-danger border-0 bg-transparent w-100">
+                        <i class="bx bx-log-out-circle"></i>
                         <span>Đăng xuất</span>
                     </button>
                 </div>
             </aside>
 
-            <!-- Right Content Section -->
-            <main class="flex-grow-1 p-0 overflow-auto">
+            <!-- Main Content Section -->
+            <main class="flex-grow-1 p-0 overflow-auto bg-white">
                 <!-- Header -->
-                <header class="content-header p-4 d-flex justify-content-between align-items-center">
-                    <div class="date-header">
-                        <h5 class="mb-0 fw-bold animate__animated animate__fadeIn" style="font-variant-numeric: tabular-nums;">{{ currentTime }}</h5>
-                        <p class="mb-0 text-muted small" style="font-weight: 500;">{{ currentDate }}</p>
+                <header class="content-header px-5 py-4 d-flex justify-content-between align-items-center">
+                    <div class="search-business d-none d-lg-flex">
+                        <i class="bx bx-search text-muted fs-5"></i>
+                        <input type="text" placeholder="Tìm kiếm dữ liệu, nhân viên...">
                     </div>
-                    <div class="header-actions d-flex align-items-center gap-3">
-                        <div class="search-bar-zoom d-none d-md-flex">
-                            <i class="bx bx-search"></i>
-                            <input type="text" placeholder="Tìm kiếm cuộc họp...">
+                    
+                    <div class="header-right d-flex align-items-center gap-4">
+                        <div class="header-icon-btns d-flex gap-3">
+                            <div class="icon-btn-plain"><i class="bx bxs-bell fs-4"></i><span class="dot-badge"></span></div>
+                            <div class="icon-btn-plain"><i class="bx bxs-calendar fs-4"></i></div>
+                            <div class="icon-btn-plain"><i class="bx bxs-message-square-detail fs-4"></i></div>
                         </div>
-                        <div class="profile-area" @click="$router.push('/doi-tac/profile')">
-                            <img :src="avatarUrl" alt="Partner Avatar" class="header-avatar shadow-sm">
+                        
+                        <div class="profile-trigger-business d-flex align-items-center gap-3 cursor-pointer" @click="$router.push('/doi-tac/profile')">
+                            <div class="text-end d-none d-md-block">
+                                <h6 class="mb-0 fw-800 text-dark" style="font-size: 0.9rem;">Admin Ánh Kim</h6>
+                                <small class="text-muted" style="font-size: 0.75rem;">Quản trị viên Hệ thống</small>
+                            </div>
+                            <img :src="avatarUrl" alt="Avatar" class="header-avatar-business shadow-sm">
                         </div>
                     </div>
                 </header>
 
-                <div class="p-4 p-xl-5">
-                    <!-- Welcome Section -->
-                    <section class="welcome-banner mb-5 p-5 rounded-5 overflow-hidden position-relative shadow-lg">
-                        <div class="banner-content position-relative z-2">
-                            <h1 class="display-5 fw-bold text-white mb-2">Chào {{ partnerName }}!</h1>
-                            <p class="text-white text-opacity-75 fs-5">Sẵn sàng cho các cuộc họp đột phá hôm nay?</p>
+                <div class="p-5 pt-4">
+                    <!-- Title Section -->
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+                        <div class="greeting-section">
+                            <h2 class="fw-800 text-dark mb-2">Chào mừng trở lại, Công ty Công nghệ Ánh Kim</h2>
+                            <p class="text-muted mb-0 fw-500">Đối tác Premium. Hôm nay bạn có 12 cuộc họp mới cần quản lý.</p>
                         </div>
-                        <div class="banner-bg-graphics">
-                            <div class="blob blob-1"></div>
-                            <div class="blob blob-2"></div>
+                        <div class="header-actions-business d-flex gap-3">
+                            <button class="btn btn-light-orange-pro px-4 py-3 fw-800 rounded-4 border-0">
+                                <i class="bx bx-download me-2"></i> Xuất báo cáo
+                            </button>
+                            <button class="btn btn-orange-pro px-4 py-3 fw-800 rounded-4 border-0 text-white shadow-orange">
+                                <i class="bx bx-plus-circle me-2"></i> Tạo cuộc họp AI
+                            </button>
                         </div>
-                    </section>
+                    </div>
 
-                    <!-- Zoom Quick Actions -->
+                    <!-- Metrics Grid (4 items) -->
                     <div class="row g-4 mb-5">
-                        <div class="col-md-6 col-lg-3">
-                            <div class="quick-card action-orange shadow-hover" data-bs-toggle="modal"
-                                data-bs-target="#newMeetingModal">
-                                <div class="action-icon-bg">
-                                    <i class="bx bxs-video-plus"></i>
+                        <div class="col-md-3">
+                            <div class="metric-card-business p-4 rounded-5 border-0">
+                                <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-user-detail"></i></div>
+                                <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Nhân viên sử dụng</label>
+                                <div class="d-flex align-items-baseline gap-2">
+                                    <h2 class="fw-900 mb-0">1,284</h2>
+                                    <span class="text-success small fw-bold">+12%</span>
                                 </div>
-                                <h5 class="mt-3 fw-bold">Cuộc họp mới</h5>
-                                <p class="text-muted small">Bắt đầu ngay lập tức</p>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-3">
-                            <div class="quick-card action-blue shadow-hover" data-bs-toggle="modal"
-                                data-bs-target="#joinMeetingModal">
-                                <div class="action-icon-bg"><i class="bx bx-plus-circle"></i></div>
-                                <h5 class="mt-3 fw-bold">Tham gia</h5>
-                                <p class="text-muted small">Bằng ID hoặc mã code</p>
+                        <div class="col-md-3">
+                            <div class="metric-card-business p-4 rounded-5 border-0">
+                                <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-time-five"></i></div>
+                                <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Tổng giờ họp tháng</label>
+                                <div class="d-flex align-items-baseline gap-2">
+                                    <h2 class="fw-900 mb-0">4,850h</h2>
+                                    <span class="text-muted fw-bold">/ ∞</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-3">
-                            <div class="quick-card action-blue shadow-hover" data-bs-toggle="modal"
-                                data-bs-target="#scheduleModal">
-                                <div class="action-icon-bg">
-                                    <i class="bx bxs-calendar"></i>
+                        <div class="col-md-3">
+                            <div class="metric-card-business p-4 rounded-5 border-0">
+                                <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-face"></i></div>
+                                <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Chính xác Face ID</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <h2 class="fw-900 mb-0">99.9%</h2>
+                                    <div class="verified-badge-business"><i class="bx bxs-check-shield"></i></div>
                                 </div>
-                                <h5 class="mt-3 fw-bold">Lên lịch</h5>
-                                <p class="text-muted small">Lên kế hoạch cuộc họp</p>
                             </div>
                         </div>
-                        <!-- Screen Share -->
-                        <div class="col-md-6 col-lg-3">
-                            <div class="quick-card action-blue shadow-hover" data-bs-toggle="modal"
-                                data-bs-target="#shareScreenModal">
-                                <div class="action-icon-bg">
-                                    <i class="bx bxs-share-alt"></i>
+                        <div class="col-md-3">
+                            <div class="metric-card-business p-4 rounded-5 border-0">
+                                <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-cloud"></i></div>
+                                <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Lưu trữ đối tác</label>
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <h4 class="fw-900 mb-0" style="font-size: 1.1rem;">1.4 TB</h4>
+                                    <span class="text-muted small fw-bold">Không giới hạn</span>
                                 </div>
-                                <h5 class="mt-3 fw-bold">Chia sẻ màn hình</h5>
-                                <p class="text-muted small">Trình bày nhanh chóng</p>
+                                <div class="progress-premium-business">
+                                    <div class="progress-bar-business" style="width: 35%"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Stats & Meetings -->
-                    <div class="row g-4">
-                        <div class="col-lg-8">
-                            <div class="glass-section p-4 h-100">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h5 class="fw-bold mb-0">Thống kê hội thoại</h5>
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-light rounded-pill px-3"
-                                            data-bs-toggle="dropdown">Hàng tuần <i
-                                                class="bx bx-chevron-down ms-1"></i></button>
-                                    </div>
-                                </div>
-                                <div class="row g-3">
-                                    <div v-for="(stat, idx) in stats" :key="idx" class="col-md-4">
-                                        <div class="stat-box p-4 rounded-4 shadow-sm">
-                                            <div class="d-flex align-items-center gap-3 mb-2">
-                                                <div class="small-icon"
-                                                    :style="{ backgroundColor: stat.color + '20', color: stat.color }">
-                                                    <i :class="stat.icon"></i>
-                                                </div>
-                                                <span class="text-muted small fw-medium">{{ stat.label }}</span>
-                                            </div>
-                                            <h3 class="mb-0 fw-bold">{{ stat.value }}</h3>
-                                        </div>
+                    <!-- Main Dashboard Content -->
+                    <div class="row g-5 mb-5">
+                        <!-- Chart Column -->
+                        <div class="col-xl-8">
+                            <div class="glass-section-business p-5 rounded-5 shadow-faint border-0">
+                                <div class="d-flex justify-content-between align-items-center mb-5">
+                                    <h4 class="fw-800 text-dark mb-0">Thống kê tần suất cuộc họp</h4>
+                                    <div class="chart-filters d-flex gap-2">
+                                        <button class="btn btn-sm-pill active">Tuần này</button>
+                                        <button class="btn btn-sm-pill">Tháng trước</button>
                                     </div>
                                 </div>
 
-                                <!-- Weekly Activity Chart -->
-                                <div class="weekly-chart-container mt-4 p-4 rounded-4 bg-light-soft border border-light animate__animated animate__fadeIn">
-                                    <div class="d-flex justify-content-between align-items-center mb-4">
-                                        <h6 class="fw-bold mb-0">Biểu đồ cuộc họp (7 ngày qua)</h6>
-                                        <div class="chart-legend d-flex gap-3">
-                                            <div class="d-flex align-items-center gap-1 small text-muted">
-                                                <span class="dot bg-primary"></span> Cuộc họp
-                                            </div>
-                                        </div>
+                                <div class="activity-visualizer-premium">
+                                    <div class="chart-labels-y d-flex flex-column justify-content-between text-muted small fw-bold">
+                                        <span>100</span><span>75</span><span>50</span><span>25</span><span>0</span>
                                     </div>
-                                    <div class="chart-wrapper d-flex align-items-end justify-content-between">
-                                        <div v-for="day in weeklyData" :key="day.label" class="chart-bar-group d-flex flex-column align-items-center flex-grow-1">
-                                            <div class="chart-bar-container w-100 d-flex flex-column align-items-center">
-                                                <div class="chart-bar bg-primary shadow-sm" :style="{ height: day.value + 'px' }">
-                                                    <div class="bar-tooltip shadow-sm">{{ day.count }} cuộc họp</div>
-                                                </div>
+                                    <div class="chart-bars-area d-flex align-items-end justify-content-around flex-grow-1">
+                                        <div v-for="day in weeklyData" :key="day.label" class="chart-bar-col d-flex flex-column align-items-center">
+                                            <div class="bar-business" :style="{ height: day.value + '%' }">
+                                                <div class="bar-glow"></div>
                                             </div>
-                                            <span class="day-label mt-3 small fw-bold text-muted text-uppercase">{{ day.label }}</span>
+                                            <span class="bar-label-business mt-5">{{ day.label }}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="glass-section p-4 h-100">
-                                <h5 class="fw-bold mb-4">Cuộc họp sắp tới</h5>
-                                <div class="meeting-list">
-                                    <div v-for="m in upcomingMeetings" :key="m.id"
-                                        class="meeting-card p-3 mb-3 rounded-4 border-start border-4"
-                                        :style="{ borderColor: m.color }">
-                                        <h6 class="mb-1 fw-bold">{{ m.title }}</h6>
-                                        <p class="text-muted small mb-2"><i class="bx bx-time-five me-1"></i> {{ m.time
-                                        }}</p>
-                                        <button class="btn btn-sm w-100 rounded-pill text-white"
-                                            :style="{ backgroundColor: m.color }">Bắt đầu</button>
+
+                        <!-- Departments Column -->
+                        <div class="col-xl-4">
+                            <div class="glass-section-business p-5 rounded-5 shadow-faint border-0 h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-5">
+                                    <h4 class="fw-800 text-dark mb-0">Phòng ban</h4>
+                                    <button class="btn-text-orange fw-800 small text-uppercase">Tất cả</button>
+                                </div>
+
+                                <div class="dept-list-business mt-4">
+                                    <div v-for="dept in departments" :key="dept.name" class="dept-item-business d-flex align-items-center mb-4">
+                                        <div class="dept-icon-mini me-3" :style="{ backgroundColor: dept.color + '15', color: dept.color }">
+                                            {{ dept.code }}
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="fw-800 text-dark mb-0">{{ dept.name }}</h6>
+                                            <small class="text-muted fw-bold">{{ dept.members }} nhân viên</small>
+                                        </div>
+                                        <div :class="['status-pill-business', dept.status]">
+                                            <span class="dot"></span> {{ dept.statusLabel || 'Active' }}
+                                        </div>
                                     </div>
+                                </div>
+
+                                <button class="btn-manage-dept w-100 py-3 mt-4 rounded-4 fw-800 text-dark">
+                                    <i class="bx bxs-cog me-2"></i> Quản lý phòng ban
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exclusive Features Section -->
+                    <div class="exclusive-section mt-5 border-top pt-5">
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                            <h4 class="fw-800 text-dark mb-0">Tính năng độc quyền Đối tác</h4>
+                            <div class="premium-badge-pill">PREMIUM ACCESS</div>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div v-for="feature in exclusiveFeatures" :key="feature.title" class="col-md-4">
+                                <div class="feature-card-business p-5 rounded-5 border-0">
+                                    <div class="feature-icon-bg mb-4">
+                                        <i :class="feature.icon"></i>
+                                    </div>
+                                    <h5 class="fw-900 text-dark mb-3">{{ feature.title }}</h5>
+                                    <p class="text-muted fw-500 mb-0" style="line-height: 1.6;">{{ feature.description }}</p>
                                 </div>
                             </div>
                         </div>
@@ -183,227 +217,58 @@
                 </div>
             </main>
         </div>
-
-        <!-- Join Meeting Modal (Zen Design) -->
-        <div class="modal fade" id="joinMeetingModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 rounded-5 shadow-2xl overflow-hidden zen-modal">
-                    <div class="modal-header border-0 p-4 pb-0">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="modal-icon-header bg-primary-soft text-primary">
-                                <i class="bx bxs-video"></i>
-                            </div>
-                            <h4 class="modal-title fw-800 mb-0">Tham gia cuộc họp</h4>
-                        </div>
-                        <button type="button" class="btn-close-custom" data-bs-dismiss="modal">
-                            <i class="bx bx-x"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body p-4 p-xl-5">
-                        <p class="text-secondary opacity-75 mb-4">Kết nối ngay với đồng nghiệp bằng cách nhập mã định
-                            danh cuộc họp bên dưới.</p>
-
-                        <div class="input-group-premium mb-4">
-                            <div class="input-icon"><i class="bx bx-hash"></i></div>
-                            <input v-model="meetingId" type="text" class="input-field"
-                                placeholder="Nhập ID cuộc họp (ví dụ: 888-222-111)">
-                        </div>
-
-                        <div class="options-grid mb-4">
-                            <div
-                                class="option-item d-flex justify-content-between align-items-center p-3 rounded-4 bg-light-soft mb-2">
-                                <div class="d-flex align-items-center gap-3">
-                                    <i class="bx bx-microphone-off text-muted fs-4"></i>
-                                    <span class="small fw-600">Không kết nối âm thanh</span>
-                                </div>
-                                <div class="form-check form-switch pe-0">
-                                    <input class="form-check-input custom-switch" type="checkbox" id="noAudio">
-                                </div>
-                            </div>
-                            <div
-                                class="option-item d-flex justify-content-between align-items-center p-3 rounded-4 bg-light-soft">
-                                <div class="d-flex align-items-center gap-3">
-                                    <i class="bx bx-video-off text-muted fs-4"></i>
-                                    <span class="small fw-600">Tắt video của tôi</span>
-                                </div>
-                                <div class="form-check form-switch pe-0">
-                                    <input class="form-check-input custom-switch" type="checkbox" id="noVideo" checked>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button @click="confirmJoin" class="btn-join-premium w-100 py-3 mb-3" :disabled="!meetingId">
-                            <span>THAM GIA NGAY</span>
-                            <i class="bx bx-right-arrow-alt ms-2"></i>
-                        </button>
-                    </div>
-                    <div class="modal-footer border-0 p-4 pt-0 justify-content-center">
-                        <p class="small text-muted opacity-50 mb-0">Tham gia an toàn với bảo mật đầu cuối</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- New Meeting Modal -->
-        <div class="modal fade" id="newMeetingModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 rounded-5 shadow-2xl overflow-hidden zen-modal">
-                    <div class="modal-header border-0 p-4 pb-0">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="modal-icon-header bg-orange-soft text-orange">
-                                <i class="bx bxs-video-plus"></i>
-                            </div>
-                            <h4 class="modal-title fw-800 mb-0">Cuộc họp mới</h4>
-                        </div>
-                        <button type="button" class="btn-close-custom" data-bs-dismiss="modal"><i
-                                class="bx bx-x"></i></button>
-                    </div>
-                    <div class="modal-body p-4 p-xl-5">
-                        <div class="options-grid mb-4">
-                            <div
-                                class="option-item d-flex justify-content-between align-items-center p-3 rounded-4 bg-light-soft mb-2">
-                                <span class="small fw-600">Bắt đầu với Video</span>
-                                <div class="form-check form-switch pe-0">
-                                    <input v-model="newMeetingData.video" class="form-check-input custom-switch"
-                                        type="checkbox">
-                                </div>
-                            </div>
-                            <div
-                                class="option-item d-flex justify-content-between align-items-center p-3 rounded-4 bg-light-soft">
-                                <span class="small fw-600">Sử dụng ID cuộc họp cá nhân (PMI)</span>
-                                <div class="form-check form-switch pe-0">
-                                    <input v-model="newMeetingData.usePMI" class="form-check-input custom-switch"
-                                        type="checkbox">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-3 bg-blue-soft rounded-4 mb-4 border border-primary border-opacity-10">
-                            <small class="text-primary fw-bold d-block mb-1">ID Cá nhân của bạn</small>
-                            <h5 class="fw-bold mb-0">888 999 0000</h5>
-                        </div>
-                        <button @click="startInstantMeeting" class="btn-orange-premium w-100 py-3 fw-bold">
-                            BẮT ĐẦU CUỘC HỌP
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Schedule Modal -->
-        <div class="modal fade" id="scheduleModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content border-0 rounded-5 shadow-2xl overflow-hidden zen-modal">
-                    <div class="modal-header border-0 p-4 pb-0">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="modal-icon-header bg-blue-soft text-primary">
-                                <i class="bx bxs-calendar"></i>
-                            </div>
-                            <h4 class="modal-title fw-800 mb-0">Lên lịch cuộc họp</h4>
-                        </div>
-                        <button type="button" class="btn-close-custom" data-bs-dismiss="modal"><i
-                                class="bx bx-x"></i></button>
-                    </div>
-                    <div class="modal-body p-4 p-xl-5">
-                        <div class="row g-4">
-                            <div class="col-12">
-                                <label class="small fw-700 text-muted mb-2">Chủ đề cuộc họp</label>
-                                <input v-model="scheduleData.topic" type="text" class="input-field-simple"
-                                    placeholder="Ví dụ: Họp định kỳ tuần 4">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small fw-700 text-muted mb-2">Ngày bắt đầu</label>
-                                <input v-model="scheduleData.date" type="date" class="input-field-simple">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small fw-700 text-muted mb-2">Thời gian</label>
-                                <input v-model="scheduleData.time" type="time" class="input-field-simple">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small fw-700 text-muted mb-2">Thời lượng (Phút)</label>
-                                <select v-model="scheduleData.duration" class="input-field-simple">
-                                    <option value="30">30 Phút</option>
-                                    <option value="60">60 Phút</option>
-                                    <option value="90">90 Phút</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small fw-700 text-muted mb-2">Mật khẩu (Tùy chọn)</label>
-                                <input v-model="scheduleData.password" type="text" class="input-field-simple"
-                                    placeholder="Mã bảo vệ">
-                            </div>
-                        </div>
-                        <button @click="confirmSchedule" class="btn-join-premium w-100 py-3 mt-5 fw-bold">
-                            LƯU LỊCH TRÌNH
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Share Screen Modal -->
-        <div class="modal fade" id="shareScreenModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 rounded-5 shadow-2xl overflow-hidden zen-modal">
-                    <div class="modal-header border-0 p-4 pb-0">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="modal-icon-header bg-blue-soft text-primary">
-                                <i class="bx bxs-share-alt"></i>
-                            </div>
-                            <h4 class="modal-title fw-800 mb-0">Chia sẻ màn hình</h4>
-                        </div>
-                        <button type="button" class="btn-close-custom" data-bs-dismiss="modal"><i
-                                class="bx bx-x"></i></button>
-                    </div>
-                    <div class="modal-body p-4 p-xl-5">
-                        <p class="text-secondary opacity-75 mb-4">Nhập ID cuộc họp hoặc Khóa chia sẻ để bắt đầu trình
-                            chiếu.</p>
-                        <div class="input-group-premium mb-4">
-                            <div class="input-icon"><i class="bx bx-cast"></i></div>
-                            <input v-model="shareData.key" type="text" class="input-field" placeholder="Mã chia sẻ">
-                        </div>
-                        <button @click="confirmShare" class="btn-join-premium w-100 py-3 fw-bold"
-                            :disabled="!shareData.key">
-                            BẮT ĐẦU CHIA SẺ
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export default {
     name: 'TrangChinhDoiTac',
     data() {
         return {
-            partnerName: 'Đối Tác',
-            avatarUrl: 'https://i.pravatar.cc/150?u=partner',
+            partnerName: 'Công ty Công nghệ Ánh Kim',
+            avatarUrl: 'https://i.pravatar.cc/150?u=admin_anhkim',
             currentTime: '',
             currentDate: '',
             timer: null,
-            meetingId: '',
-            newMeetingData: { video: true, usePMI: false },
-            scheduleData: { topic: '', date: '', time: '', duration: '30', password: '' },
-            shareData: { key: '' },
             stats: [
-                { label: 'Số Người Dùng', value: '1,284', icon: 'bx bxs-group', color: '#3b82f6' },
-                { label: 'Số Phòng Họp', value: '542', icon: 'bx bxs-video', color: '#a855f7' },
-                { label: 'Hài Lòng', value: '98%', icon: 'bx bxs-star', color: '#10b981' }
-            ],
-            upcomingMeetings: [
-                { id: 1, title: 'Họp Chiến Lược Q2', time: '10:30 AM', color: '#3b82f6' },
-                { id: 2, title: 'Review Giao Diện', time: '02:00 PM', color: '#10b981' }
+                { label: 'Nhân viên sử dụng', value: '1,284', grow: '+12%', icon: 'bx bxs-user-detail' },
+                { label: 'Tổng giờ họp tháng', value: '4,850h', icon: 'bx bxs-time-five' },
+                { label: 'Chính xác Face ID', value: '99.9%', icon: 'bx bxs-face' },
+                { label: 'Lưu trữ đối tác', value: '1.4 TB', icon: 'bx bxs-cloud' }
             ],
             weeklyData: [
-                { label: 'Thứ 2', value: 85, count: 12 },
-                { label: 'Thứ 3', value: 120, count: 18 },
-                { label: 'Thứ 4', value: 60, count: 8 },
-                { label: 'Thứ 5', value: 140, count: 22 },
-                { label: 'Thứ 6', value: 100, count: 15 },
-                { label: 'Thứ 7', value: 40, count: 5 },
-                { label: 'Chủ Nhật', value: 25, count: 2 }
+                { label: 'T2', value: 40 },
+                { label: 'T3', value: 65 },
+                { label: 'T4', value: 50 },
+                { label: 'T5', value: 85 },
+                { label: 'T6', value: 70 },
+                { label: 'T7', value: 20 },
+                { label: 'CN', value: 10 }
+            ],
+            departments: [
+                { name: 'Phòng Kỹ thuật', members: 42, code: 'KT', color: '#ea580c', status: 'active', statusLabel: 'Active' },
+                { name: 'Phòng Marketing', members: 28, code: 'MK', color: '#0ea5e9', status: 'active', statusLabel: 'Active' },
+                { name: 'Phòng Nhân sự', members: 15, code: 'NS', color: '#f59e0b', status: 'idle', statusLabel: 'Idle' }
+            ],
+            exclusiveFeatures: [
+                { 
+                    title: 'Quản trị tập trung', 
+                    icon: 'bx bx-scan', 
+                    description: 'Điều hành toàn bộ hệ thống phòng họp và tài khoản nhân viên từ một bảng điều khiển duy nhất dành riêng cho đối tác.' 
+                },
+                { 
+                    title: 'Bảo mật đa lớp AI', 
+                    icon: 'bx bx-shield-quarter', 
+                    description: 'Mã hóa đầu cuối kết hợp nhận diện sinh trắc học AI đảm bảo dữ liệu doanh nghiệp tuyệt mật ở cấp độ cao nhất.' 
+                },
+                { 
+                    title: 'Báo cáo chuyên sâu', 
+                    icon: 'bx bxs-bar-chart-square', 
+                    description: 'Phân tích hành vi, hiệu suất làm việc và mức độ tương tác thông qua dữ liệu cuộc họp AI không giới hạn lưu trữ.' 
+                }
             ]
         }
     },
@@ -420,59 +285,28 @@ export default {
     methods: {
         async fetchPartnerData() {
             try {
-                const res = await axios.get('http://localhost:8000/api/doi-tac/me', {
-                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token_doi_tac') }
+                const token = localStorage.getItem('token_doi_tac');
+                if(!token) return;
+                const res = await axios.get(`${apiUrl}/doi-tac/me`, {
+                    headers: { Authorization: 'Bearer ' + token }
                 });
                 if (res.data.status) {
-                    this.partnerName = res.data.data.ho_va_ten;
-                    this.avatarUrl = res.data.data.hinh_anh ? 'http://localhost:8000/uploads/avatars/' + res.data.data.hinh_anh : 'https://i.pravatar.cc/150?u=' + res.data.data.id;
+                    // Update dynamic info but stick to mockup defaults for now
+                    const hinh_anh = res.data.data.hinh_anh;
+                    if(hinh_anh) {
+                         const baseUrl = apiUrl.replace('/api', '');
+                         this.avatarUrl = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/uploads/avatars/${hinh_anh}`;
+                    }
                 }
             } catch (e) {
-                console.error("Lỗi lấy thông tin đối tác");
+                console.error("Error fetching partner data");
             }
         },
         updateTime() {
             const now = new Date();
-            this.currentTime = now.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit', 
-                hour12: true 
-            });
-            
+            this.currentTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
             const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-            const dayName = days[now.getDay()];
-            const dateStr = now.toLocaleDateString('vi-VN', { 
-                day: '2-digit', 
-                month: '2-digit', 
-                year: 'numeric' 
-            });
-            this.currentDate = `${dayName}, ${dateStr}`;
-        },
-        createMeeting() {
-            // This is now triggered via data-bs-toggle in template
-        },
-        startInstantMeeting() {
-            this.$toast.success("Đang khởi tạo cuộc họp tức thì...");
-            this.hideModal('newMeetingModal');
-        },
-        confirmSchedule() {
-            this.$toast.success("Đã lên lịch cuộc họp: " + this.scheduleData.topic);
-            this.hideModal('scheduleModal');
-        },
-        confirmShare() {
-            this.$toast.info("Đang chuẩn bị chia sẻ màn hình...");
-            this.hideModal('shareScreenModal');
-        },
-        confirmJoin() {
-            this.$toast.success("Đang kết nối tới phòng họp: " + this.meetingId);
-            this.hideModal('joinMeetingModal');
-            this.meetingId = '';
-        },
-        hideModal(id) {
-            const modal = document.getElementById(id);
-            const bsModal = bootstrap.Modal.getInstance(modal);
-            if (bsModal) bsModal.hide();
+            this.currentDate = `${days[now.getDay()]}, ${now.toLocaleDateString('vi-VN')}`;
         },
         logout() {
             localStorage.removeItem('token_doi_tac');
@@ -483,454 +317,349 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
 .partner-dashboard-wrapper {
-    height: 100vh;
-    background-color: #f8fafc;
+    background-color: #fff;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    color: #0f172a;
+    color: #1a1e29;
 }
 
-/* Sidebar Zoom-style */
-.sidebar-zoom {
-    width: 260px;
-    min-width: 260px;
-    flex-shrink: 0;
-    background: #ffffff;
-    border-right: 1px solid #f1f5f9;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Sidebar Business Style */
+.sidebar-business {
+    width: 320px;
+    background: #fbf9f6;
+    border-right: 1px solid #f0ece6;
     z-index: 1000;
 }
 
-.logo-section {
-    display: flex;
-    align-items: center;
-}
-
-.logo-circle {
-    width: 44px;
-    height: 44px;
-    background: #3b82f6;
+.logo-icon-business {
+    width: 48px;
+    height: 48px;
+    background: #ea580c;
     color: white;
     border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 8px 16px rgba(234, 88, 12, 0.15);
 }
 
-.nav-item {
+.nav-business-item {
     width: 100%;
-    padding: 14px 20px;
-    border: none !important;
-    outline: none !important;
+    padding: 18px 25px;
+    border: none;
     background: transparent;
-    border-radius: 16px;
-    color: #64748b;
-    font-size: 15px;
+    border-radius: 14px;
+    color: #5a5a5a;
+    font-size: 0.95rem;
     font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 16px;
-    transition: 0.2s all ease;
+    gap: 15px;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: left;
-    white-space: nowrap;
 }
 
-.nav-item i {
-    font-size: 22px;
-}
+.nav-business-item i { font-size: 1.5rem; color: #7a7a7a; }
+.nav-business-item:hover { background: rgba(234, 88, 12, 0.05); color: #ea580c; }
+.nav-business-item:hover i { color: #ea580c; }
 
-.nav-item:hover,
-.nav-item.active {
-    background: #eff6ff;
-    color: #3b82f6;
+.nav-business-item.active {
+    background: #fff;
+    color: #ea580c;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.04);
 }
+.nav-business-item.active i { color: #ea580c; }
 
+/* Header & Search */
 .content-header {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid #f1f5f9;
+    background: white;
+    border-bottom: 1px solid rgba(0,0,0,0.02);
 }
 
-.search-bar-zoom {
-    background: #f1f5f9;
-    border-radius: 100px;
-    padding: 10px 20px;
-    gap: 10px;
+.search-business {
+    background: #f3f0eb;
+    border-radius: 16px;
+    padding: 12px 25px;
+    width: 480px;
+    align-items: center;
+    gap: 12px;
+    transition: 0.3s;
 }
 
-.search-bar-zoom input {
+.search-business:focus-within {
+    background: #fff;
+    box-shadow: 0 0 0 2px #ea580c20;
+}
+
+.search-business input {
     background: transparent;
     border: none;
     outline: none;
-    font-size: 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: 100%;
+    color: #1a1e29;
 }
 
-.header-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 14px;
+.header-avatar-business {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #f0ece6;
+}
+
+.icon-btn-plain {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
+    color: #5a5a5a;
+    position: relative;
+    border-radius: 12px;
     transition: 0.2s;
 }
 
-.header-avatar:hover {
-    transform: scale(1.05);
-}
+.icon-btn-plain:hover { background: #fbf9f6; color: #1a1e29; }
 
-.welcome-banner {
-    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-}
-
-.blob {
+.dot-badge {
     position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 9px;
+    height: 9px;
+    background: #ea580c;
     border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.3;
+    border: 2.5px solid white;
 }
 
-.blob-1 {
-    width: 300px;
-    height: 300px;
-    background: #93c5fd;
-    top: -100px;
-    right: -50px;
+/* Metric Cards */
+.metric-card-business {
+    background: #fbf9f6;
+    border: 1px solid #f0ece6 !important;
+    padding: 30px !important;
+    transition: 0.4s;
 }
 
-.blob-2 {
-    width: 250px;
-    height: 250px;
-    background: #60a5fa;
-    bottom: -50px;
-    left: -50px;
-}
-
-.quick-card {
+.metric-card-business:hover {
     background: white;
-    padding: 35px 20px;
-    border-radius: 35px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    border: 1.5px solid transparent;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.06);
+    transform: translateY(-8px);
+    border-color: #fee7d1 !important;
 }
 
-.quick-card:hover {
-    border-color: #3b82f6;
-    transform: translateY(-10px);
-}
-
-.action-icon-bg {
-    width: 64px;
-    height: 64px;
-    border-radius: 22px;
-    margin: 0 auto;
+.metric-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 32px;
-    color: white;
+    font-size: 1.6rem;
 }
 
-.action-orange .action-icon-bg {
-    background: #f59e0b;
-    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
-}
+.bg-soft-orange { background: #fee7d1; }
+.text-orange { color: #ea580c; }
 
-.action-blue .action-icon-bg {
-    background: #3b82f6;
-    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
-}
-
-.glass-section {
+.verified-badge-business {
+    width: 26px;
+    height: 26px;
     background: white;
-    border-radius: 35px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+    color: #10b981;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    box-shadow: 0 2px 5px rgba(16, 185, 129, 0.2);
 }
 
-.stat-box {
-    background: #f8fafc;
-    border: 1px solid #f1f5f9;
+.progress-premium-business {
+    background: #e9e5e0;
+    height: 6px;
+    border-radius: 100px;
+    overflow: hidden;
 }
 
-.small-icon {
-    width: 38px;
-    height: 38px;
+.progress-bar-business {
+    background: linear-gradient(to right, #ea580c, #fdba74);
+    height: 100%;
+    border-radius: 100px;
+}
+
+/* Sections */
+.glass-section-business {
+    background: #fbf9f6;
+    border: 1px solid #f0ece6 !important;
+}
+
+.btn-sm-pill {
+    padding: 8px 20px;
+    border-radius: 100px;
+    border: none;
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: #7a7a7a;
+    background: transparent;
+    transition: 0.3s;
+}
+
+.btn-sm-pill.active {
+    background: #fee7d1;
+    color: #ea580c;
+}
+
+/* Chart Visualizer */
+.activity-visualizer-premium {
+    display: flex;
+    gap: 15px;
+    height: 320px;
+}
+
+.chart-labels-y {
+    padding-bottom: 55px; /* Adjust for bar labels height */
+}
+
+.chart-bars-area {
+    padding-bottom: 25px;
+}
+
+.bar-business {
+    width: 60px;
+    background: #fff;
     border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: 0.4s;
+    border: 1px solid #f0ece6;
 }
 
-.shadow-primary {
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+.bar-glow {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 10px; /* Base height */
+    background: #ea580c;
+    border-radius: 11px;
+    transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 4px 15px rgba(234, 88, 12, 0.1);
 }
 
-.shadow-glow {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+.chart-bar-col:hover .bar-glow {
+    box-shadow: 0 10px 25px rgba(234, 88, 12, 0.25);
 }
 
-/* Zen Modal Theme */
-.zen-modal {
-    background: #ffffff;
-    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.25);
+.bar-label-business {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #5a5a5a;
+    letter-spacing: 0.5px;
 }
 
-.modal-icon-header {
+/* Dept List */
+.dept-item-business {
+    padding: 12px;
+    border-radius: 18px;
+    transition: 0.3s;
+}
+.dept-item-business:hover { background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.02); }
+
+.dept-icon-mini {
     width: 48px;
     height: 48px;
     border-radius: 14px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 24px;
+    font-weight: 900;
+    font-size: 0.85rem;
 }
 
-.bg-primary-soft {
-    background: #eff6ff;
+.status-pill-business {
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.3px;
 }
 
-.bg-orange-soft {
-    background: #fff7ed;
-}
+.status-pill-business.active { background: #dcfce7; color: #166534; }
+.status-pill-business.idle { background: #fef3c7; color: #92400e; }
+.status-pill-business .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 
-.bg-blue-soft {
-    background: #eff6ff;
-}
-
-.text-orange {
-    color: #f59e0b;
-}
-
-.fw-800 {
-    font-weight: 800;
-}
-
-.fw-700 {
-    font-weight: 700;
-}
-
-.fw-600 {
-    font-weight: 600;
-}
-
-.btn-close-custom {
-    background: #f1f5f9;
+.btn-manage-dept {
+    background: #f1ede8;
     border: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.btn-manage-dept:hover { background: #e9e5e0; transform: translateY(-2px); }
+
+/* Feature Cards */
+.feature-card-business {
+    background: #fbf9f6;
+    border: 1px solid #f0ece6 !important;
+    transition: 0.4s;
+}
+
+.feature-card-business:hover {
+    background: white;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.07);
+    transform: translateY(-10px);
+}
+
+.feature-icon-bg {
+    width: 64px;
+    height: 64px;
+    background: white;
+    border-radius: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #64748b;
-    transition: 0.2s;
+    font-size: 2rem;
+    color: #ea580c;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.03);
 }
 
-.btn-close-custom:hover {
-    background: #e2e8f0;
-    color: #0f172a;
+.premium-badge-pill {
+    background: #fee7d1;
+    color: #ea580c;
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-weight: 900;
+    font-size: 0.7rem;
+    letter-spacing: 1.2px;
 }
 
-.input-group-premium {
-    position: relative;
-    display: flex;
-    align-items: center;
+/* Side Info section */
+.greeting-section h2 { font-size: 2.2rem; }
+
+/* Buttons pro */
+.btn-orange-pro { background: #ea580c; color: #fff !important; }
+.btn-light-orange-pro { background: #fbf9f6; color: #ea580c; border: 1.5px solid #f0ece6 !important; }
+.shadow-orange { box-shadow: 0 12px 30px rgba(234, 88, 12, 0.25); }
+.btn-text-orange { border: none; background: transparent; color: #ea580c; padding: 0; transition: 0.2s;}
+.btn-text-orange:hover { filter: brightness(1.2); text-decoration: underline; }
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.input-icon {
-    position: absolute;
-    left: 20px;
-    color: #94a3b8;
-    font-size: 20px;
-}
+.metric-card-business { animation: fadeIn 0.8s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.input-field {
-    width: 100%;
-    padding: 18px 20px 18px 55px;
-    background: #f8fafc;
-    border: 2px solid #f1f5f9;
-    border-radius: 20px;
-    outline: none;
-    transition: 0.3s;
-    font-weight: 500;
-}
-
-.input-field:focus {
-    background: white;
-    border-color: #3b82f6;
-    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.05);
-}
-
-.bg-light-soft {
-    background: #f8fafc;
-}
-
-.custom-switch {
-    width: 3rem !important;
-    height: 1.5rem !important;
-    cursor: pointer;
-}
-
-.btn-join-premium {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: white;
-    border: none;
-    border-radius: 20px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 15px 30px -5px rgba(59, 130, 246, 0.4);
-}
-
-.btn-join-premium:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 40px -5px rgba(59, 130, 246, 0.5);
-}
-
-.btn-join-premium:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background: #94a3b8;
-    box-shadow: none;
-}
-
-.btn-orange-premium {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 15px;
-    font-weight: 700;
-    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
-    transition: 0.3s;
-}
-
-.btn-orange-premium:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(245, 158, 11, 0.4);
-}
-
-.input-field-simple {
-    width: 100%;
-    padding: 12px 18px;
-    background: #f8fafc;
-    border: 2px solid #f1f5f9;
-    border-radius: 14px;
-    outline: none;
-    transition: 0.2s;
-}
-
-.input-field-simple:focus {
-    border-color: #3b82f6;
-    background: white;
-}
-
-.shadow-2xl {
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-}
-
-.modal-content {
-    background: white !important;
-}
-
-.bg-light {
-    background-color: #f1f5f9 !important;
-}
-
-@media (max-width: 1200px) {
-    .sidebar-zoom {
-        width: 220px;
-    }
-
-    .nav-item span {
-        font-size: 14px;
-        gap: 10px;
-    }
-}
-
-@media (max-width: 992px) {
-    .sidebar-zoom {
-        width: 80px;
-    }
-
-    .nav-item span,
-    .logo-section span {
-        display: none;
-    }
-
-    .nav-item {
-        justify-content: center;
-        padding: 12px 0;
-    }
-
-    .logo-section {
-        justify-content: center;
-        padding: 0;
-    }
-}
-
-/* Weekly Chart Styles */
-.chart-wrapper {
-    height: 180px;
-    padding-top: 20px;
-    border-bottom: 2px solid #f1f5f9;
-}
-
-.chart-bar-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-}
-
-.chart-bar {
-    width: 32px;
-    border-radius: 10px 10px 0 0;
-    position: relative;
-    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    cursor: pointer;
-}
-
-.chart-bar:hover {
-    filter: brightness(1.1);
-    transform: scaleX(1.1);
-}
-
-.bar-tooltip {
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background: #1e293b;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 700;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.3s;
-    z-index: 10;
-}
-
-.chart-bar:hover .bar-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-}
-
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.day-label {
-    font-size: 10px;
-    letter-spacing: 0.5px;
-}
+/* Utilities */
+.fw-900 { font-weight: 900; }
+.fw-800 { font-weight: 800; }
+.tracking-tighter { letter-spacing: -1.2px; }
 </style>

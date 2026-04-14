@@ -1,176 +1,197 @@
 <template>
-    <div class="partner-dashboard-wrapper">
+    <div class="partner-dashboard-wrapper h-100">
         <div class="main-layout d-flex h-100">
-            <!-- Sidebar -->
-            <aside class="sidebar-zoom d-flex flex-column py-4">
+            <!-- Sidebar (AI-Meet Business Branding) -->
+            <aside class="sidebar-business d-flex flex-column py-5 shadow-sm">
                 <div class="logo-section px-4 mb-5">
-                    <div class="logo-circle shadow-glow">
-                        <img src="../../../assets/images/logo.pnj.png" alt="" style="height: 50px; width: 50px;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="logo-icon-business">
+                            <i class="bx bxs-component fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-800 text-dark tracking-tighter">AI-Meet Business</h5>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 1.5px;">Đối tác cao cấp</small>
+                        </div>
                     </div>
-                    <h5 class="ms-3 fw-800 fs-5 text-primary"><b>Đối Tác</b></h5>
                 </div>
 
-                <div class="nav-links d-flex flex-column gap-2 px-3 flex-grow-1">
-                    <button @click="$router.push('/doi-tac/trang-chinh')" class="nav-item">
-                        <i class="bx bx-home-alt-2"></i>
-                        <span>Trang chủ</span>
+                <div class="nav-links d-flex flex-column gap-3 px-3 flex-grow-1 mt-3">
+                    <button @click="$router.push('/doi-tac/trang-chinh')" class="nav-business-item">
+                        <i class="bx bxs-dashboard"></i>
+                        <span>Tổng quan</span>
                     </button>
-                    <button @click="$router.push('/doi-tac/phong-hop')" class="nav-item">
-                        <i class="bx bx-video"></i>
-                        <span>Phòng họp</span>
+                    <button @click="$router.push('/doi-tac/phong-hop')" class="nav-business-item">
+                        <i class="bx bxs-video"></i>
+                        <span>Tham gia cuộc họp</span>
                     </button>
-                    <button class="nav-item active">
-                        <i class="bx bx-user-circle"></i>
-                        <span>Hồ sơ</span>
+                    <button class="nav-business-item">
+                        <i class="bx bxs-bar-chart-alt-2"></i>
+                        <span>Báo cáo</span>
                     </button>
-                    <button class="nav-item">
-                        <i class="bx bx-history"></i>
-                        <span>Lịch sử</span>
+                    <button class="nav-business-item active">
+                        <i class="bx bxs-cog"></i>
+                        <span>Cài đặt</span>
                     </button>
                 </div>
 
-                <div class="px-3 mt-auto">
-                    <button @click="logout" class="nav-item text-danger border-0 w-100 justify-content-start">
-                        <i class="bx bx-log-out"></i>
+                <div class="px-3 mt-auto pt-5 border-top border-light">
+                    <button class="nav-business-item mb-2 border-0 bg-transparent w-100">
+                        <i class="bx bx-help-circle"></i>
+                        <span>Hỗ trợ</span>
+                    </button>
+                    <button @click="logout" class="nav-business-item text-danger border-0 bg-transparent w-100">
+                        <i class="bx bx-log-out-circle"></i>
                         <span>Đăng xuất</span>
                     </button>
                 </div>
             </aside>
 
             <!-- Main Content Area -->
-            <main class="flex-grow-1 p-0 overflow-auto">
-                <div class="partner-profile-wrapper p-4 p-xl-5">
-                    <div class="container-fluid">
-                        <div class="row g-4">
-                            <!-- Left: Profile Summary & Face ID -->
-                            <div class="col-lg-4">
-                                <div class="glass-card text-center p-5 rounded-5 border-0 shadow-sm mb-4">
-                                    <div class="avatar-edit-wrapper position-relative d-inline-block mb-4">
-                                        <img :src="avatarPreview" alt="Avatar" class="profile-avatar shadow-lg">
-                                        <label for="avatar-input" class="edit-btn shadow-sm">
-                                            <i class="bx bxs-camera"></i>
-                                            <input type="file" id="avatar-input" hidden @change="handleAvatarChange">
-                                        </label>
-                                    </div>
-                                    <h3 class="fw-bold mb-1">{{ doi_tac.ho_va_ten }}</h3>
-                                    <p class="text-primary fw-semibold mb-4">Đối Tác Cấp Cao</p>
+            <main class="flex-grow-1 p-0 overflow-auto bg-white">
+                <header class="content-header px-5 py-4 d-flex justify-content-between align-items-center">
+                    <div class="welcome-text">
+                        <h4 class="mb-0 fw-800 text-dark">Hồ sơ đối tác</h4>
+                        <p class="mb-0 text-muted small fw-500">Thiết lập bảo mật và quản trị tài khoản doanh nghiệp</p>
+                    </div>
+                    <div class="header-actions">
+                        <button @click="$router.push('/doi-tac/trang-chinh')" class="btn btn-light-orange-pro px-4 py-2 fw-800 rounded-4 border-0">
+                            <i class="bx bx-left-arrow-alt me-2"></i> Quay lại Dashboard
+                        </button>
+                    </div>
+                </header>
 
-                                    <div
-                                        class="profile-stats d-flex justify-content-center gap-4 py-3 border-top border-bottom border-light">
-                                        <div class="stat-mini text-center">
-                                            <span class="d-block fw-bold fs-5">24</span>
-                                            <small class="text-muted">Cuộc họp</small>
-                                        </div>
-                                        <div class="stat-mini border-start ps-4 text-center">
-                                            <span class="d-block fw-bold fs-5">Active</span>
-                                            <small class="text-muted">Trạng thái</small>
-                                        </div>
-                                    </div>
+                <div class="p-5 pt-4">
+                    <div class="row g-5">
+                        <!-- Left Column: Avatar & Face ID -->
+                        <div class="col-xl-4">
+                            <!-- Avatar Card -->
+                            <div class="metric-card-business p-5 rounded-5 border-0 text-center mb-5">
+                                <div class="avatar-business-container position-relative mb-4 mx-auto">
+                                    <img :src="avatarPreview" alt="Avatar" class="avatar-business-main shadow-lg">
+                                    <label for="avatar-input" class="btn-avatar-edit-business shadow-orange">
+                                        <i class="bx bxs-camera-plus"></i>
+                                        <input type="file" id="avatar-input" hidden @change="handleAvatarChange">
+                                    </label>
                                 </div>
-
-                                <!-- Face ID Verification Card -->
-                                <div class="glass-card p-4 rounded-5 border-0 shadow-sm face-id-card overflow-hidden">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h6 class="fw-bold mb-0">Xác thực Face ID</h6>
-                                        <span v-if="doi_tac.du_lieu_khuon_mat"
-                                            class="badge bg-success-soft text-success rounded-pill px-3">Đã xác
-                                            thực</span>
-                                        <span v-else class="badge bg-warning-soft text-warning rounded-pill px-3">Chưa
-                                            xác thực</span>
+                                <h4 class="fw-900 text-dark mb-1">{{ doi_tac.ho_va_ten }}</h4>
+                                <p class="text-orange fw-800 small text-uppercase mb-4">Quản trị viên Hệ thống</p>
+                                
+                                <div class="d-flex justify-content-center gap-4 py-4 border-top border-light">
+                                    <div class="text-center px-3">
+                                        <h5 class="mb-0 fw-900">PREMIUM</h5>
+                                        <small class="text-muted fw-bold">Cấp độ</small>
                                     </div>
-
-                                    <div v-if="!isScanning"
-                                        class="face-preview-placeholder d-flex flex-column align-items-center justify-content-center py-5 bg-light rounded-4 border border-dashed text-muted">
-                                        <i class="bx bx-face fs-1 mb-2 opacity-50"></i>
-                                        <p class="small mb-0">Nhấn để bắt đầu quét khuôn mặt</p>
+                                    <div class="text-center border-start border-light ps-4 px-3">
+                                        <h5 class="mb-0 fw-900 text-success">ACTIVE</h5>
+                                        <small class="text-muted fw-bold">Trạng thái</small>
                                     </div>
-
-                                    <div v-else class="face-scanner-container bg-dark rounded-4 position-relative">
-                                        <video ref="video" autoplay playsinline class="face-video-feed"></video>
-                                        <div class="scan-overlay">
-                                            <div class="scan-radar shadow-glow-blue"></div>
-                                            <div class="scan-line"></div>
-                                        </div>
-                                        <div class="scan-status text-white text-center p-3">
-                                            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
-                                            {{ scanMessage }}
-                                        </div>
-                                    </div>
-
-                                    <button @click="toggleScanning" class="btn w-100 mt-4 rounded-pill py-3 fw-bold"
-                                        :class="isScanning ? 'btn-danger' : 'btn-primary shadow-primary'">
-                                        {{ isScanning ? 'Hủy quét' : (doi_tac.du_lieu_khuon_mat ? 'Quét lại Face ID' :
-                                            'Bắt đầu quét Face ID') }}
-                                    </button>
                                 </div>
                             </div>
 
-                            <!-- Right: Edit Forms -->
-                            <div class="col-lg-8">
-                                <!-- Info Section -->
-                                <div class="glass-card p-4 p-xl-5 rounded-5 border-0 shadow-sm mb-4">
-                                    <h5 class="fw-bold mb-4 d-flex align-items-center">
-                                        <i class="bx bx-user-pin fs-3 me-2 text-primary"></i> Thông tin cá nhân
-                                    </h5>
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label small fw-bold">Họ và tên</label>
-                                            <input v-model="doi_tac.ho_va_ten" type="text"
-                                                class="form-control rounded-4 p-3 bg-light border-0">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label small fw-bold">Số điện thoại</label>
-                                            <input v-model="doi_tac.so_dien_thoai" type="text"
-                                                class="form-control rounded-4 p-3 bg-light border-0">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label class="form-label small fw-bold">Email (Mã định danh)</label>
-                                            <input v-model="doi_tac.email" type="email"
-                                                class="form-control rounded-4 p-3 bg-light border-0" readonly>
-                                        </div>
-                                        <div class="col-12 mt-4">
-                                            <button @click="updateProfile"
-                                                class="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-primary"
-                                                :disabled="isLoading">
-                                                <span v-if="!isLoading">Cập Nhật Thông Tin</span>
-                                                <span v-else class="spinner-border spinner-border-sm"></span>
-                                            </button>
-                                        </div>
+                            <!-- Face ID Calibration -->
+                            <div class="metric-card-business p-5 rounded-5 border-0 overflow-hidden">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="fw-800 text-dark mb-0">Xác thực Face ID</h5>
+                                    <div v-if="doi_tac.du_lieu_khuon_mat" class="status-pill-business active">
+                                        <span class="dot"></span> Đã kích hoạt
+                                    </div>
+                                    <div v-else class="status-pill-business idle">
+                                        <span class="dot"></span> Chưa thiết lập
                                     </div>
                                 </div>
 
-                                <!-- Password Section -->
-                                <div class="glass-card p-4 p-xl-5 rounded-5 border-0 shadow-sm">
-                                    <h5 class="fw-bold mb-4 d-flex align-items-center">
-                                        <i class="bx bx-lock-open-alt fs-3 me-2 text-primary"></i> Thay đổi mật khẩu
-                                    </h5>
-                                    <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <label class="form-label small fw-bold">Mật khẩu cũ</label>
-                                            <input v-model="passwordData.old_password" type="password"
-                                                class="form-control rounded-4 p-3 bg-light border-0"
-                                                placeholder="••••••••">
+                                <div class="face-preview-business rounded-4 overflow-hidden position-relative mb-4">
+                                    <template v-if="!isScanning">
+                                        <div class="d-flex flex-column align-items-center justify-content-center h-100 bg-dark text-white p-5 text-center">
+                                            <i class="bx bx-shield-quarter fs-1 mb-3 text-orange opacity-50"></i>
+                                            <p class="small fw-bold mb-0 text-white-50">Khuôn mặt là chìa khóa truy cập bảo mật của bạn.</p>
                                         </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label small fw-bold">Mật khẩu mới</label>
-                                            <input v-model="passwordData.new_password" type="password"
-                                                class="form-control rounded-4 p-3 bg-light border-0"
-                                                placeholder="••••••••">
+                                    </template>
+                                    <template v-else>
+                                        <video ref="video" autoplay playsinline class="video-feed-business"></video>
+                                        <div class="scanner-layer-business">
+                                            <div class="scanner-circle-business"></div>
+                                            <div class="scanner-beam-business"></div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label small fw-bold">Xác nhận</label>
-                                            <input v-model="passwordData.confirm_password" type="password"
-                                                class="form-control rounded-4 p-3 bg-light border-0"
-                                                placeholder="••••••••">
+                                        <div class="scanner-status-business text-white">
+                                            <div class="spinner-grow spinner-grow-sm text-orange me-2" role="status"></div>
+                                            <span class="small fw-800 text-uppercase letter-spacing-1">{{ scanMessage }}</span>
                                         </div>
-                                        <div class="col-12 mt-4">
-                                            <button @click="changePassword"
-                                                class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-dark"
-                                                :disabled="isPasswordLoading">
-                                                <span v-if="!isPasswordLoading">Đổi Mật Khẩu</span>
-                                                <span v-else class="spinner-border spinner-border-sm"></span>
-                                            </button>
+                                    </template>
+                                </div>
+
+                                <button @click="toggleScanning" class="btn w-100 py-3 rounded-4 fw-800 shadow-orange"
+                                    :class="isScanning ? 'btn-danger text-white' : 'btn-orange-pro text-white'">
+                                    <i v-if="!isScanning" class="bx bx-scan me-2"></i>
+                                    {{ isScanning ? 'Hủy thiết lập' : (doi_tac.du_lieu_khuon_mat ? 'Thiết lập lại Face ID' : 'Bắt đầu thiết lập') }}
+                                </button>
+                                <p class="text-center text-muted small mt-4 mb-0 fw-500">Dữ liệu được mã hóa chuẩn biometrics</p>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Forms -->
+                        <div class="col-xl-8">
+                            <!-- Info Form -->
+                            <div class="metric-card-business p-5 rounded-5 border-0 mb-5">
+                                <div class="d-flex align-items-center justify-content-between mb-5">
+                                    <h4 class="fw-900 text-dark mb-0">Thông tin cơ bản</h4>
+                                    <div class="feature-icon-bg-mini"><i class="bx bxs-user-pin"></i></div>
+                                </div>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label class="fw-800 small text-muted mb-2">Họ và tên hiển thị</label>
+                                        <div class="input-premium-group">
+                                            <i class="bx bx-user"></i>
+                                            <input v-model="doi_tac.ho_va_ten" type="text" placeholder="Nhập họ và tên...">
                                         </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="fw-800 small text-muted mb-2">Điện thoại liên lạc</label>
+                                        <div class="input-premium-group">
+                                            <i class="bx bx-phone"></i>
+                                            <input v-model="doi_tac.so_dien_thoai" type="text" placeholder="Số điện thoại...">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="fw-800 small text-muted mb-2">Email Doanh nghiệp (Cố định)</label>
+                                        <div class="input-premium-group bg-light-faint">
+                                            <i class="bx bx-envelope"></i>
+                                            <input v-model="doi_tac.email" type="email" readonly class="text-muted">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-5">
+                                        <button @click="updateProfile" class="btn btn-orange-pro py-3 px-5 rounded-4 fw-800 text-white shadow-orange" :disabled="isLoading">
+                                            <span v-if="!isLoading">Lưu thay đổi hồ sơ</span>
+                                            <div v-else class="spinner-border spinner-border-sm"></div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Security Form -->
+                            <div class="metric-card-business p-5 rounded-5 border-0">
+                                <div class="d-flex align-items-center justify-content-between mb-5">
+                                    <h4 class="fw-900 text-dark mb-0">Quản lý bảo mật</h4>
+                                    <div class="feature-icon-bg-mini"><i class="bx bxs-lock-alt"></i></div>
+                                </div>
+                                <div class="row g-4">
+                                    <div class="col-md-4">
+                                        <label class="fw-800 small text-muted mb-2">Mật khẩu hiện tại</label>
+                                        <input v-model="passwordData.old_password" type="password" class="form-business-input" placeholder="••••••••">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="fw-800 small text-muted mb-2">Mật khẩu mới</label>
+                                        <input v-model="passwordData.new_password" type="password" class="form-business-input" placeholder="••••••••">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="fw-800 small text-muted mb-2">Xác nhận mật khẩu</label>
+                                        <input v-model="passwordData.confirm_password" type="password" class="form-business-input" placeholder="••••••••">
+                                    </div>
+                                    <div class="col-12 mt-5">
+                                        <button @click="changePassword" class="btn btn-light-orange-pro py-3 px-5 rounded-4 fw-800 border-0" :disabled="isPasswordLoading">
+                                            <span v-if="!isPasswordLoading">Cập nhật mật khẩu mới</span>
+                                            <div v-else class="spinner-border spinner-border-sm"></div>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -185,6 +206,7 @@
 <script>
 import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
+
 export default {
     name: 'PartnerProfile',
     data() {
@@ -194,15 +216,14 @@ export default {
                 so_dien_thoai: '',
                 email: '',
                 hinh_anh: '',
-                du_lieu_khuon_mat: null,
-                id_doi_tac: null
+                du_lieu_khuon_mat: null
             },
             passwordData: {
                 old_password: '',
                 new_password: '',
                 confirm_password: ''
             },
-            avatarPreview: 'https://i.pravatar.cc/300?u=partner',
+            avatarPreview: 'https://i.pravatar.cc/300?u=partner_anhkim',
             isLoading: false,
             isPasswordLoading: false,
             isScanning: false,
@@ -219,9 +240,9 @@ export default {
     methods: {
         async fetchProfile() {
             try {
-                const token = localStorage.getItem('token_doi_tac') || localStorage.getItem('token_nguoi_dung');
+                const token = localStorage.getItem('token_doi_tac');
                 if (!token) {
-                    this.$toast.error("Vui lòng đăng nhập để xem hồ sơ.");
+                    this.$toast.error("Vui lòng đăng nhập lại.");
                     this.$router.push('/nguoi-dung/dang-nhap');
                     return;
                 }
@@ -233,39 +254,29 @@ export default {
                     const hinh_anh = this.doi_tac.hinh_anh;
                     if (hinh_anh) {
                         const baseUrl = apiUrl.replace('/api', '');
-                        if (hinh_anh.startsWith('http')) {
-                            this.avatarPreview = hinh_anh;
-                        } else if (hinh_anh.startsWith('uploads/')) {
-                            this.avatarPreview = `${baseUrl}/` + hinh_anh;
-                        } else {
-                            this.avatarPreview = `${baseUrl}/uploads/avatars/` + hinh_anh;
-                        }
+                        this.avatarPreview = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/uploads/avatars/${hinh_anh}`;
                     }
                 }
             } catch (e) {
-                console.error("Profile Load Error:", e);
-                const msg = e.response?.data?.message || "Không thể tải thông tin hồ sơ.";
-                if (e.response?.status === 401) {
-                    this.$router.push('/nguoi-dung/dang-nhap');
-                }
-                this.$toast.error(msg);
+                this.$toast.error("Lỗi tải thông tin đối tác.");
+                if (e.response?.status === 401) this.$router.push('/nguoi-dung/dang-nhap');
             }
         },
+
         async toggleScanning() {
             if (this.isScanning) {
                 this.stopCamera();
                 this.isScanning = false;
             } else {
                 this.isScanning = true;
-                this.scanMessage = "Đang quét khuôn mặt...";
+                this.scanMessage = "Vui lòng nhìn thẳng...";
                 try {
                     this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                    this.$nextTick(() => {
-                        this.$refs.video.srcObject = this.stream;
-                    });
+                    this.$nextTick(() => { this.$refs.video.srcObject = this.stream; });
 
-                    setTimeout(() => { this.scanMessage = "Nhận diện đặc điểm..."; }, 1500);
-                    setTimeout(() => { this.scanMessage = "Đang mã hóa dữ liệu biometrics..."; }, 3000);
+                    // Simulation of scanning process
+                    setTimeout(() => { this.scanMessage = "Đang nhận diện sinh trắc..."; }, 1500);
+                    setTimeout(() => { this.scanMessage = "Đang mã hóa FaceID..."; }, 3500);
                     setTimeout(async () => {
                         await this.saveFaceData();
                         this.stopCamera();
@@ -273,94 +284,93 @@ export default {
                     }, 5000);
 
                 } catch (e) {
-                    this.$toast.error("Không thể truy cập camera. Vui lòng cấp quyền.");
+                    this.$toast.error("Không thể bật camera!");
                     this.isScanning = false;
                 }
             }
         },
+
         async saveFaceData() {
             try {
-                const fakeFaceHash = "FACE_ID_" + Math.random().toString(36).substring(7).toUpperCase();
-                const token = localStorage.getItem('token_doi_tac') || localStorage.getItem('token_nguoi_dung');
-                const res = await axios.post(`${apiUrl}/doi-tac/profile/update-face-data`,
-                    { face_data: fakeFaceHash },
+                const fakeHash = "FACE_" + Math.random().toString(36).substring(7).toUpperCase();
+                const token = localStorage.getItem('token_doi_tac');
+                const res = await axios.post(`${apiUrl}/doi-tac/profile/update-face-data`, 
+                    { face_data: fakeHash }, 
                     { headers: { Authorization: 'Bearer ' + token } }
                 );
                 if (res.data.status) {
-                    this.$toast.success("Xác thực Face ID thành công!");
-                    this.doi_tac.du_lieu_khuon_mat = fakeFaceHash;
+                    this.$toast.success("Đã đồng bộ vân mặt bảo mật!");
+                    this.doi_tac.du_lieu_khuon_mat = fakeHash;
                 }
             } catch (e) {
-                this.$toast.error("Lỗi khi lưu dữ liệu khuôn mặt.");
+                this.$toast.error("Lỗi đồng bộ sinh trắc học.");
             }
         },
+
         stopCamera() {
             if (this.stream) {
-                this.stream.getTracks().forEach(track => track.stop());
+                this.stream.getTracks().forEach(t => t.stop());
                 this.stream = null;
             }
         },
-        async handleAvatarChange(event) {
-            const file = event.target.files[0];
+
+        async handleAvatarChange(e) {
+            const file = e.target.files[0];
             if (!file) return;
 
-            const formData = new FormData();
-            formData.append('hinh_anh', file);
+            const fd = new FormData();
+            fd.append('hinh_anh', file);
 
             try {
-                const token = localStorage.getItem('token_doi_tac') || localStorage.getItem('token_nguoi_dung');
-                const res = await axios.post(`${apiUrl}/doi-tac/profile/update-avatar`, formData, {
-                    headers: { Authorization: 'Bearer ' + token }
+                const token = localStorage.getItem('token_doi_tac');
+                const res = await axios.post(`${apiUrl}/doi-tac/profile/update-avatar`, fd, {
+                    headers: { 
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: 'Bearer ' + token 
+                    }
                 });
                 if (res.data.status) {
-                    const hinh_anh = res.data.hinh_anh;
-                    const baseUrl = apiUrl.replace('/api', '');
-                    if (hinh_anh.startsWith('http')) {
-                        this.avatarPreview = hinh_anh;
-                    } else if (hinh_anh.startsWith('uploads/')) {
-                        this.avatarPreview = `${baseUrl}/` + hinh_anh;
-                    } else {
-                        this.avatarPreview = `${baseUrl}/uploads/avatars/` + hinh_anh;
-                    }
                     this.$toast.success("Đã cập nhật ảnh đại diện.");
+                    await this.fetchProfile();
                 }
             } catch (e) {
                 this.$toast.error("Lỗi khi tải ảnh lên.");
             }
         },
+
         async updateProfile() {
             this.isLoading = true;
             try {
-                const token = localStorage.getItem('token_doi_tac') || localStorage.getItem('token_nguoi_dung');
+                const token = localStorage.getItem('token_doi_tac');
                 const res = await axios.post(`${apiUrl}/doi-tac/profile/update`, this.doi_tac, {
                     headers: { Authorization: 'Bearer ' + token }
                 });
-                if (res.data.status) {
-                    this.$toast.success(res.data.message);
-                }
+                if (res.data.status) this.$toast.success("Thông tin đã được lưu!");
             } catch (e) {
-                this.$toast.error(e.response?.data?.message || "Lỗi cập nhật hồ sơ");
+                this.$toast.error("Lỗi cập nhật hồ sơ!");
             } finally {
                 this.isLoading = false;
             }
         },
+
         async changePassword() {
             this.isPasswordLoading = true;
             try {
-                const token = localStorage.getItem('token_doi_tac') || localStorage.getItem('token_nguoi_dung');
+                const token = localStorage.getItem('token_doi_tac');
                 const res = await axios.post(`${apiUrl}/doi-tac/profile/change-password`, this.passwordData, {
                     headers: { Authorization: 'Bearer ' + token }
                 });
                 if (res.data.status) {
-                    this.$toast.success(res.data.message);
+                    this.$toast.success("Thay đổi mật khẩu thành công!");
                     this.passwordData = { old_password: '', new_password: '', confirm_password: '' };
                 }
             } catch (e) {
-                this.$toast.error(e.response?.data?.message || "Lỗi đổi mật khẩu");
+                this.$toast.error(e.response?.data?.message || "Lỗi đổi mật khẩu!");
             } finally {
                 this.isPasswordLoading = false;
             }
         },
+
         logout() {
             localStorage.removeItem('token_doi_tac');
             this.$router.push('/nguoi-dung/dang-nhap');
@@ -370,196 +380,209 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
 .partner-dashboard-wrapper {
-    height: 100vh;
-    background-color: #f8fafc;
+    background-color: #fff;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    color: #0f172a;
+    color: #1a1e29;
 }
 
-.sidebar-zoom {
-    width: 260px;
-    min-width: 260px;
-    flex-shrink: 0;
-    background: #ffffff;
-    border-right: 1px solid #f1f5f9;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Sidebar Business Style (Exact match with Dashboard) */
+.sidebar-business {
+    width: 320px;
+    background: #fbf9f6;
+    border-right: 1px solid #f0ece6;
     z-index: 1000;
 }
 
-.logo-section {
-    display: flex;
-    align-items: center;
-}
-
-.logo-circle {
-    width: 44px;
-    height: 44px;
-    background: #3b82f6;
+.logo-icon-business {
+    width: 48px;
+    height: 48px;
+    background: #ea580c;
     color: white;
     border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 8px 16px rgba(234, 88, 12, 0.15);
 }
 
-.nav-item {
+.nav-business-item {
     width: 100%;
-    padding: 14px 20px;
-    border: none !important;
-    outline: none !important;
+    padding: 18px 25px;
+    border: none;
     background: transparent;
-    border-radius: 16px;
-    color: #64748b;
-    font-size: 15px;
+    border-radius: 14px;
+    color: #5a5a5a;
+    font-size: 0.95rem;
     font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 16px;
-    transition: 0.2s all ease;
+    gap: 15px;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: left;
-    white-space: nowrap;
 }
 
-.nav-item:hover,
-.nav-item.active {
-    background: #eff6ff;
-    color: #3b82f6;
-}
+.nav-business-item i { font-size: 1.5rem; color: #7a7a7a; }
+.nav-business-item:hover { background: rgba(234, 88, 12, 0.05); color: #ea580c; }
+.nav-business-item:hover i { color: #ea580c; }
 
-.partner-profile-wrapper {
-    min-height: 100vh;
-    background: #f8fafc;
+.nav-business-item.active {
+    background: #fff;
+    color: #ea580c;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.04);
 }
+.nav-business-item.active i { color: #ea580c; }
 
-.glass-card {
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}
+/* Header */
+.content-header { border-bottom: 1px solid rgba(0,0,0,0.02); }
 
-.profile-avatar {
-    width: 180px;
-    height: 180px;
-    border-radius: 60px;
+/* Avatar Section Business */
+.avatar-business-container { width: 160px; height: 160px; }
+.avatar-business-main {
+    width: 100%;
+    height: 100%;
+    border-radius: 45px;
     object-fit: cover;
-    border: 8px solid #fff;
+    border: 6px solid #fff;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
 }
-
-.edit-btn {
+.btn-avatar-edit-business {
     position: absolute;
-    bottom: 5px;
-    right: 5px;
-    background: #3b82f6;
-    color: white;
+    bottom: -5px;
+    right: -5px;
     width: 48px;
     height: 48px;
-    border-radius: 18px;
+    background: #ea580c;
+    color: white;
+    border-radius: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: 0.3s;
+    border: 3px solid #fff;
+}
+.btn-avatar-edit-business:hover { transform: scale(1.1) rotate(5deg); }
+
+/* Metric Card Style for Forms (Matching Dashboard) */
+.metric-card-business {
+    background: #fbf9f6;
+    border: 1px solid #f0ece6 !important;
+    padding: 30px !important;
+    transition: 0.4s;
 }
 
-.edit-btn:hover {
-    background: #1d4ed8;
-    transform: rotate(15deg) scale(1.1);
+/* Face ID UI Modernized */
+.face-preview-business { height: 280px; background: #1a1e29; border: 1px solid #f0ece6; }
+.video-feed-business { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+.scanner-layer-business {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
 }
-
-.bg-success-soft {
-    background: #ecfdf5;
-}
-
-.bg-warning-soft {
-    background: #fffbeb;
-}
-
-.face-scanner-container {
-    height: 240px;
-    overflow: hidden;
-    position: relative;
-    border: 2px solid #3b82f6;
-}
-
-.face-video-feed {
+.scanner-circle-business {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-}
-
-.scan-radar {
-    position: absolute;
-    width: 160px;
-    height: 160px;
-    border: 2px solid rgba(59, 130, 246, 0.6);
+    border: 2px dashed #ea580c;
     border-radius: 50%;
-    animation: pulseRadar 2s infinite;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    animation: rotateScan 10s linear infinite;
 }
-
-.scan-line {
+.scanner-beam-business {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-    top: 0;
-    animation: scanLineMove 3s linear infinite;
-    box-shadow: 0 0 15px #3b82f6;
+    background: linear-gradient(to right, transparent, #ea580c, transparent);
+    animation: scanMoveBusiness 3s ease-in-out infinite;
+    box-shadow: 0 0 15px rgba(234, 88, 12, 0.5);
+}
+.scanner-status-business {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    text-align: center;
 }
 
-@keyframes pulseRadar {
-    0% {
-        transform: translate(-50%, -50%) scale(0.8);
-        opacity: 0.8;
-    }
+@keyframes rotateScan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes scanMoveBusiness { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
 
-    100% {
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: 0;
-    }
+/* Form Elements Business */
+.input-premium-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.input-premium-group i { position: absolute; left: 20px; color: #94a3b8; font-size: 1.3rem; }
+.input-premium-group input {
+    width: 100%;
+    padding: 16px 20px 16px 55px;
+    border-radius: 18px;
+    border: 2px solid #f0ece6;
+    background: #fff;
+    outline: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.input-premium-group input:focus { border-color: #ea580c; box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.05); }
+
+.form-business-input {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 18px;
+    border: 2px solid #f0ece6;
+    background: #fff;
+    outline: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.form-business-input:focus { border-color: #ea580c; box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.05); }
+
+.status-pill-business {
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.status-pill-business.active { background: #dcfce7; color: #166534; }
+.status-pill-business.idle { background: #fef3c7; color: #92400e; }
+.status-pill-business .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+.feature-icon-bg-mini {
+    width: 44px;
+    height: 44px;
+    background: #fff;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    color: #ea580c;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
 }
 
-@keyframes scanLineMove {
-    0% {
-        top: 10%;
-    }
+/* Common Components */
+.btn-orange-pro { background: #ea580c; border: none; }
+.btn-light-orange-pro { background: #fbf9f6; color: #ea580c; border: 1.5px solid #f0ece6 !important; }
+.shadow-orange { box-shadow: 0 12px 30px rgba(234, 88, 12, 0.25); }
 
-    50% {
-        top: 90%;
-    }
+/* Utilities */
+.fw-900 { font-weight: 900; }
+.fw-800 { font-weight: 800; }
+.letter-spacing-1 { letter-spacing: 1px; }
+.bg-light-faint { background-color: #fbf9f6 !important; }
 
-    100% {
-        top: 10%;
-    }
-}
-
-.shadow-primary {
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
-}
-
-@media (max-width: 992px) {
-    .sidebar-zoom {
-        width: 80px;
-        min-width: 80px;
-    }
-
-    .nav-item span,
-    .logo-section span {
-        display: none;
-    }
-
-    .nav-item {
-        justify-content: center;
-        padding: 14px 0;
-    }
-
-    .logo-section {
-        justify-content: center;
-        padding: 0;
-    }
+@media (max-width: 1200px) {
+    .sidebar-business { width: 100px; }
+    .nav-business-item span, .logo-section { display: none; }
 }
 </style>
