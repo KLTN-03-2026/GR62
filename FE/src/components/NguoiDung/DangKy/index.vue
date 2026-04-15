@@ -1,116 +1,116 @@
 <template>
-    <div class="user-register-wrapper">
-        <!-- Background Elements -->
-        <div class="sky-container">
-            <div class="star-field"></div>
-            <div class="grid-overlay"></div>
-            <div class="aurora aurora-1"></div>
-            <div class="aurora aurora-2"></div>
-        </div>
+    <div class="auth-page">
+        <!-- Header -->
+        <header class="auth-header">
+            <div class="auth-logo">AI-Meet</div>
+            <button class="help-btn"><i class="bx bx-help-circle"></i></button>
+        </header>
 
-        <div class="register-content-container">
-            <div class="main-glass-card shadow-lg">
-                <div class="row g-0 h-100">
-                    <!-- Left: Interactive Branding -->
-                    <div
-                        class="col-lg-5 d-none d-lg-flex flex-column justify-content-center p-5 branding-panel text-white">
-                        <div class="branding-content-wrapper d-flex flex-column align-items-center gap-5">
-                            <div class="brand-top d-flex flex-column align-items-center">
-                                <div class="logo-morph">
-                                    <div class="nebula"></div>
-                                    <i class="bx bx-planet"></i>
-                                </div>
-                                <h2 class="brand-text">AI-Meet</h2>
-                            </div>
-
-                            <div class="brand-center">
-                                <h1 class="hero-title">Khởi đầu<br><span class="text-gradient">Hành trình mới</span><br>cùng
-                                    AI</h1>
-                                <p class="mt-3 opacity-75">Tham gia mạng lưới họp trực tuyến bảo mật nhất hành tinh.</p>
-                            </div>
-                        </div>
+        <div class="register-layout">
+            <!-- Left Panel: Brown branding -->
+            <div class="register-left">
+                <div class="left-content">
+                    <h1 class="left-headline">Kết nối thông minh.<br />Phát triển vượt trội.</h1>
+                    <p class="left-desc">Tham gia cộng đồng chuyên gia sử dụng AI để tối ưu hóa mạng lưới quan hệ của bạn.</p>
+                </div>
+                <div class="left-social-proof">
+                    <div class="sp-avatars">
+                        <img src="https://i.pravatar.cc/40?img=1" alt="user" />
+                        <img src="https://i.pravatar.cc/40?img=5" alt="user" />
+                        <img src="https://i.pravatar.cc/40?img=9" alt="user" />
                     </div>
+                    <span class="sp-text">Hơn 5,000 chuyên gia đã tham gia</span>
+                </div>
+            </div>
 
-                    <!-- Right: Aesthetic Register Form -->
-                    <div class="col-lg-7 form-panel">
-                        <div class="form-scrollable p-4 p-xl-5">
-                            <div class="form-header mb-4">
-                                <h3 class="welcome-text">Tạo Tài Khoản</h3>
-                                <p class="sub-text">Chỉ mất vài giây để bắt đầu trải nghiệm 4K HDR</p>
+            <!-- Right Panel: Form -->
+            <div class="register-right">
+                <div class="form-box">
+                    <h2 class="form-title">Tạo tài khoản mới</h2>
+                    <p class="form-subtitle">Bắt đầu hành trình kết nối chuyên nghiệp của bạn ngay hôm nay.</p>
+
+                    <form @submit.prevent="register" class="auth-form">
+                        <div class="field-group">
+                            <label class="field-label">HỌ VÀ TÊN</label>
+                            <div class="input-wrap">
+                                <input v-model="dang_ky.ho_va_ten" type="text" placeholder="Nguyễn Văn A" required />
+                            </div>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">SỐ ĐIỆN THOẠI</label>
+                            <div class="input-wrap">
+                                <input v-model="dang_ky.so_dien_thoai" type="text" placeholder="0123 456 789" required />
+                            </div>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">EMAIL</label>
+                            <div class="input-wrap">
+                                <input v-model="dang_ky.email" type="email" placeholder="email@example.com" required />
+                            </div>
+                        </div>
+
+                        <div class="field-row">
+                            <div class="field-group">
+                                <label class="field-label">MẬT KHẨU</label>
+                                <div class="input-wrap">
+                                    <input v-model="dang_ky.password" :type="showPass ? 'text' : 'password'" placeholder="••••••••" required />
+                                    <span class="input-icon clickable" @click="showPass = !showPass">
+                                        <i :class="showPass ? 'bx bx-show' : 'bx bx-hide'"></i>
+                                    </span>
+                                </div>
                             </div>
 
-                            <form @submit.prevent="register" class="neon-form">
-                                <div class="row g-3">
-                                    <div class="col-md-6 mb-2">
-                                        <div class="creative-input">
-                                            <label>HỌ VÀ TÊN</label>
-                                            <div class="input-glow-wrapper">
-                                                <i class="bx bx-user"></i>
-                                                <input v-model="dang_ky.ho_va_ten" type="text" placeholder="Nguyễn Văn A" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <div class="creative-input">
-                                            <label>SỐ ĐIỆN THOẠI</label>
-                                            <div class="input-glow-wrapper">
-                                                <i class="bx bx-phone"></i>
-                                                <input v-model="dang_ky.so_dien_thoai" type="text" placeholder="0123 456 789" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 mb-2">
-                                        <div class="creative-input">
-                                            <label>ĐỊA CHỈ EMAIL</label>
-                                            <div class="input-glow-wrapper">
-                                                <i class="bx bx-envelope"></i>
-                                                <input v-model="dang_ky.email" type="email" placeholder="email@example.com" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <div class="creative-input">
-                                            <label>MẬT KHẨU</label>
-                                            <div class="input-glow-wrapper">
-                                                <i class="bx bx-lock-alt"></i>
-                                                <input v-model="dang_ky.password" type="password" placeholder="••••••••" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <div class="creative-input">
-                                            <label>XÁC NHẬN</label>
-                                            <div class="input-glow-wrapper">
-                                                <i class="bx bx-shield-check"></i>
-                                                <input v-model="dang_ky.re_password" type="password" placeholder="••••••••" required>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="field-group">
+                                <label class="field-label">XÁC NHẬN MẬT KHẨU</label>
+                                <div class="input-wrap">
+                                    <input v-model="dang_ky.re_password" :type="showRePass ? 'text' : 'password'" placeholder="••••••••" required />
+                                    <span class="input-icon clickable" @click="showRePass = !showRePass">
+                                        <i :class="showRePass ? 'bx bx-show' : 'bx bx-hide'"></i>
+                                    </span>
                                 </div>
-
-                                <div class="form-check mt-3 custom-check">
-                                    <input class="form-check-input" type="checkbox" id="terms" required checked>
-                                    <label class="form-check-label text-muted small" for="terms">
-                                        Tôi đồng ý với <a href="#" class="link-glow">Điều khoản</a> & <a href="#" class="link-glow">Chính sách bảo mật</a>
-                                    </label>
-                                </div>
-
-                                <button type="submit" class="cyber-button mt-4" :disabled="isLoading">
-                                    <div class="btn-inner">
-                                        <span v-if="!isLoading">Đăng Ký Tài Khoản</span>
-                                        <span v-else class="loader"></span>
-                                        <i v-if="!isLoading" class="bx bx-plus-circle"></i>
-                                    </div>
-                                    <div class="btn-glow"></div>
-                                </button>
-                            </form>
-
-                            <p class="mt-4 text-center switch-auth">
-                                Đã có tài khoản? <router-link to="/nguoi-dung/dang-nhap">Đăng nhập</router-link>
-                            </p>
+                            </div>
                         </div>
+
+                        <div class="terms-row">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="terms" required checked />
+                                <span>Tôi đồng ý với <a href="#" class="orange-link">Điều khoản dịch vụ</a> và <a href="#" class="orange-link">Chính sách bảo mật.</a></span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn-primary" :disabled="isLoading">
+                            <span v-if="!isLoading">Đăng ký ngay <i class="bx bx-right-arrow-alt"></i></span>
+                            <span v-else class="btn-loader"></span>
+                        </button>
+                    </form>
+
+                    <p class="switch-auth">Đã có tài khoản? <router-link to="/nguoi-dung/dang-nhap">Đăng nhập</router-link></p>
+
+                    <div class="divider"><span>HOẶC ĐĂNG KÝ BẰNG</span></div>
+
+                    <div class="social-row">
+                        <button class="social-btn">
+                            <img src="https://www.google.com/favicon.ico" alt="Google" width="18" />
+                            Google
+                        </button>
+                        <button class="social-btn">
+                            <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" alt="LinkedIn" width="18" />
+                            LinkedIn
+                        </button>
                     </div>
                 </div>
+
+                <!-- Footer -->
+                <footer class="auth-footer">
+                    <span>© 2024 AI-MEET. PROFESSIONAL NETWORKING EXCELLENCE.</span>
+                    <div class="footer-links">
+                        <a href="#">ĐIỀU KHOẢN</a>
+                        <a href="#">BẢO MẬT</a>
+                        <a href="#">HỖ TRỢ</a>
+                    </div>
+                </footer>
             </div>
         </div>
     </div>
@@ -130,7 +130,9 @@ export default {
                 password: '',
                 re_password: '',
             },
-            isLoading: false
+            isLoading: false,
+            showPass: false,
+            showRePass: false,
         }
     },
     methods: {
@@ -172,276 +174,300 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-.user-register-wrapper {
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.auth-page {
     min-height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #050810;
-    font-family: 'Outfit', sans-serif;
-    position: relative;
-    overflow: hidden;
-    padding: 20px;
-}
-
-/* Sky Background Elements */
-.sky-container {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-}
-
-.star-field {
-    position: absolute;
-    inset: 0;
-    background-image: 
-        radial-gradient(1px 1px at 25px 35px, #fff, rgba(0,0,0,0)),
-        radial-gradient(1.5px 1.5px at 100px 150px, #fff, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 150px 250px, #fff, rgba(0,0,0,0));
-    background-size: 300px 300px;
-    opacity: 0.25;
-}
-
-.grid-overlay {
-    position: absolute;
-    inset: 0;
-    background-image: 
-        linear-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px);
-    background-size: 50px 50px;
-    perspective: 800px;
-    transform: perspective(500px) rotateX(35deg) scale(2);
-    transform-origin: center bottom;
-}
-
-.aurora {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.3;
-}
-
-.aurora-1 {
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, #1e3a8a 0%, transparent 60%);
-    top: -20%;
-    right: -10%;
-}
-
-.aurora-2 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, #7e22ce 0%, transparent 60%);
-    bottom: -10%;
-    left: -10%;
-}
-
-.register-content-container {
-    width: 100%;
-    max-width: 1150px;
-    z-index: 10;
-    animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes fade-in-up {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.main-glass-card {
-    background: rgba(10, 15, 30, 0.82);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 40px;
-    overflow: hidden;
-}
-
-/* Branding Panel */
-.branding-panel {
-    background: linear-gradient(165deg, rgba(37, 99, 235, 0.1) 0%, rgba(126, 34, 206, 0.1) 100%);
-    position: relative;
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    background: #FDF0EA;
+    font-family: 'Inter', sans-serif;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
 }
 
-.logo-morph {
-    width: 50px;
-    height: 50px;
-    background: #2563eb;
-    border-radius: 14px;
+/* ── Header ── */
+.auth-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    font-size: 28px;
-    position: relative;
+    padding: 18px 40px;
+}
+.auth-logo {
+    font-size: 20px;
+    font-weight: 800;
+    color: #C84B11;
+}
+.help-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Layout ── */
+.register-layout {
+    display: flex;
+    min-height: 100vh;
+    padding: 80px 40px 40px;
+    gap: 32px;
+    align-items: stretch;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ── Left Panel ── */
+.register-left {
+    width: 42%;
+    background: linear-gradient(160deg, #B84010 0%, #8B3009 100%);
+    border-radius: 24px;
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+}
+.left-headline {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+.left-desc {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+    max-width: 280px;
+}
+.left-social-proof {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.sp-avatars { display: flex; }
+.sp-avatars img {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid #B84010;
+    margin-left: -10px;
+    object-fit: cover;
+}
+.sp-avatars img:first-child { margin-left: 0; }
+.sp-text { font-size: 13px; color: rgba(255,255,255,0.8); font-weight: 500; }
+
+/* ── Right Panel ── */
+.register-right {
+    flex: 1;
+    background: white;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     overflow: hidden;
 }
-
-.logo-morph .nebula {
-    position: absolute;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle, #7e22ce 0%, transparent 50%);
-    animation: nebula-rotate 4s linear infinite;
+.form-box {
+    padding: 48px 56px 32px;
 }
-
-@keyframes nebula-rotate {
-    to { transform: rotate(360deg); }
-}
-
-.brand-text {
-    margin-top: 10px;
+.form-title {
+    font-size: 28px;
     font-weight: 800;
-    font-size: 22px;
-    color: white;
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+}
+.form-subtitle {
+    font-size: 14px;
+    color: #6B7280;
+    margin-bottom: 28px;
+    line-height: 1.6;
 }
 
-.hero-title {
-    font-size: 42px;
-    font-weight: 800;
-    line-height: 1.1;
-    font-family: 'Space Grotesk', sans-serif;
+/* ── Fields ── */
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
 }
-
-.text-gradient {
-    background: linear-gradient(90deg, #60a5fa, #c084fc, #60a5fa);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: text-pulse 4s linear infinite;
-}
-
-@keyframes text-pulse { to { background-position: 200% center; } }
-
-/* Form Panel */
-.form-panel {
-    background: rgba(5, 8, 16, 0.4);
-}
-
-.welcome-text {
-    color: white;
-    font-size: 32px;
-    font-weight: 800;
-}
-
-.sub-text {
-    color: #64748b;
-}
-
-.creative-input label {
+.field-group { margin-bottom: 16px; }
+.field-label {
     display: block;
-    color: #475569;
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 1.2px;
+    color: #9CA3AF;
+    letter-spacing: 1px;
     margin-bottom: 8px;
 }
-
-.input-glow-wrapper {
+.input-wrap {
     position: relative;
     display: flex;
     align-items: center;
 }
-
-.input-glow-wrapper i {
-    position: absolute;
-    left: 16px;
-    color: #334155;
-    font-size: 18px;
-    transition: 0.3s;
-}
-
-.input-glow-wrapper input {
+.input-wrap input {
     width: 100%;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    padding: 14px 20px 14px 48px;
-    color: white;
-    font-size: 15px;
-    transition: 0.3s;
-}
-
-.input-glow-wrapper input::placeholder {
-    color: rgba(255, 255, 255, 0.7) !important;
-}
-
-.input-glow-wrapper input:focus {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: #2563eb;
-    box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
+    background: #FDF6F2;
+    border: 1.5px solid #E8D5CC;
+    border-radius: 10px;
+    padding: 12px 44px 12px 14px;
+    font-size: 14px;
+    color: #1a1a1a;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
 }
-
-.input-glow-wrapper input:focus + i {
-    color: #2563eb;
+.input-wrap input::placeholder { color: #BBAA9A; }
+.input-wrap input:focus {
+    border-color: #C84B11;
+    box-shadow: 0 0 0 3px rgba(200, 75, 17, 0.1);
+    background: #FFFAF8;
 }
-
-.link-glow {
-    color: #60a5fa;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-/* Cyber Button */
-.cyber-button {
-    width: 100%;
-    background: #2563eb;
-    border: none;
-    border-radius: 16px;
-    position: relative;
-    cursor: pointer;
-    overflow: hidden;
-    transition: 0.3s;
-}
-
-.btn-inner {
-    padding: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    color: white;
-    font-weight: 700;
-    position: relative;
-    z-index: 2;
-}
-
-.btn-glow {
+.input-icon {
     position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transform: translateX(-100%);
-    transition: 0.5s;
+    right: 14px;
+    color: #BBAA9A;
+    font-size: 18px;
+    display: flex; align-items: center;
 }
+.input-icon.clickable { cursor: pointer; }
+.input-icon.clickable:hover { color: #C84B11; }
 
-.cyber-button:hover {
+/* ── Terms ── */
+.terms-row { margin-bottom: 20px; }
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: #6B7280;
+    cursor: pointer;
+    line-height: 1.5;
+}
+.checkbox-label input[type="checkbox"] {
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    accent-color: #C84B11;
+    cursor: pointer;
+}
+.orange-link { color: #C84B11; font-weight: 600; text-decoration: none; }
+.orange-link:hover { text-decoration: underline; }
+
+/* ── Button ── */
+.btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #C84B11 0%, #E05F20 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+.btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 10px 30px rgba(200, 75, 17, 0.35);
+}
+.btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+.btn-loader {
+    width: 20px; height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
 }
 
-.cyber-button:hover .btn-glow {
-    transform: translateX(100%);
+/* ── Switch ── */
+.switch-auth {
+    text-align: center;
+    font-size: 14px;
+    color: #6B7280;
+    margin-top: 16px;
+}
+.switch-auth a { color: #C84B11; font-weight: 700; text-decoration: none; }
+.switch-auth a:hover { text-decoration: underline; }
+
+/* ── Divider ── */
+.divider {
+    text-align: center;
+    margin: 20px 0 16px;
+    position: relative;
+}
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 1px;
+    background: #F0E4DC;
+}
+.divider span {
+    background: white;
+    position: relative;
+    padding: 0 16px;
+    font-size: 11px;
+    color: #9CA3AF;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
-.switch-auth { color: #64748b; }
-.switch-auth a { color: #60a5fa; text-decoration: none; font-weight: 700; }
-
-.loader {
-    width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite;
+/* ── Social ── */
+.social-row { display: flex; gap: 12px; }
+.social-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px;
+    background: #FDF6F2;
+    border: 1.5px solid #E8D5CC;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    font-family: 'Inter', sans-serif;
 }
+.social-btn:hover { background: #FBEde6; border-color: #C84B11; }
+
+/* ── Footer ── */
+.auth-footer {
+    padding: 16px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #F0E4DC;
+    font-size: 11px;
+    color: #9CA3AF;
+    letter-spacing: 0.5px;
+}
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { color: #9CA3AF; text-decoration: none; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+.footer-links a:hover { color: #C84B11; }
+
 @keyframes spin { to { transform: rotate(360deg); } }
 
-@media (max-width: 991px) {
-    .main-glass-card { border-radius: 20px; }
+@media (max-width: 900px) {
+    .register-layout { flex-direction: column; padding: 80px 20px 20px; }
+    .register-left { width: 100%; padding: 36px 32px; min-height: auto; }
+    .left-headline { font-size: 26px; }
+    .form-box { padding: 32px 24px; }
+    .field-row { grid-template-columns: 1fr; }
+    .auth-footer { flex-direction: column; gap: 10px; text-align: center; padding: 16px 24px; }
 }
 </style>
