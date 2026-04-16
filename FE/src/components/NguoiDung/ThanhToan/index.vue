@@ -46,6 +46,15 @@
                                         <span class="fw-500">Thuế (VAT 10%)</span>
                                         <span class="fw-700 text-dark">{{ formatMoney(vatAmount) }}</span>
                                     </div>
+                                    <hr class="my-3 opacity-10">
+                                    <div class="d-flex justify-content-between align-items-center text-secondary" v-if="user">
+                                        <span class="fw-500">Họ và tên</span>
+                                        <span class="fw-700 text-dark">{{ user.ho_va_ten }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center text-secondary" v-if="user">
+                                        <span class="fw-500">Email</span>
+                                        <span class="fw-700 text-dark">{{ user.email }}</span>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Total Section -->
@@ -70,18 +79,13 @@
                         </p>
                     </div>
                 </div>
-
                 <!-- Right Section: SePay QR -->
                 <div class="col-lg-7">
                     <div class="card border-0 rounded-5 shadow-lg p-2 bg-white main-payment-card">
                         <div class="card-body p-5">
                             <div class="d-flex justify-content-between align-items-center mb-5">
                                 <h4 class="fw-800 text-dark m-0">Chuyển khoản qua SePay</h4>
-                                <div class="sepay-badge p-2 rounded-2 border">
-                                    <img src="https://sepay.vn/logo.png" height="15" alt="SePay" class="grayscale">
-                                </div>
                             </div>
-
                             <div class="row g-4 align-items-start">
                                 <!-- QR Display -->
                                 <div class="col-md-6">
@@ -97,7 +101,6 @@
                                         </template>
                                     </div>
                                 </div>
-
                                 <!-- Bank Fields -->
                                 <div class="col-md-6 space-y-4">
                                     <div class="form-group-custom">
@@ -190,8 +193,18 @@ export default {
             status: 'pending',
             timer: null,
             isCreating: false,
-            id_goi: parseInt(this.$route.params.id_goi) || 2,
+            id_goi: 2, // Default will be overridden in created
             goiInfo: null,
+            user: null,
+        }
+    },
+    created() {
+        const userData = localStorage.getItem('thong_tin_user');
+        if (userData) {
+            this.user = JSON.parse(userData);
+        }
+        if (this.$route && this.$route.params && this.$route.params.id_goi) {
+            this.id_goi = parseInt(this.$route.params.id_goi) || 2;
         }
     },
     computed: {
@@ -230,8 +243,8 @@ export default {
                 const res = await axios.post(`${this.apiUrl}/sepay/create-order`, {
                     id_goi: this.id_goi,
                     amount: Math.round(this.totalPrice),
-                    customer_name: 'Premium Member',
-                    customer_email: 'member@example.com'
+                    customer_name: this.user ? this.user.ho_va_ten : 'Premium Member',
+                    customer_email: this.user ? this.user.email : 'member@example.com'
                 });
                 this.payment = res.data;
                 this.status = res.data.status;
@@ -252,8 +265,20 @@ export default {
                     this.status = res.data.status;
                     if (res.data.status === 'paid') {
                         clearInterval(this.timer);
+
+                        if (this.user && res.data.id_doi_tac) {
+                            this.user.id_doi_tac = res.data.id_doi_tac;
+                            localStorage.setItem('thong_tin_user', JSON.stringify(this.user));
+                            const token = localStorage.getItem('token_nguoi_dung');
+                            if (token) {
+                                localStorage.setItem('token_doi_tac', token);
+                            }
+                        }
+
                         if (this.$toast) this.$toast.success("Thanh toán hoàn tất!");
-                        setTimeout(() => this.$router.push('/nguoi-dung/trang-chinh'), 2500);
+                        
+                        const redirectUrl = res.data.id_doi_tac ? '/doi-tac/trang-chinh' : '/nguoi-dung/trang-chinh';
+                        setTimeout(() => this.$router.push(redirectUrl), 2500);
                     }
                 } catch (e) { }
             }, 4000);

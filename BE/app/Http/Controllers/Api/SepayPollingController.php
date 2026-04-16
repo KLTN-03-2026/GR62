@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Goi;
+use App\Models\DoiTac;
+use App\Models\NguoiDung;
 use App\Services\SepayApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -90,42 +92,70 @@ class SepayPollingController extends Controller
                 'paid_at' => now(),
                 'payment_meta' => $transaction,
             ]);
+
+            // Cập nhật id_doi_tac cho NguoiDung từ email
+            $doiTac = DoiTac::where('email', $order->customer_email)->first();
+            if ($doiTac) {
+                $nguoiDung = NguoiDung::where('email', $order->customer_email)->first();
+                if ($nguoiDung) {
+                    $nguoiDung->id_doi_tac = $doiTac->id;
+                    $nguoiDung->save();
+                }
+            }
         }
 
         $order->refresh();
+
+        $id_doi_tac = null;
+        if ($order->status === 'paid') {
+            $user = NguoiDung::where('email', $order->customer_email)->first();
+            $id_doi_tac = $user ? $user->id_doi_tac : null;
+        }
 
         return response()->json([
             'success' => true,
             'order_code' => $order->order_code,
             'status' => $order->status,
             'paid_at' => optional($order->paid_at)->toDateTimeString(),
+            'id_doi_tac' => $id_doi_tac,
         ]);
     }
 
     private function findMatchingTransaction(Order $order, SepayApiService $sepayApi): ?array
     {
-        // Chỉ quét giao dịch từ lúc tạo đơn tới hiện tại, nới thêm 5 phút trước đó cho an toàn
+        // Chuyển múi giờ về Việt Nam (GMT+7) để khớp với hệ thống SePay
+        $createdAtVN = Carbon::parse($order->created_at)->setTimezone('Asia/Ho_Chi_Minh');
+
         $query = [
-            'amount_in' => $order->amount,
-            'transaction_date_min' => Carbon::parse($order->created_at)->subMinutes(5)->format('Y-m-d H:i:s'),
-            'transaction_date_max' => now()->format('Y-m-d H:i:s'),
-            'limit' => 100,
+            'transaction_date_min' => $createdAtVN->subMinutes(10)->format('Y-m-d H:i:s'),
+            'limit' => 50,
         ];
 
-        $data = $sepayApi->listTransactions($query);
-        $transactions = $data['transactions'] ?? [];
+        \Log::info("Checking SePay for Order {$order->order_code}", [
+            'query' => $query,
+            'order_amount' => $order->amount
+        ]);
 
-        foreach ($transactions as $tx) {
-            $amountIn = (int) round((float) ($tx['amount_in'] ?? 0));
-            $code = (string) ($tx['code'] ?? '');
-            $content = (string) ($tx['transaction_content'] ?? '');
+        try {
+            $data = $sepayApi->listTransactions($query);
+            $transactions = $data['transactions'] ?? [];
 
-            $matchedCode = $code === $order->order_code || str_contains($content, $order->order_code);
-            $matchedAmount = $amountIn === (int) $order->amount;
+            foreach ($transactions as $tx) {
+                $amountIn = (int) round((float) ($tx['amount_in'] ?? 0));
+                $content = (string) ($tx['transaction_content'] ?? '');
 
-            if ($matchedCode && $matchedAmount) {
-                return $tx;
+                // Kiểm tra mã đơn hàng trong nội dung chuyển khoản
+                $matchedCode = str_contains($content, $order->order_code);
+                // Kiểm tra số tiền (ép kiểu về int để so sánh chính xác)
+                $matchedAmount = $amountIn === (int) $order->amount;
+
+                if ($matchedCode && $matchedAmount) {
+                    \Log::info("Match found for Order {$order->order_code}", ['transaction_id' => $tx['id']]);
+                    return $tx;
+                }
             }
+        } catch (\Exception $e) {
+            \Log::error("SePay API Error during polling: " . $e->getMessage());
         }
 
         return null;

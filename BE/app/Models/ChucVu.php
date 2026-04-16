@@ -9,5 +9,6 @@ class ChucVu extends Model
     protected $fillable = [
         'ten_chuc_vu',
         'mo_ta',
+        'trang_thai',
     ];
 }

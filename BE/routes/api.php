@@ -24,11 +24,17 @@ Route::get('/sepay/status/{orderCode}', [SepayPollingController::class, 'checkSt
 
 // Admin
 Route::post('/admin/login', [AdminController::class, 'login']);
-// Route::get('/admin/data-chi-tiet/{admin}', [AdminController::class, 'show']);
-Route::get('/admin/data', [AdminController::class, 'index']);
-Route::post('/admin/create', [AdminController::class, 'store']);
-Route::post('/admin/update', [AdminController::class, 'update']);
-Route::post('/admin/delete', [AdminController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/admin/data', [AdminController::class, 'index']);
+    Route::post('/admin/create', [AdminController::class, 'store']);
+    Route::post('/admin/update', [AdminController::class, 'update']);
+    Route::post('/admin/delete', [AdminController::class, 'destroy']);
+    
+    Route::get('/admin/profile/data', [AdminController::class, 'getProfile']);
+    Route::post('/admin/profile/update', [AdminController::class, 'updateProfile']);
+    Route::post('/admin/profile/change-password', [AdminController::class, 'changePassword']);
+});
 
 // 1. Chức Vụ
 Route::get('/chuc-vu/data', [ChucVuController::class, 'index']);

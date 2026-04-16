@@ -11,5 +11,7 @@ class ChucNang extends Model
         'ma_chuc_nang',
         'url',
         'mo_ta',
+        'ten_slug',
+        'trang_thai',
     ];
 }

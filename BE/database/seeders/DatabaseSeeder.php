@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            ChucVuSeeder::class,
+            ChucNangSeeder::class,
             AdminSeeder::class,
             NguoiDungSeeder::class,
             DoiTacSeeder::class,
