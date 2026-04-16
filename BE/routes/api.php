@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/create', [AdminController::class, 'store']);
     Route::post('/admin/update', [AdminController::class, 'update']);
     Route::post('/admin/delete', [AdminController::class, 'destroy']);
-    
+
     Route::get('/admin/profile/data', [AdminController::class, 'getProfile']);
     Route::post('/admin/profile/update', [AdminController::class, 'updateProfile']);
     Route::post('/admin/profile/change-password', [AdminController::class, 'changePassword']);
@@ -144,7 +144,3 @@ Route::post('/hoa-don/create', [HoaDonController::class, 'store']);
 Route::post('/hoa-don/update', [HoaDonController::class, 'update']);
 Route::post('/hoa-don/delete', [HoaDonController::class, 'destroy']);
 Route::post('/hoa-don/tim-kiem', [HoaDonController::class, 'search']);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
