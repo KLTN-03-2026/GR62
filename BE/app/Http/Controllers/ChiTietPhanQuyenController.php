@@ -9,7 +9,6 @@ use App\Http\Requests\ChiTietPhanQuyenUpdateRequest;
 use App\Models\ChiTietPhanQuyen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\PhanQuyen;
 
 class ChiTietPhanQuyenController extends Controller
 {

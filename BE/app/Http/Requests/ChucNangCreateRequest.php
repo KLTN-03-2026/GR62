@@ -4,30 +4,21 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ChucNangUpdateRequest extends FormRequest
+class ChucNangCreateRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'id'            => 'required|integer|exists:chuc_nangs,id',
-            'ten_chuc_nang' => 'required|string|min:2|max:255',
-            'ma_chuc_nang'  => 'required|string|min:2|max:255|unique:chuc_nangs,ma_chuc_nang,' . $this->id,
+            'ten_chuc_nang' => 'required|string|max:255',
+            'ma_chuc_nang'  => 'required|string|max:255|unique:chuc_nangs,ma_chuc_nang',
             'url'           => 'nullable|string|max:255',
             'mo_ta'         => 'nullable|string|max:255',
-            'ten_slug'      => 'required|string|max:255|unique:chuc_nangs,ten_slug,' . $this->id,
+            'ten_slug'      => 'required|string|max:255|unique:chuc_nangs,ten_slug',
             'trang_thai'    => 'required|integer',
         ];
     }
@@ -35,9 +26,6 @@ class ChucNangUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'id.required'            => 'ID chức năng không được để trống',
-            'id.integer'             => 'ID chức năng phải là số nguyên',
-            'id.exists'              => 'Chức năng không tồn tại',
             'ten_chuc_nang.required' => 'Tên chức năng không được để trống',
             'ma_chuc_nang.required'  => 'Mã chức năng không được để trống',
             'ma_chuc_nang.unique'    => 'Mã chức năng đã tồn tại',

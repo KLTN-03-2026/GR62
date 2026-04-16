@@ -82,6 +82,18 @@ const routes = [
         beforeEnter: checkAdmin
     },
     {
+        path: '/admin/chuc-vu',
+        component: () => import('../components/Admin/ChucVu/index.vue'),
+        meta: { layout: 'inapp' },
+        beforeEnter: checkAdmin
+    },
+    {
+        path: '/admin/chuc-nang',
+        component: () => import('../components/Admin/ChucNang/index.vue'),
+        meta: { layout: 'inapp' },
+        beforeEnter: checkAdmin
+    },
+    {
         path: '/admin/dang-nhap',
         component: () => import('../components/Admin/DangNhap/index.vue'),
         meta: { layout: 'black' }

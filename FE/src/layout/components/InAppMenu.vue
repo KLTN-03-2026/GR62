@@ -68,7 +68,19 @@
                 </router-link>
             </li>
 
-            <li class="menu-label">Hệ Thống</li>
+            <li class="menu-label">Hệ Thống Phân Quyền</li>
+            <li>
+                <router-link to="/admin/chuc-vu">
+                    <div class="parent-icon"><i class='bx bx-user-circle'></i></div>
+                    <div class="menu-title">Chức Vụ</div>
+                </router-link>
+            </li>
+            <li>
+                <router-link to="/admin/chuc-nang">
+                    <div class="parent-icon"><i class='bx bx-code-block'></i></div>
+                    <div class="menu-title">Chức Năng</div>
+                </router-link>
+            </li>
             <li>
                 <router-link to="/admin/phan-quyen">
                     <div class="parent-icon"><i class='bx bx-shield-quarter'></i></div>

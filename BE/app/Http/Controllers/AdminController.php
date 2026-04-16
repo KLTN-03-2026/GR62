@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
-use App\Models\PhanQuyen;
+use App\Models\ChiTietPhanQuyen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,18 +14,21 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $id_chuc_nang = 1; // Assuming a specific ID for viewing admins, adjust if needed
+        $id_chuc_nang = 1; 
         $login = Auth::guard('sanctum')->user();
-        $id_chuc_vu = $login->id_chuc_vu;
-        $check_quyen = PhanQuyen::where('id_chuc_vu', $id_chuc_vu)
-            ->where('id_chuc_nang', $id_chuc_nang)
-            ->first();
-        if (!$check_quyen) {
-            return response()->json([
-                'data' => false,
-                'message' => "bạn không có quyền thực hiện chức năng này!"
-            ]);
+        
+        if (!$login->is_master) {
+            $check_quyen = ChiTietPhanQuyen::where('id_chuc_vu', $login->id_chuc_vu)
+                ->where('id_chuc_nang', $id_chuc_nang)
+                ->first();
+            if (!$check_quyen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "bạn không có quyền thực hiện chức năng này!"
+                ]);
+            }
         }
+        
         $data = Admin::all();
         return response()->json([
             'data' => $data
@@ -34,17 +37,19 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
-        $id_chuc_nang = 2; // Assuming a specific ID for creating admins, adjust if needed
+        $id_chuc_nang = 2; 
         $login = Auth::guard('sanctum')->user();
-        $id_chuc_vu = $login->id_chuc_vu;
-        $check_quyen = PhanQuyen::where('id_chuc_vu', $id_chuc_vu)
-            ->where('id_chuc_nang', $id_chuc_nang)
-            ->first();
-        if (!$check_quyen) {
-            return response()->json([
-                'data' => false,
-                'message' => "bạn không có quyền thực hiện chức năng này!"
-            ]);
+        
+        if (!$login->is_master) {
+            $check_quyen = ChiTietPhanQuyen::where('id_chuc_vu', $login->id_chuc_vu)
+                ->where('id_chuc_nang', $id_chuc_nang)
+                ->first();
+            if (!$check_quyen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "bạn không có quyền thực hiện chức năng này!"
+                ]);
+            }
         }
         $data = Admin::create([
             'id_chuc_vu' => $request->id_chuc_vu,
@@ -64,17 +69,19 @@ class AdminController extends Controller
 
     public function update(Request $request)
     {
-        $id_chuc_nang = 3; // Assuming a specific ID for updating admins, adjust if needed
+        $id_chuc_nang = 3; 
         $login = Auth::guard('sanctum')->user();
-        $id_chuc_vu = $login->id_chuc_vu;
-        $check_quyen = PhanQuyen::where('id_chuc_vu', $id_chuc_vu)
-            ->where('id_chuc_nang', $id_chuc_nang)
-            ->first();
-        if (!$check_quyen) {
-            return response()->json([
-                'data' => false,
-                'message' => "bạn không có quyền thực hiện chức năng này!"
-            ]);
+        
+        if (!$login->is_master) {
+            $check_quyen = ChiTietPhanQuyen::where('id_chuc_vu', $login->id_chuc_vu)
+                ->where('id_chuc_nang', $id_chuc_nang)
+                ->first();
+            if (!$check_quyen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "bạn không có quyền thực hiện chức năng này!"
+                ]);
+            }
         }
 
         $updateData = [
@@ -101,17 +108,19 @@ class AdminController extends Controller
 
     public function destroy(Request $request)
     {
-        $id_chuc_nang = 4; // Assuming a specific ID for deleting admins, adjust if needed
+        $id_chuc_nang = 4; 
         $login = Auth::guard('sanctum')->user();
-        $id_chuc_vu = $login->id_chuc_vu;
-        $check_quyen = PhanQuyen::where('id_chuc_vu', $id_chuc_vu)
-            ->where('id_chuc_nang', $id_chuc_nang)
-            ->first();
-        if (!$check_quyen) {
-            return response()->json([
-                'data' => false,
-                'message' => "bạn không có quyền thực hiện chức năng này!"
-            ]);
+        
+        if (!$login->is_master) {
+            $check_quyen = ChiTietPhanQuyen::where('id_chuc_vu', $login->id_chuc_vu)
+                ->where('id_chuc_nang', $id_chuc_nang)
+                ->first();
+            if (!$check_quyen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "bạn không có quyền thực hiện chức năng này!"
+                ]);
+            }
         }
         $data = Admin::where('id', $request->id)->delete();
         return response()->json([
@@ -149,6 +158,48 @@ class AdminController extends Controller
                 'admin' => $admin,
                 'token' => $token,
             ],
+        ]);
+    }
+
+    public function getProfile()
+    {
+        $admin = Auth::guard('sanctum')->user();
+        return response()->json([
+            'status' => true,
+            'data'   => $admin,
+        ]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $admin = Auth::guard('sanctum')->user();
+        $admin->update([
+            'ho_va_ten'     => $request->ho_va_ten,
+            'so_dien_thoai' => $request->so_dien_thoai,
+            'email'         => $request->email,
+        ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Cập nhật hồ sơ thành công',
+        ]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $admin = Auth::guard('sanctum')->user();
+        if (Hash::check($request->password, $admin->password)) {
+            $admin->update([
+                'password' => Hash::make($request->new_password),
+            ]);
+            return response()->json([
+                'status'  => true,
+                'message' => 'Đổi mật khẩu thành công',
+            ]);
+        }
+        return response()->json([
+            'status'  => false,
+            'message' => 'Mật khẩu cũ không chính xác',
         ]);
     }
 }
