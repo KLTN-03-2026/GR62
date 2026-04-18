@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { Room, RoomEvent, Track } from 'livekit-client';
 import { markRaw } from 'vue';
 
@@ -270,10 +271,33 @@ export default {
             }
         },
         roiPhong() {
+            // Lấy thông tin user và ID phòng
+            const user = JSON.parse(localStorage.getItem('thong_tin_user'));
+            const id_phong_that = sessionStorage.getItem('id_phong_hop');
+            const apiUrl = import.meta.env.VITE_API_URL;
+
+            // Bắn API lưu lịch sử rời phòng (chạy ngầm, không cần await để tránh chờ đợi)
+            if (user && id_phong_that) {
+                let data = {
+                    id_nguoi_dung: user.id,
+                    id_phong_hop: id_phong_that,
+                    xac_thuc_khuon_mat: 1,
+                    is_vi_pham: 0,
+                    is_nguoi_dung: 1,
+                    is_active: 0, // 0 vì đang rời đi
+                    trang_thai: 1
+                };
+
+                axios
+                    .post(`${apiUrl}/chi-tiet-phong-hop/create`, data)
+                    .catch(err => console.error("Lỗi lưu lịch sử:", err));
+            }
+            // Xử lý ngắt kết nối LiveKit và dọn dẹp
             if (this.room) {
                 this.room.disconnect();
             }
             sessionStorage.removeItem('livekit_token');
+            sessionStorage.removeItem('id_phong_hop'); // Dọn dẹp luôn ID phòng
             this.$router.push('/nguoi-dung/trang-chinh');
         }
     },

@@ -27,12 +27,6 @@ class PhongHopController extends Controller
 
     public function store(PhongHopCreateRequest $request)
     {
-        // 1. Kiểm tra dữ liệu gửi lên
-        $request->validate([
-            'ten_phong'       => 'required|string|max:255',
-            'id_chu_phong'    => 'required|integer',
-            'so_nguoi_toi_da' => 'nullable|integer|min:2',
-        ]);
 
         // 2. Tự động sinh ma_phong duy nhất (VD: xya-qwer-zxc)
         do {
@@ -186,7 +180,8 @@ class PhongHopController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Cấp quyền vào phòng thành công!',
-                'token' => $token
+                'token' => $token,
+                'id_phong_hop' => $phong->id
             ]);
         } catch (\Exception $e) {
             return response()->json([

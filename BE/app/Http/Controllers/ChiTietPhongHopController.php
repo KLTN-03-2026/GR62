@@ -11,7 +11,10 @@ class ChiTietPhongHopController extends Controller
 {
     public function index()
     {
-        $data = ChiTietPhongHop::all();
+        $data = ChiTietPhongHop::join('phong_hops', 'chi_tiet_phong_hops.id_phong_hop', '=', 'phong_hops.id')
+            ->join('nguoi_dungs', 'chi_tiet_phong_hops.id_nguoi_dung', '=', 'nguoi_dungs.id')
+            ->select('chi_tiet_phong_hops.*', 'phong_hops.ten_phong', 'nguoi_dungs.ho_va_ten')
+            ->get();
         return response()->json([
             'status' => true,
             'data' => $data

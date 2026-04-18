@@ -522,79 +522,33 @@
 
                                     <div class="card border-0 shadow-sm p-0" style="border-radius: 12px;">
                                         <div class="list-group list-group-flush" style="border-radius: 12px;">
-
                                             <!-- History Item 1 -->
                                             <div class="list-group-item p-4 border-bottom-0 pb-3 bg-transparent">
-                                                <div class="d-flex align-items-start">
-                                                    <div class="mt-1 me-3">
-                                                        <div class="rounded-circle d-flex justify-content-center align-items-center bg-success bg-opacity-10"
-                                                            style="width: 24px; height: 24px; color: #22c55e;">
-                                                            <i class='bx bx-check fs-6'></i>
+                                                <template  v-for="(value, index) in chi_tiet_phong_hop" :key="index">
+                                                    <div class="d-flex align-items-start">
+                                                        <div class="mt-1 me-3">
+                                                            <div class="rounded-circle d-flex justify-content-center align-items-center bg-success bg-opacity-10"
+                                                                style="width: 24px; height: 24px; color: #22c55e;">
+                                                                <i class='bx bx-check fs-6'></i>
+                                                            </div>
                                                         </div>
+                                                            <div class="flex-grow-1">
+                                                                <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
+                                                                    {{ value.ten_phong }}</h6>
+                                                                <p class="fw-medium mb-2"
+                                                                    style="color: #94a3b8; font-size: 0.75rem;">{{ value.created_at }}</p>
+                                                                <div class="d-flex gap-2 mb-2">
+                                                                    <span class="badge fw-bold"
+                                                                        style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">BẢN
+                                                                        GHI</span>
+                                                                    <span class="badge fw-bold"
+                                                                        style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">BẢN
+                                                                        GHI HÌNH</span>
+                                                                </div>
+                                                            </div>
                                                     </div>
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
-                                                            Cuộc gọi kiểm tra QA</h6>
-                                                        <p class="fw-medium mb-2"
-                                                            style="color: #94a3b8; font-size: 0.75rem;">Hôm qua, 4:15
-                                                            CH • 45 phút</p>
-                                                        <div class="d-flex gap-2">
-                                                            <span class="badge fw-bold"
-                                                                style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">BẢN
-                                                                GHI</span>
-                                                            <span class="badge fw-bold"
-                                                                style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">BẢN
-                                                                GHI HÌNH</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                </template>                                                
                                             </div>
-
-                                            <hr class="m-0 mx-4"
-                                                style="border-color: #e2e8f0; border-top-style: dashed;">
-
-                                            <!-- History Item 2 -->
-                                            <div class="list-group-item p-4 border-bottom-0 py-3 bg-transparent">
-                                                <div class="d-flex align-items-start">
-                                                    <div class="mt-1 me-3">
-                                                        <div class="rounded-circle d-flex justify-content-center align-items-center bg-secondary bg-opacity-10"
-                                                            style="width: 24px; height: 24px; color: #64748b;">
-                                                            <i class='bx bx-video-off fs-6'></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
-                                                            Missed: Marketing Brainstorm</h6>
-                                                        <p class="fw-medium mb-0"
-                                                            style="color: #94a3b8; font-size: 0.75rem;">22 tháng 10,
-                                                            2:00 CH
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <hr class="m-0 mx-4"
-                                                style="border-color: #e2e8f0; border-top-style: dashed;">
-
-                                            <!-- History Item 3 -->
-                                            <div class="list-group-item p-4 border-bottom-0 pt-3 bg-transparent">
-                                                <div class="d-flex align-items-start">
-                                                    <div class="mt-1 me-3">
-                                                        <div class="rounded-circle d-flex justify-content-center align-items-center bg-success bg-opacity-10"
-                                                            style="width: 24px; height: 24px; color: #22c55e;">
-                                                            <i class='bx bx-check fs-6'></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
-                                                            One-on-one with Sarah</h6>
-                                                        <p class="fw-medium mb-0"
-                                                            style="color: #94a3b8; font-size: 0.75rem;">Oct 22, 11:30 AM
-                                                            • 30 mins</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                             <div class="list-group-item text-center p-3 mt-2 border-top-0 rounded-bottom"
                                                 style="background-color: #f8fafc; border-radius: 0 0 12px 12px;">
                                                 <a href="#" class="fw-bold text-decoration-none small"
@@ -1022,7 +976,8 @@ export default {
             authStream: null,
             authInterval: null,
             isMatched: false, // biến này để tránh quét trúng nhiều lần
-            list_goi:[]
+            list_goi:[],
+            chi_tiet_phong_hop:[],
         }
     },
     mounted() {
@@ -1036,6 +991,7 @@ export default {
             this.showDropdown = false;
         });
         this.getGoi();
+        this.getChiTietPhongHop();
     },
     computed: {
         id_nguoi_dung() {
@@ -1072,6 +1028,23 @@ export default {
         }
     },
     methods: {
+        getChiTietPhongHop(){
+            axios
+                .get(`${apiUrl}/chi-tiet-phong-hop/data`)
+                .then((res) =>  {
+                    if(res.data.status)
+                    {
+                        this.chi_tiet_phong_hop = res.data.data
+                    }
+                    else{
+                        this.$toast.info(res.data.message)
+                    }
+                })
+                .catch((err) => {
+                    console.error("Lỗi lấy chi tiết phòng họp:", err);
+                    this.$toast.error("Không thể tải chi tiết phòng họp.");
+                });
+        },
         getGoi(){
             axios
                 .get(`${apiUrl}/goi/data`)
@@ -1566,7 +1539,7 @@ export default {
                 if (detections.length === 1) {
                     const liveDescriptor = detections[0].descriptor;
 
-                    // SO SÁNH: Tính khoảng cách Euclidean giữa 2 véc-tơ
+                    // Tính khoảng cách Euclidean giữa 2 véc-tơ
                     const distance = faceapi.euclideanDistance(savedDescriptor, liveDescriptor);
 
                     // Ngưỡng 0.5 là mức độ an toàn cao (càng nhỏ càng giống)
@@ -1579,13 +1552,7 @@ export default {
                         this.authScanStatus = "Xác nhận thành công!";
 
                         // Tắt camera modal
-                        this.dongModalXacThucJoin(false);
-
-
-                        // Đợi 800ms để nhả camera phần cứng, sau đó mới gọi API và chuyển trang
-
-
-                        // ĐÃ XÓA CÁC DÒNG CODE BỊ LẶP Ở ĐÂY
+                        this.dongModalXacThucJoin(false);                       
                     }
                     else {
                         this.authError = true;
@@ -1629,7 +1596,8 @@ export default {
                     sessionStorage.setItem('livekit_token', response.data.token);
                     sessionStorage.setItem('livekit_room', this.ma_phong_tham_gia.trim());
                     if (this.$toast) this.$toast.success("Đang tham gia phòng họp");
-
+                    // Lưu ID phòng
+                    sessionStorage.setItem('id_phong_hop', response.data.id_phong_hop);
                     // Ẩn modal và sang phòng
                     this.showJoinAuthModal = false;
                     window.location.href = `/phong-hop/${this.ma_phong_tham_gia.trim()}`;
@@ -1685,8 +1653,6 @@ export default {
         this.stopFaceScan();
     }
 }
-
-
 </script>
 
 <style scoped>
