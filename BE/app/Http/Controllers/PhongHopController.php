@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PhongHopCreateRequest;
+use App\Http\Requests\PhongHopSearchRequest;
+use App\Http\Requests\PhongHopUpdateRequest;
 use App\Models\NguoiDung;
 use App\Models\PhongHop;
 use Illuminate\Http\Request;
@@ -22,7 +25,7 @@ class PhongHopController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(PhongHopCreateRequest $request)
     {
         // 1. Kiểm tra dữ liệu gửi lên
         $request->validate([
@@ -53,7 +56,7 @@ class PhongHopController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(PhongHopUpdateRequest $request)
     {
         $data = PhongHop::where('id', $request->id)->first();
         if ($data) {
@@ -86,7 +89,7 @@ class PhongHopController extends Controller
         ]);
     }
 
-    public function search(Request $request)
+    public function search(PhongHopSearchRequest $request)
     {
         $query = PhongHop::query();
         if ($request->has('keyword') && $request->keyword != '') {

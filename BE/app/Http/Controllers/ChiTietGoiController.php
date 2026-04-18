@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChiTieGoiCreateRequest;
+use App\Http\Requests\ChiTietGoiChangeStatusRequest;
+use App\Http\Requests\ChiTieGoiUpdateRequest;
 use App\Models\ChiTietGoi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\PhanQuyen;
 
 class ChiTietGoiController extends Controller
 {
@@ -18,7 +19,7 @@ class ChiTietGoiController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(ChiTieGoiCreateRequest $request)
     {
         $data = ChiTietGoi::create($request->all());
         return response()->json([
@@ -28,7 +29,7 @@ class ChiTietGoiController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(ChiTieGoiUpdateRequest $request)
     {
         $data = ChiTietGoi::where('id', $request->id)->first();
         if ($data) {
@@ -61,7 +62,7 @@ class ChiTietGoiController extends Controller
         ]);
     }
 
-    public function changeStatus(Request $request)
+    public function changeStatus(ChiTietGoiChangeStatusRequest $request)
     {
         $data = ChiTietGoi::where('id', $request->id)->first();
         if ($data) {
