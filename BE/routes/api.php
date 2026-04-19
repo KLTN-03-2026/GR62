@@ -123,6 +123,7 @@ Route::get('/phong-hop/ma-phong', [PhongHopController::class, 'getByMaPhong']);
 // 8.1 Phòng Họp
 Route::post('/phong-hop/tao-token', [PhongHopController::class, 'taoToken']);
 Route::post('/phong-hop/kiem-tra-phong-hop', [PhongHopController::class, 'kiemTraPhongHop']);
+Route::post('/webhook/livekit', [PhongHopController::class, 'livekitWebhook']); // Bắt sự kiện người dùng rời phòng họp
 
 // 9. Chi Tiết Phòng Họp
 Route::get('/chi-tiet-phong-hop/data', [ChiTietPhongHopController::class, 'index']);

@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PhongHopCreateRequest;
 use App\Http\Requests\PhongHopSearchRequest;
 use App\Http\Requests\PhongHopUpdateRequest;
+use App\Models\ChiTietPhongHop;
 use App\Models\NguoiDung;
 use App\Models\PhongHop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PhanQuyen;
 use Firebase\JWT\JWT;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use LiveKit\RoomServiceClient;
 
@@ -206,5 +209,55 @@ class PhongHopController extends Controller
                 'status'  => true,
             ], 200);
         }
+    }
+    public function livekitWebhook(Request $request)
+    {
+        $payload = $request->all();
+
+        // Ghi log
+        Log::info('LiveKit Webhook Received:', $payload);
+
+        $event = $payload['event'] ?? null;
+        if (!$event) {
+            return response()->json(['status' => false, 'message' => 'No event type']);
+        }
+
+        // xuất Mã phòng
+        $ma_phong = $payload['room']['name'] ?? null;
+        $phong = PhongHop::where('ma_phong', $ma_phong)->first();
+
+        if (!$phong) {
+            return response()->json(['status' => false, 'message' => 'Không tìm thấy phòng trong DB']);
+        }
+
+        // XỬ LÝ SỰ KIỆN: 1 NGƯỜI DÙNG THOÁT HOẶC RỚT MẠNG
+        if ($event === 'participant_left' || $event === 'participant_disconnected') {
+            // Lấy identity của người dùng
+            $userName = $payload['participant']['identity'] ?? null;
+
+            // Tìm ID người dùng dựa vào tên
+            $user = NguoiDung::where('ho_va_ten', $userName)->first();
+
+            if ($user) {
+                ChiTietPhongHop::where('id_phong_hop', $phong->id)
+                    ->where('id_nguoi_dung', $user->id)
+                    ->update(['is_active' => false]);
+            }
+        }
+
+        // XỬ LÝ SỰ KIỆN: PHÒNG HỌP CHÍNH THỨC KẾT THÚC (Mọi người đã thoát hết)
+        if ($event === 'room_finished') {
+            // Cập nhật thời gian kết thúc vào bảng phong_hops
+            $phong->update([
+                'thoi_gian_ket_thuc' => Carbon::now(),
+                'trang_thai' => false // Đóng phòng
+            ]);
+
+            // Quét sạch: Đảm bảo mọi người trong phòng này đều được update thành is_active = 0
+            ChiTietPhongHop::where('id_phong_hop', $phong->id)
+                ->update(['is_active' => false]);
+        }
+        // Trả về 200
+        return response()->json(['status' => true]);
     }
 }
