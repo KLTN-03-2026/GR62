@@ -209,6 +209,7 @@
 
 <script>
 import axios from 'axios';
+import * as faceapi from 'face-api.js';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default {
@@ -232,7 +233,11 @@ export default {
             isPasswordLoading: false,
             isScanning: false,
             scanMessage: 'Đang khởi tạo camera...',
-            stream: null
+            stream: null,
+            dem_thoi_gian: 0,
+            giay_can_thiet: 15,
+            faceSaved: false,
+            vong_lap_nhan_dien: null
         }
     },
     mounted() {
@@ -267,26 +272,46 @@ export default {
             }
         },
 
+        async tai_mo_hinh_ai() {
+            this.scanMessage = 'Đang tải dữ liệu AI...';
+            const DUONG_DAN_MODELS = '/model';
+            try {
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(DUONG_DAN_MODELS),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(DUONG_DAN_MODELS),
+                    faceapi.nets.faceRecognitionNet.loadFromUri(DUONG_DAN_MODELS)
+                ]);
+                return true;
+            } catch (loi) {
+                this.scanMessage = 'Lỗi tải dữ liệu AI!';
+                console.error(loi);
+                return false;
+            }
+        },
+
         async toggleScanning() {
             if (this.isScanning) {
                 this.stopCamera();
                 this.isScanning = false;
             } else {
+                const tai_xong = await this.tai_mo_hinh_ai();
+                if (!tai_xong) return;
+
                 this.isScanning = true;
-                this.scanMessage = "Vui lòng nhìn thẳng...";
+                this.scanMessage = "Đang mở camera...";
+                this.faceSaved = false;
+                this.dem_thoi_gian = 0;
+
                 try {
-                    this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                    this.$nextTick(() => { this.$refs.video.srcObject = this.stream; });
-
-                    // Simulation of scanning process
-                    setTimeout(() => { this.scanMessage = "Đang nhận diện sinh trắc..."; }, 1500);
-                    setTimeout(() => { this.scanMessage = "Đang mã hóa FaceID..."; }, 3500);
-                    setTimeout(async () => {
-                        await this.saveFaceData();
-                        this.stopCamera();
-                        this.isScanning = false;
-                    }, 5000);
-
+                    this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                    this.$nextTick(() => { 
+                        const video = this.$refs.video;
+                        video.srcObject = this.stream; 
+                        video.onloadedmetadata = () => {
+                            video.play();
+                            this.bat_dau_nhan_dien();
+                        };
+                    });
                 } catch (e) {
                     this.$toast.error("Không thể bật camera!");
                     this.isScanning = false;
@@ -294,20 +319,56 @@ export default {
             }
         },
 
-        async saveFaceData() {
+        bat_dau_nhan_dien() {
+            const video = this.$refs.video;
+            this.vong_lap_nhan_dien = setInterval(async () => {
+                const ket_qua = await faceapi.detectAllFaces(
+                    video,
+                    new faceapi.TinyFaceDetectorOptions()
+                ).withFaceLandmarks().withFaceDescriptors();
+
+                if (ket_qua.length === 1) {
+                    this.dem_thoi_gian++;
+                    let phan_tram = Math.min(Math.round((this.dem_thoi_gian / this.giay_can_thiet) * 100), 100);
+                    this.scanMessage = `Đang phân tích sinh trắc học... ${phan_tram}%`;
+
+                    if (this.dem_thoi_gian >= this.giay_can_thiet && !this.faceSaved) {
+                        this.faceSaved = true;
+                        this.scanMessage = "Xác nhận thực thể sống thành công!";
+                        const véc_tơ_khuon_mat = Array.from(ket_qua[0].descriptor);
+                        await this.saveFaceData(véc_tơ_khuon_mat);
+                    }
+                } else {
+                    this.dem_thoi_gian = 0;
+                    if (ket_qua.length === 0) {
+                        this.scanMessage = 'Vui lòng đưa mặt vào khung hình';
+                    } else {
+                        this.scanMessage = 'Cảnh báo: Phát hiện quá nhiều người!';
+                    }
+                }
+            }, 200);
+        },
+
+        async saveFaceData(mang_so) {
             try {
-                const fakeHash = "FACE_" + Math.random().toString(36).substring(7).toUpperCase();
+                clearInterval(this.vong_lap_nhan_dien);
+                const stringifiedData = JSON.stringify(mang_so);
                 const token = localStorage.getItem('token_doi_tac');
                 const res = await axios.post(`${apiUrl}/doi-tac/profile/update-face-data`, 
-                    { face_data: fakeHash }, 
+                    { face_data: stringifiedData }, 
                     { headers: { Authorization: 'Bearer ' + token } }
                 );
                 if (res.data.status) {
                     this.$toast.success("Đã đồng bộ vân mặt bảo mật!");
-                    this.doi_tac.du_lieu_khuon_mat = fakeHash;
+                    this.doi_tac.du_lieu_khuon_mat = stringifiedData;
+                    this.stopCamera();
+                    this.isScanning = false;
                 }
             } catch (e) {
-                this.$toast.error("Lỗi đồng bộ sinh trắc học.");
+                this.$toast.error(e.response?.data?.message || "Lỗi đồng bộ sinh trắc học.");
+                this.faceSaved = false;
+                this.stopCamera();
+                this.isScanning = false;
             }
         },
 
@@ -315,6 +376,10 @@ export default {
             if (this.stream) {
                 this.stream.getTracks().forEach(t => t.stop());
                 this.stream = null;
+            }
+            if (this.vong_lap_nhan_dien) {
+                clearInterval(this.vong_lap_nhan_dien);
+                this.vong_lap_nhan_dien = null;
             }
         },
 

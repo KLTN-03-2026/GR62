@@ -14,7 +14,7 @@
         </header>
 
         <main class="flex-grow-1 position-relative p-2 p-md-4 mt-5 d-flex align-items-center justify-content-center">
-            <div id="video-grid" class="video-grid w-100 h-100">
+            <div id="video-grid" class="video-grid w-100 h-100" :style="{ paddingRight: isChatOpen ? '350px' : '0', transition: 'padding 0.3s ease' }">
                 <div id="local-video-wrapper" class="video-wrapper shadow-lg">
                     <div class="w-100 h-100 bg-secondary position-relative">
                         <div v-if="!cameraReady" class="position-absolute top-50 start-50 translate-middle z-3">
@@ -60,6 +60,10 @@
                     <i class='bx bx-slider-alt fs-4'></i>
                 </button>
 
+                <button @click="toggleChat" :class="['btn rounded-circle tool-btn shadow-sm', isChatOpen ? 'btn-primary text-white' : 'btn-light']" title="Mở Chat">
+                    <i class='bx bx-message-rounded-dots fs-4'></i>
+                </button>
+
                 <div class="vr bg-secondary mx-2"></div>
 
                 <button @click="roiPhong"
@@ -103,6 +107,33 @@
                     tất</button>
             </div>
         </div>
+
+        <!-- Chat Sidebar -->
+        <aside v-if="isChatOpen" class="bg-dark border-start border-secondary d-flex flex-column z-3" 
+            style="width: 350px; position: absolute; right: 0; top: 0; bottom: 0; box-shadow: -5px 0 15px rgba(0,0,0,0.5);">
+            <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center bg-dark text-white">
+                <h6 class="mb-0 fw-bold"><i class='bx bx-message-rounded-dots me-2'></i> Trò chuyện trong phòng</h6>
+                <button @click="toggleChat" class="btn-close btn-close-white"></button>
+            </div>
+            
+            <div class="flex-grow-1 overflow-auto p-3 d-flex flex-column gap-3" ref="chatBox">
+                <div v-for="(msg, index) in chatMessages" :key="index" :class="['d-flex flex-column', msg.isLocal ? 'align-items-end' : 'align-items-start']">
+                    <span class="small text-secondary mb-1">{{ msg.sender }} <span style="font-size: 0.7rem;">{{ msg.timestamp }}</span></span>
+                    <div :class="['px-3 py-2 rounded-4 text-white', msg.isLocal ? 'bg-primary' : 'bg-secondary']" style="max-width: 85%; word-wrap: break-word;">
+                        {{ msg.text }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 border-top border-secondary">
+                <form @submit.prevent="sendChatMessage" class="d-flex gap-2">
+                    <input type="text" v-model="newMessage" class="form-control bg-dark text-white border-secondary rounded-pill" placeholder="Nhập tin nhắn..." autocomplete="off">
+                    <button type="submit" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; flex-shrink: 0;" :disabled="!newMessage.trim()">
+                        <i class='bx bx-send'></i>
+                    </button>
+                </form>
+            </div>
+        </aside>
     </div>
 </template>
 
@@ -127,7 +158,12 @@ export default {
             audioInputs: [],
             audioOutputs: [],
             selectedMic: '',
-            selectedSpeaker: ''
+            selectedSpeaker: '',
+
+            // State cho Chat
+            isChatOpen: false,
+            chatMessages: [],
+            newMessage: ''
         };
     },
     async mounted() {
@@ -166,6 +202,25 @@ export default {
                 if (videoEl) videoEl.remove();
             });
 
+            // Lắng nghe tin nhắn chat từ DataChannel
+            this.room.on(RoomEvent.DataReceived, (payload, participant, kind, topic) => {
+                const decoder = new TextDecoder();
+                const strData = decoder.decode(payload);
+                try {
+                    const msgData = JSON.parse(strData);
+                    this.chatMessages.push({
+                        ...msgData,
+                        isLocal: false
+                    });
+                    this.scrollToBottom();
+                    if (!this.isChatOpen) {
+                        if (this.$toast) this.$toast.info(`${msgData.sender}: ${msgData.text}`);
+                    }
+                } catch (e) {
+                    console.error("Lỗi parse tin nhắn:", e);
+                }
+            });
+
             // HIỆU ỨNG PHÁT SÁNG KHI ĐANG NÓI (SPEAKING)
             this.room.on(RoomEvent.ActiveSpeakersChanged, (speakers) => {
                 // Tắt viền tất cả mọi người trước
@@ -180,6 +235,23 @@ export default {
             });
 
             await this.room.connect(livekitUrl, token);
+
+            // Bắn API lưu lịch sử tham gia phòng
+            const user = JSON.parse(localStorage.getItem('thong_tin_user'));
+            const id_phong_that = sessionStorage.getItem('id_phong_hop');
+            const apiUrl = import.meta.env.VITE_API_URL;
+            if (user && id_phong_that) {
+                let data = {
+                    id_nguoi_dung: user.id,
+                    id_phong_hop: id_phong_that,
+                    xac_thuc_khuon_mat: 1,
+                    is_vi_pham: 0,
+                    is_nguoi_dung: 1,
+                    is_active: 1, // Đang tham gia
+                    trang_thai: 1
+                };
+                axios.post(`${apiUrl}/chi-tiet-phong-hop/create`, data).catch(err => console.error(err));
+            }
 
             await this.room.localParticipant.enableCameraAndMicrophone();
             this.cameraReady = true;
@@ -246,6 +318,39 @@ export default {
                 if (this.$toast) this.$toast.error("Đã hủy chia sẻ màn hình.");
             }
         },
+        toggleChat() {
+            this.isChatOpen = !this.isChatOpen;
+            if (this.isChatOpen) {
+                this.scrollToBottom();
+            }
+        },
+        async sendChatMessage() {
+            if (!this.newMessage.trim()) return;
+            const msgData = {
+                text: this.newMessage.trim(),
+                sender: JSON.parse(localStorage.getItem('thong_tin_user'))?.ho_va_ten || 'Khách',
+                timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            };
+            
+            this.chatMessages.push({ ...msgData, isLocal: true });
+            
+            try {
+                const strData = JSON.stringify(msgData);
+                const encoder = new TextEncoder();
+                await this.room.localParticipant.publishData(encoder.encode(strData), { reliable: true });
+            } catch (err) {
+                console.error("Lỗi gửi tin nhắn:", err);
+            }
+            
+            this.newMessage = '';
+            this.scrollToBottom();
+        },
+        scrollToBottom() {
+            this.$nextTick(() => {
+                const chatBox = this.$refs.chatBox;
+                if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        },
         // --- CÁC HÀM XỬ LÝ THIẾT BỊ ÂM THANH ---
         async openSettings() {
             this.showSettings = true;
@@ -280,16 +385,11 @@ export default {
             if (user && id_phong_that) {
                 let data = {
                     id_nguoi_dung: user.id,
-                    id_phong_hop: id_phong_that,
-                    xac_thuc_khuon_mat: 1,
-                    is_vi_pham: 0,
-                    is_nguoi_dung: 1,
-                    is_active: 0, // 0 vì đang rời đi
-                    trang_thai: 1
+                    id_phong_hop: id_phong_that
                 };
 
                 axios
-                    .post(`${apiUrl}/chi-tiet-phong-hop/create`, data)
+                    .post(`${apiUrl}/phong-hop/roi-phong`, data)
                     .catch(err => console.error("Lỗi lưu lịch sử:", err));
             }
             // Xử lý ngắt kết nối LiveKit và dọn dẹp

@@ -210,6 +210,34 @@ class PhongHopController extends Controller
             ], 200);
         }
     }
+    public function roiPhongHop(Request $request)
+    {
+        try {
+            ChiTietPhongHop::where('id_phong_hop', $request->id_phong_hop)
+                ->where('id_nguoi_dung', $request->id_nguoi_dung)
+                ->update(['is_active' => false]);
+
+            $soNguoiConLai = ChiTietPhongHop::where('id_phong_hop', $request->id_phong_hop)
+                ->where('is_active', true)
+                ->count();
+
+            if ($soNguoiConLai == 0) {
+                PhongHop::where('id', $request->id_phong_hop)->update([
+                    'thoi_gian_ket_thuc' => \Carbon\Carbon::now(),
+                    'trang_thai' => false
+                ]);
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Đã rời phòng và cập nhật lịch sử thành công!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Lỗi khi cập nhật rời phòng: ' . $e->getMessage()
+            ], 500);
+        }
+    }
     public function livekitWebhook(Request $request)
     {
         $payload = $request->all();

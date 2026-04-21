@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('password');
             $table->text('dia_chi')->nullable();
             $table->boolean('trang_thai')->default(true);
+            $table->string('hinh_anh');
+            $table->string('du_lieu_khuon_mat');
             $table->timestamps();
         });
     }
