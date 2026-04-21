@@ -25,8 +25,6 @@ class DoiTacSeeder extends Seeder
             'password'          => Hash::make('123456'),
             'dia_chi'           => '123 Đường ABC, Quận 1, TP. Hồ Chí Minh',
             'trang_thai'        => true,
-            'hinh_anh'          => null,
-            'du_lieu_khuon_mat' => null,
         ]);
 
         DoiTac::create([
@@ -37,8 +35,6 @@ class DoiTacSeeder extends Seeder
             'password'          => Hash::make('123456'),
             'dia_chi'           => '456 Đường XYZ, Quận 3, TP. Hồ Chí Minh',
             'trang_thai'        => true,
-            'hinh_anh'          => null,
-            'du_lieu_khuon_mat' => null,
         ]);
 
         DoiTac::create([
@@ -49,8 +45,6 @@ class DoiTacSeeder extends Seeder
             'password'          => Hash::make('123456'),
             'dia_chi'           => '789 Đường LMN, Quận Bình Thạnh, TP. Hồ Chí Minh',
             'trang_thai'        => true,
-            'hinh_anh'          => null,
-            'du_lieu_khuon_mat' => null,
         ]);
 
         DoiTac::create([
@@ -61,8 +55,6 @@ class DoiTacSeeder extends Seeder
             'password'          => Hash::make('123456'),
             'dia_chi'           => '101 Đường PQR, Quận Tân Bình, TP. Hồ Chí Minh',
             'trang_thai'        => false,
-            'hinh_anh'          => null,
-            'du_lieu_khuon_mat' => null,
         ]);
 
         DoiTac::create([
@@ -73,8 +65,6 @@ class DoiTacSeeder extends Seeder
             'password'          => Hash::make('123456'),
             'dia_chi'           => '202 Đường STU, Quận 7, TP. Hồ Chí Minh',
             'trang_thai'        => true,
-            'hinh_anh'          => null,
-            'du_lieu_khuon_mat' => null,
         ]);
     }
 }
