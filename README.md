@@ -22,7 +22,7 @@
 | :--- | :--- | :---: |
 | 🛡️ **Bảo mật đa tầng** | Xác thực OTP & JWT cho người dùng và đối tác. | ✅ |
 | 🤖 **Face ID Sinh trắc học** | Tích hợp nhận diện khuôn mặt thực tế bằng AI để bảo mật. | ✅ |
-| 💬 **Real-time Chat** | Tích hợp hệ thống Chat thời gian thực sử dụng LiveKit DataChannel. | ✅ |
+| 💬 **Real-time Chat** | Tích hợp hệ thống Chat thời gian thực. | ✅ |
 | 🎨 **Neo-UI Design** | Giao diện hiện đại, tối ưu trải nghiệm (UX). | ✅ |
 | ☁️ **Cloud Sync** | Đồng bộ hóa hồ sơ và lịch họp trên đám mây. | ✅ |
 | 📽️ **4K HDR Video** | Chất lượng truyền tải hình ảnh độ phân giải cao. | ✅ |
@@ -54,9 +54,12 @@ graph TD
     Backend -->|Model Interaction| Database[(MySQL Database)]
     Backend -->|Authentication| Sanctum[Laravel Sanctum / JWT]
     
-    subgraph "Dịch vụ AI & WebRTC"
-        Frontend --> FaceAPI[AI Face ID / Sinh trắc học]
-        Frontend --> WebRTC[Real-time Video & Chat / LiveKit]
+    subgraph "Dịch vụ AI"
+        Backend --> AI_Service[AI Summarization/Analysis]
+    end
+    
+    subgraph "Video Streaming"
+        Frontend --> WebRTC[Real-time Video / WebRTC]
     end
 ```
 

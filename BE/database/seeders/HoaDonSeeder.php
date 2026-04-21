@@ -16,15 +16,13 @@ class HoaDonSeeder extends Seeder
     public function run(): void
     {
         $hoaDons = [];
-        
-        // Tạo 18 hóa đơn tương ứng với id_nguoi_dung từ 1 đến 18
         for ($i = 1; $i <= 18; $i++) {
             $hoaDons[] = [
                 'id_nguoi_dung' => $i,
                 'id_goi' => rand(1, 4), // Giả sử id_goi có từ 1 đến 4
                 'so_tien' => rand(500, 5000) * 1000, // Giá từ 500k đến 5 triệu
-                'ma_giao_dich' => 'TXN' . strtoupper(Str::random(10)),
-                'phuong_thuc_thanh_toan' => collect(['Thẻ tín dụng', 'Momo', 'Chuyển khoản ngân hàng', 'VNPay'])->random(),
+                'ma_giao_dich' => 'HD' . time(),
+                'phuong_thuc_thanh_toan' => collect(['Sepay'])->random(),
                 'trang_thai_thanh_toan' => collect(['pending', 'completed', 'failed', 'cancelled'])->random(),
                 'created_at' => Carbon::now()->subDays(rand(1, 30)),
                 'updated_at' => Carbon::now()->subDays(rand(1, 30)),
