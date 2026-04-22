@@ -24,8 +24,6 @@
 
             <li class="menu-label">Quản Lý Hệ Thống</li>
             <li>
-
-
                 <router-link to="/admin/dashboard">
                     <div class="parent-icon"><i class='bx bx-home-circle'></i></div>
                     <div class="menu-title">dashboard</div>

@@ -14,7 +14,7 @@
                 <a href="#" class="nav-link-item">Liên hệ</a>
             </nav>
             <div class="auth-buttons d-flex gap-2 align-items-center">
-                <router-link to="/nguoi-dung/dang-nhap" class="btn-text">Đăng nhập</router-link>
+                <router-link to="/dang-nhap" class="btn-text">Đăng nhập</router-link>
                 <router-link to="/nguoi-dung/dang-ky" class="btn-orange rounded-pill px-4">Đăng ký</router-link>
             </div>
         </div>

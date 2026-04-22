@@ -15,6 +15,7 @@ use App\Http\Controllers\ChiTietPhongHopController;
 use App\Http\Controllers\ChatRoomController;
 use App\Http\Controllers\HoaDonController;
 use App\Http\Controllers\Api\SepayPollingController;
+use App\Http\Controllers\AuthController;
 
 //SEPAY
 Route::post('/sepay/create-order', [SepayPollingController::class, 'createOrder']);
@@ -66,8 +67,7 @@ Route::post('/doi-tac/delete', [DoiTacController::class, 'destroy']);
 Route::post('/doi-tac/tim-kiem', [DoiTacController::class, 'search']);
 Route::post('/doi-tac/change-status', [DoiTacController::class, 'changeStatus']);
 
-Route::post('/doi-tac/login', [DoiTacController::class, 'login']);
-Route::post('/doi-tac/register', [DoiTacController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/doi-tac/me', [DoiTacController::class, 'getProfile']);
@@ -85,7 +85,6 @@ Route::post('/nguoi-dung/update', [NguoiDungController::class, 'update']);
 Route::post('/nguoi-dung/delete', [NguoiDungController::class, 'destroy']);
 Route::post('/nguoi-dung/tim-kiem', [NguoiDungController::class, 'search']);
 Route::post('/nguoi-dung/change-status', [NguoiDungController::class, 'changeStatus']);
-Route::post('/nguoi-dung/login', [NguoiDungController::class, 'login']);
 Route::post('/nguoi-dung/logout', [NguoiDungController::class, 'logout']);
 Route::post('/nguoi-dung/register', [NguoiDungController::class, 'register']);
 Route::post('/nguoi-dung/quen-mat-khau', [NguoiDungController::class, 'quenMatKhau']);
