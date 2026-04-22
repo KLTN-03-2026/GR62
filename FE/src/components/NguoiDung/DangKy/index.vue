@@ -137,7 +137,7 @@ export default {
                     if (this.$toast) {
                         this.$toast.success(res.data.message);
                     }
-                    this.$router.push('/nguoi-dung/dang-nhap');
+                    this.$router.push('/dang-nhap');
                 } else {
                     if (this.$toast) {
                         this.$toast.error(res.data.message || 'Gặp sự cố khi đăng ký.');
