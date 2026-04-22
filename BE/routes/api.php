@@ -91,6 +91,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/nguoi-dung/update-avatar', [NguoiDungController::class, 'updateAvatar']);
     Route::post('/nguoi-dung/change-password', [NguoiDungController::class, 'changePassword']);
     Route::post('/nguoi-dung/update-profile', [NguoiDungController::class, 'updateProfile']);
+    Route::get('/hoa-don/history', [HoaDonController::class, 'getHistory']);
 });
 
 // 6. Gói
@@ -120,6 +121,7 @@ Route::get('/phong-hop/ma-phong', [PhongHopController::class, 'getByMaPhong']);
 // 8.1 Phòng Họp
 Route::post('/phong-hop/tao-token', [PhongHopController::class, 'taoToken']);
 Route::post('/phong-hop/kiem-tra-phong-hop', [PhongHopController::class, 'kiemTraPhongHop']);
+Route::get('/phong-hop/data-by-chu-phong', [PhongHopController::class, 'getDataByChuPhong']);
 
 // 9. Chi Tiết Phòng Họp
 Route::get('/chi-tiet-phong-hop/data', [ChiTietPhongHopController::class, 'index']);

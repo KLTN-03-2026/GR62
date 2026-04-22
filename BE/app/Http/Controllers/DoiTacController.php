@@ -95,9 +95,14 @@ class DoiTacController extends Controller
             ], 401);
         }
 
-        // Đồng bộ hóa trường hinh_anh cho NguoiDung nếu dùng chung component profile
-        // Đồng thời giữ nguyên danh tính thực của người đăng nhập (Personal ID)
+        // Nếu là NguoiDung, phải có quyền Đối tác (id_doi_tac = 1) mới được vào
         if ($user instanceof NguoiDung) {
+            if ($user->id_doi_tac != 1) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Tài khoản của bạn chưa được nâng cấp lên Đối tác!'
+                ], 403);
+            }
             $user->hinh_anh = $user->avatar;
         }
 
@@ -195,21 +200,79 @@ class DoiTacController extends Controller
 
     public function updateFaceData(Request $request)
     {
-        $doi_tac = Auth::guard('sanctum')->user();
-        if (!$doi_tac) {
+        $doi_tac_hien_tai = Auth::guard('sanctum')->user();
+        if (!$doi_tac_hien_tai) {
             return response()->json([
                 'status'  => false,
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
 
-        $doi_tac->du_lieu_khuon_mat = $request->face_data;
-        $doi_tac->save();
+        // 1. Kiểm tra đầu vào
+        $request->validate([
+            'face_data' => 'required'
+        ]);
+
+        $vector_moi = is_string($request->face_data)
+            ? json_decode($request->face_data, true)
+            : $request->face_data;
+
+        if (!is_array($vector_moi)) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Lỗi định dạng dữ liệu sinh trắc học.'
+            ], 400);
+        }
+
+        // 2. Kiểm tra trùng lặp với các đối tác khác (Bảo mật 1:N)
+        $danh_sach_doi_tac = DoiTac::whereNotNull('du_lieu_khuon_mat')
+            ->where('id', '!=', $doi_tac_hien_tai->id)
+            ->get();
+
+        foreach ($danh_sach_doi_tac as $dt_khac) {
+            $vector_cu = is_string($dt_khac->du_lieu_khuon_mat)
+                ? json_decode($dt_khac->du_lieu_khuon_mat, true)
+                : $dt_khac->du_lieu_khuon_mat;
+
+            $khoang_cach = $this->tinhToanDistance($vector_moi, $vector_cu);
+
+            // Ngưỡng 0.50 (càng nhỏ càng giống)
+            if ($khoang_cach < 0.50) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Lỗi bảo mật! Khuôn mặt này đã được liên kết với một tài khoản đối tác khác.'
+                ], 400);
+            }
+        }
+
+        // 3. Lưu dữ liệu
+        $doi_tac_hien_tai->du_lieu_khuon_mat = is_array($request->face_data)
+            ? json_encode($request->face_data)
+            : $request->face_data;
+
+        $doi_tac_hien_tai->save();
 
         return response()->json([
             'status'  => true,
-            'message' => 'Cập nhật dữ liệu khuôn mặt thành công'
+            'message' => 'Đăng ký Face ID doanh nghiệp thành công!'
         ]);
+    }
+
+    /**
+     * Hàm tính khoảng cách Euclid giữa 2 vector 128 chiều (Biometrics)
+     */
+    private function tinhToanDistance($vectorA, $vectorB)
+    {
+        if (!is_array($vectorA) || !is_array($vectorB) || count($vectorA) === 0 || count($vectorA) !== count($vectorB)) {
+            return 1.0;
+        }
+
+        $sum = 0;
+        for ($i = 0; $i < count($vectorA); $i++) {
+            $sum += pow((float)$vectorA[$i] - (float)$vectorB[$i], 2);
+        }
+
+        return sqrt($sum);
     }
 
     public function changePassword(Request $request)

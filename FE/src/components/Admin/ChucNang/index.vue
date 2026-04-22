@@ -26,6 +26,7 @@
                                 <th class="text-center align-middle">Mã Chức Năng</th>
                                 <th class="text-center align-middle">Tên Slug</th>
                                 <th class="text-center align-middle">URL</th>
+                                <th class="text-center align-middle">Mô Tả</th>
                                 <th class="text-center align-middle">Trạng Thái</th>
                                 <th class="text-center align-middle">Thao Tác</th>
                             </tr>
@@ -37,6 +38,7 @@
                                 <td class="align-middle text-center">{{ value.ma_chuc_nang }}</td>
                                 <td class="align-middle">{{ value.ten_slug }}</td>
                                 <td class="align-middle small">{{ value.url }}</td>
+                                <td class="align-middle">{{ value.mo_ta }}</td>
                                 <td class="align-middle text-center" v-on:click="changeStatus(value)">
                                     <button v-if="value.trang_thai == 1" class="btn btn-info w-100"
                                         style="color:white">Hoạt động</button>

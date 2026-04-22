@@ -21,4 +21,9 @@ class HoaDon extends Model
             'so_tien' => 'decimal:2',
         ];
     }
+
+    public function goi()
+    {
+        return $this->belongsTo(Goi::class, 'id_goi');
+    }
 }

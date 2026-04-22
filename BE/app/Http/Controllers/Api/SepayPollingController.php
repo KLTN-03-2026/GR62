@@ -93,14 +93,12 @@ class SepayPollingController extends Controller
                 'payment_meta' => $transaction,
             ]);
 
-            // Cập nhật id_doi_tac cho NguoiDung từ email
-            $doiTac = DoiTac::where('email', $order->customer_email)->first();
-            if ($doiTac) {
-                $nguoiDung = NguoiDung::where('email', $order->customer_email)->first();
-                if ($nguoiDung) {
-                    $nguoiDung->id_doi_tac = $doiTac->id;
-                    $nguoiDung->save();
-                }
+            // Cập nhật trạng thái Đối tác (Partner) cho NguoiDung dựa trên Email
+            $nguoiDung = NguoiDung::where('email', $order->customer_email)->first();
+            if ($nguoiDung) {
+                // Theo yêu cầu mới: id_doi_tac đóng vai trò là cờ True/False (1/0)
+                $nguoiDung->id_doi_tac = 1; 
+                $nguoiDung->save();
             }
         }
 

@@ -142,6 +142,11 @@ const routes = [
         meta: { layout: 'black' }
     },
     {
+        path: '/nguoi-dung/danh-sach-goi',
+        component: () => import('../components/NguoiDung/DanhSachGoi/index.vue'),
+        meta: { layout: 'black' }
+    },
+    {
         path: '/nguoi-dung/thanh-toan/:id_goi?',
         component: () => import('../components/NguoiDung/ThanhToan/index.vue'),
         meta: { layout: 'black' }
@@ -178,6 +183,16 @@ const routes = [
     {
         path: '/doi-tac/trang-chinh',
         component: () => import('../components/DoiTac/TrangChinhDoiTac/index.vue'),
+        meta: { layout: 'black' }
+    },
+    {
+        path: '/doi-tac/phong-hop',
+        component: () => import('../components/DoiTac/PhongHop/index.vue'),
+        meta: { layout: 'black' }
+    },
+    {
+        path: '/doi-tac/bao-cao',
+        component: () => import('../components/DoiTac/BaoCao/index.vue'),
         meta: { layout: 'black' }
     },
     {

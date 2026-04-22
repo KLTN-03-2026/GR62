@@ -22,9 +22,12 @@
                         <thead>
                             <tr class="bg-primary text-light text-nowrap">
                                 <th class="text-center">#</th>
+                                <th class="text-center">Avatar</th>
                                 <th class="text-center">Họ Và Tên</th>
                                 <th class="text-center">Email</th>
                                 <th class="text-center">Số Điện Thoại</th>
+                                <th class="text-center">Đối Tác</th>
+                                <th class="text-center">Chức Vụ</th>
                                 <th class="text-center">Trạng Thái</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -33,9 +36,19 @@
                             <template v-for="(value, index) in list_nguoi_dung" :key="index">
                                 <tr class="text-nowrap">
                                     <th class="align-middle text-center">{{ index + 1 }}</th>
+                                    <td class="align-middle text-center">
+                                        <img :src="value.avatar" alt="" class="rounded-circle" width="40" height="40"
+                                            onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIsTksbH1mYp9bE9t20fUp5ZId3Xf0v0K9g&s'">
+                                    </td>
                                     <td class="align-middle">{{ value.ho_va_ten }}</td>
                                     <td class="align-middle">{{ value.email }}</td>
                                     <td class="align-middle text-center">{{ value.so_dien_thoai }}</td>
+                                    <td class="align-middle text-center">
+                                        {{ value.doi_tac ? value.doi_tac.ho_va_ten : 'N/A' }}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {{ value.chuc_vu ? value.chuc_vu.ten_chuc_vu : 'N/A' }}
+                                    </td>
                                     <td class="align-middle text-center" v-on:click="changeStatus(value)">
                                         <button v-if="value.trang_thai == 1" class="btn btn-info w-100"
                                             style="color: white;">
@@ -96,6 +109,28 @@
                             <input v-model="create_nguoi_dung.so_dien_thoai" type="text" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label class="form-label">Avatar (URL)</label>
+                            <input v-model="create_nguoi_dung.avatar" type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Đối Tác</label>
+                            <select v-model="create_nguoi_dung.id_doi_tac" class="form-select">
+                                <option value="">Chọn đối tác</option>
+                                <template v-for="(v, k) in list_doi_tac" :key="k">
+                                    <option :value="v.id">{{ v.ho_va_ten }}</option>
+                                </template>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Chức Vụ</label>
+                            <select v-model="create_nguoi_dung.id_chuc_vu" class="form-select">
+                                <option value="">Chọn chức vụ</option>
+                                <template v-for="(v, k) in list_chuc_vu" :key="k">
+                                    <option :value="v.id">{{ v.ten_chuc_vu }}</option>
+                                </template>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
                             <select v-model="create_nguoi_dung.trang_thai" class="form-select">
                                 <option value="1">Hoạt động</option>
@@ -135,6 +170,28 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Số Điện Thoại</label>
                             <input v-model="edit_nguoi_dung.so_dien_thoai" type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Avatar (URL)</label>
+                            <input v-model="edit_nguoi_dung.avatar" type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Đối Tác</label>
+                            <select v-model="edit_nguoi_dung.id_doi_tac" class="form-select">
+                                <option value="">Chọn đối tác</option>
+                                <template v-for="(v, k) in list_doi_tac" :key="k">
+                                    <option :value="v.id">{{ v.ho_va_ten }}</option>
+                                </template>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Chức Vụ</label>
+                            <select v-model="edit_nguoi_dung.id_chuc_vu" class="form-select">
+                                <option value="">Chọn chức vụ</option>
+                                <template v-for="(v, k) in list_chuc_vu" :key="k">
+                                    <option :value="v.id">{{ v.ten_chuc_vu }}</option>
+                                </template>
+                            </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
@@ -187,18 +244,26 @@ export default {
     data() {
         return {
             list_nguoi_dung: [],
+            list_doi_tac: [],
+            list_chuc_vu: [],
             create_nguoi_dung: {
                 ho_va_ten: "",
                 email: "",
+                avatar: "",
                 password: "",
                 re_password: "",
                 so_dien_thoai: "",
+                id_doi_tac: "",
+                id_chuc_vu: "",
                 trang_thai: "1",
             },
             edit_nguoi_dung: {
                 ho_va_ten: "",
                 email: "",
+                avatar: "",
                 so_dien_thoai: "",
+                id_doi_tac: "",
+                id_chuc_vu: "",
                 trang_thai: "",
             },
             del_nguoi_dung: {},
@@ -207,6 +272,8 @@ export default {
     },
     mounted() {
         this.loadData();
+        this.loadDataPartner();
+        this.loadDataChucVu();
     },
     methods: {
         timKiem() {
@@ -226,6 +293,20 @@ export default {
                     this.list_nguoi_dung = res.data.data;
                 });
         },
+        loadDataPartner() {
+            axios
+                .get('http://127.0.0.1:8000/api/doi-tac/data')
+                .then((res) => {
+                    this.list_doi_tac = res.data.data;
+                });
+        },
+        loadDataChucVu() {
+            axios
+                .get('http://127.0.0.1:8000/api/chuc-vu/data')
+                .then((res) => {
+                    this.list_chuc_vu = res.data.data;
+                });
+        },
         themNguoiDung() {
             axios
                 .post('http://127.0.0.1:8000/api/nguoi-dung/create', this.create_nguoi_dung)
@@ -235,9 +316,12 @@ export default {
                         this.create_nguoi_dung = {
                             ho_va_ten: "",
                             email: "",
+                            avatar: "",
                             password: "",
                             re_password: "",
                             so_dien_thoai: "",
+                            id_doi_tac: "",
+                            id_chuc_vu: "",
                             trang_thai: "1",
                         };
                         this.loadData();

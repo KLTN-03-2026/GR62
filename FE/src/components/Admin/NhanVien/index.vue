@@ -26,6 +26,8 @@
                                 <th class="text-center">Email</th>
                                 <th class="text-center">Số Điện Thoại</th>
                                 <th class="text-center">Chức Vụ</th>
+                                <th class="text-center">Mở?</th>
+                                <th class="text-center">Master?</th>
                                 <th class="text-center">Trạng Thái</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -38,6 +40,14 @@
                                     <td class="align-middle">{{ value.email }}</td>
                                     <td class="align-middle text-center">{{ value.so_dien_thoai }}</td>
                                     <td class="align-middle">{{ tenChucVu(value.id_chuc_vu) }}</td>
+                                    <td class="align-middle text-center">
+                                        <i v-if="value.is_open" class="fa-solid fa-check-circle text-success"></i>
+                                        <i v-else class="fa-solid fa-times-circle text-danger"></i>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <i v-if="value.is_master" class="fa-solid fa-check-circle text-success"></i>
+                                        <i v-else class="fa-solid fa-times-circle text-danger"></i>
+                                    </td>
                                     <td class="align-middle text-center">
                                         <button v-if="value.trang_thai == 1" class="btn btn-info w-100" style="color:white">
                                             Hoạt động
@@ -102,6 +112,20 @@
                                 <option value="0">Tạm tắt</option>
                             </select>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mở?</label>
+                            <select v-model="create_nhan_vien.is_open" class="form-select">
+                                <option :value="1">Có</option>
+                                <option :value="0">Không</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Master?</label>
+                            <select v-model="create_nhan_vien.is_master" class="form-select">
+                                <option :value="1">Có</option>
+                                <option :value="0">Không</option>
+                            </select>
+                        </div>
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Chức Vụ</label>
                             <select v-model="create_nhan_vien.id_chuc_vu" class="form-select">
@@ -152,6 +176,20 @@
                             <select v-model="edit_nhan_vien.trang_thai" class="form-select">
                                 <option value="1">Hoạt động</option>
                                 <option value="0">Tạm tắt</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mở?</label>
+                            <select v-model="edit_nhan_vien.is_open" class="form-select">
+                                <option :value="true">Có</option>
+                                <option :value="false">Không</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Master?</label>
+                            <select v-model="edit_nhan_vien.is_master" class="form-select">
+                                <option :value="true">Có</option>
+                                <option :value="false">Không</option>
                             </select>
                         </div>
                         <div class="col-md-12 mb-3">
@@ -208,11 +246,11 @@ export default {
             tu_khoa: '',
             create_nhan_vien: {
                 ho_va_ten: "", email: "", password: "", re_password: "",
-                so_dien_thoai: "", id_chuc_vu: "", trang_thai: "1",
+                so_dien_thoai: "", id_chuc_vu: "", is_open: 1, is_master: 0, trang_thai: "1",
             },
             edit_nhan_vien: {
                 ho_va_ten: "", email: "", password: "", so_dien_thoai: "",
-                id_chuc_vu: "", trang_thai: "",
+                id_chuc_vu: "", is_open: "", is_master: "", trang_thai: "",
             },
             del_nhan_vien: {},
         };
@@ -258,7 +296,7 @@ export default {
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);
-                        this.create_nhan_vien = { ho_va_ten: "", email: "", password: "", re_password: "", so_dien_thoai: "", id_chuc_vu: "", trang_thai: "1" };
+                        this.create_nhan_vien = { ho_va_ten: "", email: "", password: "", re_password: "", so_dien_thoai: "", id_chuc_vu: "", is_open: 1, is_master: 0, trang_thai: "1" };
                         this.loadData();
                     } else {
                         this.$toast.error(res.data.message);

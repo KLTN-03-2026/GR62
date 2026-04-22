@@ -11,7 +11,25 @@ class HoaDonController extends Controller
 {
     public function index()
     {
-        $data = HoaDon::all();
+        $data = HoaDon::with('goi')->get();
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ]);
+    }
+
+    public function getHistory()
+    {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $data = HoaDon::where('id_nguoi_dung', $user->id)
+                      ->with('goi')
+                      ->orderBy('created_at', 'desc')
+                      ->get();
+
         return response()->json([
             'status' => true,
             'data' => $data

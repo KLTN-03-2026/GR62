@@ -22,6 +22,7 @@
                         <thead>
                             <tr class="bg-primary text-light text-nowrap">
                                 <th class="text-center">#</th>
+                                <th class="text-center">Hình Ảnh</th>
                                 <th class="text-center">Họ Và Tên</th>
                                 <th class="text-center">Email</th>
                                 <th class="text-center">Số Điện Thoại</th>
@@ -34,6 +35,10 @@
                             <template v-for="(value, index) in list_doi_tac" :key="index">
                                 <tr class="text-nowrap">
                                     <th class="align-middle text-center">{{ index + 1 }}</th>
+                                    <td class="align-middle text-center">
+                                        <img :src="value.hinh_anh" alt="" class="rounded-circle" width="40" height="40"
+                                            onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIsTksbH1mYp9bE9t20fUp5ZId3Xf0v0K9g&s'">
+                                    </td>
                                     <td class="align-middle">{{ value.ho_va_ten }}</td>
                                     <td class="align-middle">{{ value.email }}</td>
                                     <td class="align-middle text-center">{{ value.so_dien_thoai }}</td>
@@ -102,6 +107,10 @@
                             <input v-model="create_doi_tac.dia_chi" type="text" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label class="form-label">Hình Ảnh (URL)</label>
+                            <input v-model="create_doi_tac.hinh_anh" type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
                             <select v-model="create_doi_tac.trang_thai" class="form-select">
                                 <option value="1">Hoạt động</option>
@@ -144,6 +153,10 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Địa Chỉ</label>
                             <input v-model="edit_doi_tac.dia_chi" type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Hình Ảnh (URL)</label>
+                            <input v-model="edit_doi_tac.hinh_anh" type="text" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
@@ -194,11 +207,11 @@ export default {
         return {
             list_doi_tac: [],
             create_doi_tac: {
-                ho_va_ten: "", email: "", password: "", re_password: "",
+                ho_va_ten: "", email: "", hinh_anh: "", password: "", re_password: "",
                 so_dien_thoai: "", dia_chi: "", trang_thai: "1",
             },
             edit_doi_tac: {
-                ho_va_ten: "", email: "", so_dien_thoai: "", dia_chi: "", trang_thai: "",
+                ho_va_ten: "", email: "", hinh_anh: "", so_dien_thoai: "", dia_chi: "", trang_thai: "",
             },
             del_doi_tac: {},
             tim_kiem: {},
@@ -224,7 +237,7 @@ export default {
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);
-                        this.create_doi_tac = { ho_va_ten: "", email: "", password: "", re_password: "", so_dien_thoai: "", dia_chi: "", trang_thai: "1" };
+                        this.create_doi_tac = { ho_va_ten: "", email: "", hinh_anh: "", password: "", re_password: "", so_dien_thoai: "", dia_chi: "", trang_thai: "1" };
                         this.loadData();
                     } else {
                         this.$toast.error(res.data.message);

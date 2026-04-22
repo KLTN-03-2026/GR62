@@ -23,7 +23,7 @@ class NguoiDungController extends Controller
 {
     public function index()
     {
-        $data = NguoiDung::all();
+        $data = NguoiDung::with('doiTac', 'chucVu')->get();
         return response()->json([
             'status' => true,
             'data' => $data
@@ -75,7 +75,7 @@ class NguoiDungController extends Controller
 
     public function search(Request $request)
     {
-        $query = NguoiDung::query();
+        $query = NguoiDung::with('doiTac', 'chucVu');
         if ($request->has('keyword') && $request->keyword != '') {
             $keyword = $request->keyword;
             $query->where(function ($q) use ($keyword) {

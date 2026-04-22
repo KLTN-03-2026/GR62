@@ -2,906 +2,750 @@
     <div class="trang-chinh-wrapper">
         <div class="d-flex vh-100 w-100 overflow-hidden"
             style="background-color: #f8fafc; font-family: 'Inter', sans-serif;">
-        <!-- Left Sidebar -->
-        <aside class="bg-white border-end d-flex flex-column flex-shrink-0" style="width: 260px;">
-            <!-- Logo -->
-            <div class="px-4 py-4 d-flex align-items-center mb-2">
-                <div class="d-flex justify-content-center align-items-center rounded-3 me-3 shadow-sm"
-                    style="background-color: #ea580c; width: 44px; height: 44px;">
-                    <i class="bx bx-camera-movie text-white fs-4"></i>
-                </div>
-                <div>
-                    <h5 class="mb-0 fw-bolder" style="color: #0f172a; font-size: 1.15rem; letter-spacing: -0.5px;">
-                        AI-Meet</h5>
-
-                    <small class="text-muted fw-medium" style="font-size: 0.75rem;">Video Intelligence</small>
-                </div>
-            </div>
-
-            <!-- Navigation -->
-            <div class="px-3 flex-grow-1 mt-2">
-                <ul class="nav nav-pills flex-column mb-auto gap-2">
-                    <li class="nav-item">
-                        <a href="#" @click.prevent="currentTab = 'dashboard'"
-                            :class="['nav-link d-flex align-items-center fw-medium py-2 px-3 rounded-3', currentTab === 'dashboard' ? 'active-tab fw-bold' : 'text-dark text-muted-hover']">
-                            <i class='bx bxs-dashboard me-3 fs-5'
-                                :style="currentTab === 'dashboard' ? '' : 'color: #64748b;'"></i> Bảng điều khiển
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" @click.prevent="currentTab = 'meetings'"
-                            :class="['nav-link d-flex align-items-center fw-medium py-2 px-3 rounded-3', currentTab === 'meetings' ? 'active-tab fw-bold' : 'text-dark text-muted-hover']">
-                            <i class='bx bx-camera-movie me-3 fs-5'
-                                :style="currentTab === 'meetings' ? '' : 'color: #64748b;'"></i> Cuộc họp
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="#" @click.prevent="currentTab = 'settings'"
-                            :class="['nav-link d-flex align-items-center fw-medium py-2 px-3 rounded-3', currentTab === 'settings' ? 'active-tab fw-bold' : 'text-dark text-muted-hover']">
-                            <i class='bx bx-cog me-3 fs-5'
-                                :style="currentTab === 'settings' ? '' : 'color: #64748b;'"></i> Cài đặt
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Pro Plan -->
-            <div class="p-4 mt-auto">
-                <div class="p-3 rounded-4 pt-4 text-center"
-                    style="background-color: #fff7ed; border: 1px solid #ffedd5;">
-                    <div class="text-start mb-2">
-                        <h6 class="fw-bolder mb-1" style="color: #ea580c; font-size: 0.75rem; letter-spacing: 0.5px;">
-
-                            GÓI PRO</h6>
-                        <p class="small text-muted mb-3 lh-sm" style="font-size: 0.8rem; color: #64748b !important;">
-                            Theo dõi khuôn mặt AI không giới hạn & lưu trữ.</p>
+            <!-- Left Sidebar -->
+            <aside class="bg-white border-end d-flex flex-column flex-shrink-0" style="width: 260px;">
+                <!-- Logo -->
+                <div class="px-4 py-4 d-flex align-items-center mb-2">
+                    <div class="d-flex justify-content-center align-items-center rounded-3 me-3 shadow-sm"
+                        style="background-color: #ea580c; width: 44px; height: 44px;">
+                        <i class="bx bx-camera-movie text-white fs-4"></i>
                     </div>
-                    <router-link to="/nguoi-dung/thanh-toan" class="btn w-100 fw-bold text-white shadow-sm"
-                        style="background-color: #ea580c; font-size: 0.85rem; padding: 10px 0; border-radius: 8px; text-decoration: none;">
-                        Nâng cấp gói
-                    </router-link>
-                </div>
-            </div>
-        </aside>
+                    <div>
+                        <h5 class="mb-0 fw-bolder" style="color: #0f172a; font-size: 1.15rem; letter-spacing: -0.5px;">
+                            AI-Meet</h5>
 
-        <!-- Main Content -->
-        <main class="flex-grow-1 d-flex flex-column overflow-hidden h-100">
-            <!-- Topbar -->
-            <header
-                class="bg-white border-bottom d-flex align-items-center justify-content-between px-4 p-xl-4 flex-shrink-0"
-                style="height: 80px;">
-                <!-- Search -->
-                <div class="position-relative" style="width: 380px;">
-                    <i class='bx bx-search position-absolute top-50 translate-middle-y text-muted fs-5'
-                        style="left: 16px; color: #94a3b8 !important;"></i>
-                    <input type="text" class="form-control bg-light border-0 shadow-none ps-5"
-                        placeholder="Tìm kiếm cuộc họp, bản ghi, hoặc người..."
-                        style="border-radius: 12px; font-size: 0.95rem; padding-top: 12px; padding-bottom: 12px; color: #64748b;">
+                        <small class="text-muted fw-medium" style="font-size: 0.75rem;">Video Intelligence</small>
+                    </div>
                 </div>
 
-                <!-- Right Actions -->
-                <div class="d-flex align-items-center gap-3">
-                    <button
-                        class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border position-relative shadow-sm"
-                        style="width: 44px; height: 44px; border-color: #e2e8f0 !important;">
-                        <i class='bx bxs-bell fs-5' style="color: #334155;"></i>
-                    </button>
-                    <button
-                        class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border shadow-sm"
-                        style="width: 44px; height: 44px; border-color: #e2e8f0 !important;">
-                        <i class='bx bxs-message-square-dots fs-5' style="color: #334155;"></i>
-                    </button>
+                <!-- Navigation -->
+                <div class="px-3 flex-grow-1 mt-2">
+                    <ul class="nav nav-pills flex-column mb-auto gap-2">
+                        <li class="nav-item">
+                            <a href="#" @click.prevent="currentTab = 'dashboard'"
+                                :class="['nav-link d-flex align-items-center fw-medium py-2 px-3 rounded-3', currentTab === 'dashboard' ? 'active-tab fw-bold' : 'text-dark text-muted-hover']">
+                                <i class='bx bxs-dashboard me-3 fs-5'
+                                    :style="currentTab === 'dashboard' ? '' : 'color: #64748b;'"></i> Bảng điều khiển
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" @click.prevent="currentTab = 'meetings'"
+                                :class="['nav-link d-flex align-items-center fw-medium py-2 px-3 rounded-3', currentTab === 'meetings' ? 'active-tab fw-bold' : 'text-dark text-muted-hover']">
+                                <i class='bx bx-camera-movie me-3 fs-5'
+                                    :style="currentTab === 'meetings' ? '' : 'color: #64748b;'"></i> Cuộc họp
+                            </a>
+                        </li>
 
-                    <div class="position-relative border-start ms-2 ps-4 d-flex align-items-center"
-                        style="border-color: #e2e8f0 !important;">
 
-                        <div @click.stop="showDropdown = !showDropdown"
-                            class="d-flex align-items-center user-profile-link" style="cursor: pointer;">
-                            <div class="text-end me-3 d-none d-md-block">
-                                <h6 class="mb-0 fw-bolder" style="font-size: 0.95rem; color: #0f172a;">
-                                    {{ ten_nguoi_dung }}
-                                </h6>
+                        <li class="nav-item">
+                            <a href="#" @click.prevent="currentTab = 'settings'"
+                                :class="['nav-link d-flex align-items-center fw-medium py-2 px-3 rounded-3', currentTab === 'settings' ? 'active-tab fw-bold' : 'text-dark text-muted-hover']">
+                                <i class='bx bx-cog me-3 fs-5'
+                                    :style="currentTab === 'settings' ? '' : 'color: #64748b;'"></i> Cài đặt
+                            </a>
+                        </li>
+                        <hr class="my-2 opacity-10">
+                        <li class="nav-item" v-if="la_doi_tac">
+                            <a href="/doi-tac/trang-chinh"
+                                class="nav-link d-flex align-items-center fw-medium py-2 px-3 rounded-3 text-dark text-muted-hover animate__animated animate__pulse">
+                                <i class='bx bxs-business me-3 fs-5 text-orange'></i> Quản trị Đối tác
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-                                <small v-if="da_xac_minh" class="fw-bold" style="font-size: 0.75rem; color: #ea580c;">
-                                    <i class='bx bxs-check-shield'></i> Đã xác minh danh tính
-                                </small>
-                                <small v-else class="fw-bold" style="font-size: 0.75rem; color: #64748b;">
-                                    <i class='bx bx-error-circle'></i> Chưa xác minh
-                                </small>
+                <!-- Pro Plan -->
+                <div class="p-4 mt-auto">
+                    <div class="p-3 rounded-4 pt-4 text-center"
+                        style="background-color: #fff7ed; border: 1px solid #ffedd5;">
+                        <div class="text-start mb-2">
+                            <h6 class="fw-bolder mb-1"
+                                style="color: #ea580c; font-size: 0.75rem; letter-spacing: 0.5px;">
+
+                                GÓI PRO</h6>
+                            <p class="small text-muted mb-3 lh-sm"
+                                style="font-size: 0.8rem; color: #64748b !important;">
+                                Theo dõi khuôn mặt AI không giới hạn & lưu trữ.</p>
+                        </div>
+                        <router-link to="/nguoi-dung/danh-sach-goi" class="btn w-100 fw-bold text-white shadow-sm"
+                            style="background-color: #ea580c; font-size: 0.85rem; padding: 10px 0; border-radius: 8px; text-decoration: none;">
+                            Nâng cấp gói
+                        </router-link>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-grow-1 d-flex flex-column overflow-hidden h-100">
+                <!-- Topbar -->
+                <header
+                    class="bg-white border-bottom d-flex align-items-center justify-content-between px-4 p-xl-4 flex-shrink-0"
+                    style="height: 80px;">
+                    <!-- Search -->
+                    <div class="position-relative" style="width: 380px;">
+                        <i class='bx bx-search position-absolute top-50 translate-middle-y text-muted fs-5'
+                            style="left: 16px; color: #94a3b8 !important;"></i>
+                        <input type="text" class="form-control bg-light border-0 shadow-none ps-5"
+                            placeholder="Tìm kiếm cuộc họp, bản ghi, hoặc người..."
+                            style="border-radius: 12px; font-size: 0.95rem; padding-top: 12px; padding-bottom: 12px; color: #64748b;">
+                    </div>
+
+                    <!-- Right Actions -->
+                    <div class="d-flex align-items-center gap-3">
+                        <button
+                            class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border position-relative shadow-sm"
+                            style="width: 44px; height: 44px; border-color: #e2e8f0 !important;">
+                            <i class='bx bxs-bell fs-5' style="color: #334155;"></i>
+                        </button>
+                        <button
+                            class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border shadow-sm"
+                            style="width: 44px; height: 44px; border-color: #e2e8f0 !important;">
+                            <i class='bx bxs-message-square-dots fs-5' style="color: #334155;"></i>
+                        </button>
+
+                        <div class="position-relative border-start ms-2 ps-4 d-flex align-items-center"
+                            style="border-color: #e2e8f0 !important;">
+
+                            <div @click.stop="showDropdown = !showDropdown"
+                                class="d-flex align-items-center user-profile-link" style="cursor: pointer;">
+                                <div class="text-end me-3 d-none d-md-block">
+                                    <h6 class="mb-0 fw-bolder" style="font-size: 0.95rem; color: #0f172a;">
+                                        {{ ten_nguoi_dung }}
+                                    </h6>
+
+                                    <small v-if="da_xac_minh" class="fw-bold"
+                                        style="font-size: 0.75rem; color: #ea580c;">
+                                        <i class='bx bxs-check-shield'></i> Đã xác minh danh tính
+                                    </small>
+                                    <small v-else class="fw-bold" style="font-size: 0.75rem; color: #64748b;">
+                                        <i class='bx bx-error-circle'></i> Chưa xác minh
+                                    </small>
+                                </div>
+
+                                <img :src="avatar_url" alt="Profile" class="rounded-circle border border-2 shadow-sm"
+                                    width="46" height="46"
+                                    :style="{ borderColor: '#fff !important', outline: da_xac_minh ? '2px solid #ea580c' : '2px solid #cbd5e1' }">
                             </div>
 
-                            <img :src="avatar_url" alt="Profile" class="rounded-circle border border-2 shadow-sm"
-                                width="46" height="46"
-                                :style="{ borderColor: '#fff !important', outline: da_xac_minh ? '2px solid #ea580c' : '2px solid #cbd5e1' }">
+                            <div v-if="showDropdown"
+                                class="position-absolute end-0 bg-white shadow-lg border rounded-3 py-2 animate__animated animate__fadeInUp"
+                                style="top: 120%; width: 180px; z-index: 1050; border-color: #f1f5f9 !important;">
+
+                                <div class="px-3 py-2 border-bottom mb-1">
+                                    <span class="text-muted"
+                                        style="font-size: 0.7rem; text-transform: uppercase; font-weight: 700;">Tài
+                                        khoản</span>
+                                </div>
+
+                                <button @click="dang_xuat"
+                                    class="dropdown-item px-3 py-2 d-flex align-items-center text-danger fw-bold border-0 bg-transparent w-100 text-start">
+                                    <i class="bx bx-log-out-circle me-2 fs-5"></i>
+                                    <span>Đăng xuất</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  -->
+                </header>
+
+                <!-- Scrollable Content Area -->
+                <div class="flex-grow-1 overflow-auto p-4 p-xl-5">
+                    <div style="max-width: 1100px; margin: 0 auto;">
+
+                        <!-- TAB: DASHBOARD -->
+                        <div v-if="currentTab === 'dashboard'">
+                            <!-- User Welcome Row -->
+                            <div class="row mb-4">
+                                <div class="col-md-6 d-flex flex-column justify-content-end">
+                                    <h2 class="fw-bolder mb-2"
+                                        style="color: #0f172a; letter-spacing: -0.5px; font-size: 2rem;">Chào mừng trở
+                                        lại,
+                                        Alex!
+                                    </h2>
+                                    <p class="mb-0" style="font-size: 1rem; color: #64748b;">Bạn có <strong>3
+                                            cuộc họp</strong> được lên lịch cho hôm nay.</p>
+                                </div>
+                                <div
+                                    class="col-md-6 d-none d-md-flex flex-column justify-content-end align-items-end mb-1">
+                                    <p class="text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">
+                                        GIỜ ĐỊA PHƯƠNG</p>
+                                    <h3 class="fw-bolder mb-0"
+                                        style="color: #0f172a; font-size: 1.5rem; letter-spacing: -0.5px;">10:45 AM</h3>
+                                </div>
+                            </div>
+
+                            <!-- Action Cards Row -->
+                            <div class="row g-4 mb-5">
+                                <!-- New Meeting -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card border-0 h-100 p-4 text-white shadow-sm d-flex flex-column"
+                                        style="background-color: #ea580c; border-radius: 16px;">
+                                        <div>
+                                            <div class="d-flex justify-content-center align-items-center rounded mb-4 shadow-sm"
+                                                style="background-color: rgba(255,255,255,0.25); width: 44px; height: 44px;">
+                                                <i class="bx bx-video-plus fs-4"></i>
+                                            </div>
+
+                                            <h4 class="fw-bolder mb-2" style="font-size: 1.35rem;">Cuộc họp mới</h4>
+                                            <p class="mb-4 text-white"
+                                                style="font-size: 0.95rem; opacity: 0.9; line-height: 1.5;">Bắt đầu cuộc
+                                                họp
+                                                tức thì
+                                                với theo dõi khuôn mặt AI đang hoạt động.</p>
+                                        </div>
+                                        <div class="mt-auto">
+                                            <button @click="currentTab = 'meetings'" class="btn bg-white fw-bolder w-100 py-2"
+                                                style="border-radius: 8px; color: #ea580c; font-size: 1rem;">Bắt đầu
+                                                ngay</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Join Meeting -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card border-0 h-100 p-4 shadow-sm d-flex flex-column"
+                                        style="background-color: #ffffff; border-radius: 16px; border: 1px solid #f1f5f9 !important;">
+                                        <div>
+                                            <div class="d-flex justify-content-center align-items-center rounded-3 mb-4 shadow-sm"
+                                                style="background-color: #fff7ed; width: 44px; height: 44px;">
+                                                <i class="bx bxs-keyboard fs-4" style="color: #ea580c;"></i>
+                                            </div>
+
+                                            <h4 class="fw-bolder mb-2 text-dark" style="font-size: 1.35rem;">Tham gia
+                                                cuộc
+                                                họp
+                                            </h4>
+                                            <p class="mb-4"
+                                                style="font-size: 0.95rem; color: #64748b; line-height: 1.5;">
+                                                Nhập ID cuộc họp hoặc liên kết để kết nối.</p>
+                                        </div>
+                                        <div class="d-flex mt-auto gap-3">
+                                            <div class="flex-grow-1 position-relative">
+                                                <input type="text" v-model="ma_phong_tham_gia"
+                                                    class="form-control bg-light border-0 shadow-none h-100 ps-3 fw-medium"
+                                                    placeholder="ID: 000-000-000"
+                                                    style="font-size: 0.9rem; border-radius: 8px; color: #475569;"
+                                                    @keyup.enter="kiemTraTruocKhiJoin">
+                                            </div>
+                                            <button @click="kiemTraTruocKhiJoin" :disabled="isJoining"
+                                                class="btn text-white fw-bold px-4"
+                                                style="background-color: #ea580c; border-radius: 8px;">
+                                                <span v-if="isJoining" class="spinner-border spinner-border-sm"></span>
+                                                <span v-else>Tham Gia</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Face ID Status -->
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="card border-0 h-100 p-4 text-white shadow-sm position-relative overflow-hidden d-flex flex-column"
+                                        style="background-color: #0f172a; border-radius: 16px;">
+                                        <div class="d-flex justify-content-between align-items-start mb-4">
+                                            <div>
+
+                                                <h4 class="fw-bolder mb-2" style="font-size: 1.3rem;">Trạng thái Face ID
+                                                </h4>
+                                                <div class="d-flex align-items-center" style="color: #ea580c;">
+                                                    <i class='bx bxs-check-shield me-2 fs-5'></i>
+                                                    <span class="fw-semibold small">Đã đồng bộ hoàn toàn</span>
+                                                </div>
+                                            </div>
+                                            <div class="rounded-3 overflow-hidden"
+                                                style="width: 55px; height: 55px; background-color: #334155; border: 2px solid #334155;">
+                                                <img :src="avatar_url" class="w-100 h-100 object-fit-cover"
+                                                    alt="Face Scanned" style="filter: contrast(1.1) brightness(0.9);">
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-auto pt-2">
+                                            <div class="progress mb-3 shadow-none"
+                                                style="height: 6px; background-color: #334155; border-radius: 10px;">
+                                                <div class="progress-bar rounded-pill" role="progressbar"
+                                                    style="width: 94.2%; background-color: #ea580c;"></div>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-end">
+                                                <div>
+                                                    <p class="small mb-0 fw-medium"
+                                                        style="color: #94a3b8; font-size: 0.75rem;">Điểm tin cậy:</p>
+                                                    <h5 class="fw-bolder mb-0 mt-1">94.2%</h5>
+                                                </div>
+                                                <a href="#" class="small text-decoration-none fw-semibold"
+                                                    style="color: #ea580c; line-height: 1.3; text-align: right;">Quản
+                                                    lý<br>Sinh trắc học</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lists Row -->
+                            <div class="row g-4">
+                                <!-- Upcoming Meetings -->
+                                <div class="col-lg-12">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <h4 class="fw-bolder mb-0 text-dark" style="font-size: 1.25rem;">Cuộc họp sắp tới</h4>
+                                        <a href="#" class="fw-bolder text-decoration-none small" style="color: #ea580c;">Xem lịch</a>
+                                    </div>
+
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="card border-0 shadow-sm p-3" style="border-radius: 12px;">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="rounded-3 d-flex flex-column justify-content-center align-items-center px-3 py-2 me-4"
+                                                        style="background-color: #f8fafc; min-width: 65px; border: 1px solid #f1f5f9;">
+                                                        <span class="fw-bolder" style="color: #ea580c; font-size: 1.15rem;">24</span>
+                                                        <span class="small fw-bolder text-muted" style="font-size: 0.65rem;">OCT</span>
+                                                    </div>
+                                                    <div class="flex-grow-1 pe-3">
+                                                        <h6 class="fw-bolder mb-1 text-dark" style="font-size: 0.95rem;">Đồng bộ sản phẩm: Đánh giá thiết kế</h6>
+                                                        <div class="d-flex align-items-center fw-medium mt-1" style="color: #94a3b8; font-size: 0.8rem;">
+                                                            <span>11:00 AM - 12:00 PM</span>
+                                                            <span class="mx-2">•</span>
+                                                            <span>ID: 882-192-331</span>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn text-white fw-bold px-4 py-2" style="background-color: #ea580c; border-radius: 8px; font-size: 0.9rem;">Join</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card border-0 shadow-sm p-3 bg-white" style="border-radius: 12px; border: 1px solid #f1f5f9 !important;">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="rounded-3 d-flex flex-column justify-content-center align-items-center px-3 py-2 me-4"
+                                                        style="background-color: #f8fafc; min-width: 65px; opacity: 0.7;">
+                                                        <span class="fw-bolder" style="color: #94a3b8; font-size: 1.15rem;">25</span>
+                                                        <span class="small fw-bolder text-muted" style="font-size: 0.65rem;">OCT</span>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <h6 class="fw-bolder mb-1 text-dark" style="font-size: 0.95rem;">Cập nhật hàng tháng cho nhà đầu tư</h6>
+                                                        <div class="d-flex align-items-center fw-medium mt-1" style="color: #94a3b8; font-size: 0.8rem;">
+                                                            <span>09:30 AM - 10:30 AM</span>
+                                                            <span class="mx-2">•</span>
+                                                            <span>ID: 110-349-882</span>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn fw-semibold px-4 py-2 bg-white" style="border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">Chi tiết</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div v-if="showDropdown"
-                            class="position-absolute end-0 bg-white shadow-lg border rounded-3 py-2 animate__animated animate__fadeInUp"
-                            style="top: 120%; width: 180px; z-index: 1050; border-color: #f1f5f9 !important;">
+                        <!-- TAB: MEETINGS -->
+                        <div v-if="currentTab === 'meetings'">
+                            <h2 class="fw-bolder mb-5" style="color: #0f172a; letter-spacing: -0.5px; font-size: 2rem;">
 
-                            <div class="px-3 py-2 border-bottom mb-1">
-                                <span class="text-muted"
-                                    style="font-size: 0.7rem; text-transform: uppercase; font-weight: 700;">Tài
-                                    khoản</span>
+                                Cuộc họp</h2>
+
+                            <div class="row g-4">
+                                <!-- Left Col: Create Room -->
+                                <div class="col-lg-7">
+                                    <div class="card border-0 shadow-sm p-4 p-md-5" style="border-radius: 16px;">
+                                        <div class="d-flex align-items-center mb-5">
+                                            <div class="d-flex justify-content-center align-items-center rounded me-3 shadow-sm"
+                                                style="background-color: #fff7ed; width: 44px; height: 44px;">
+                                                <i class="bx bx-calendar-check fs-4" style="color: #ea580c;"></i>
+                                            </div>
+
+                                            <h4 class="fw-bolder mb-0 text-dark" style="font-size: 1.35rem;">Tạo phòng
+                                                họp
+                                            </h4>
+                                        </div>
+
+                                        <form @submit.prevent="taoPhongHop">
+                                            <div class="mb-4">
+                                                <label class="form-label fw-bold mb-2 text-muted"
+                                                    style="font-size: 0.75rem; letter-spacing: 1px;">TIÊU ĐỀ CUỘC
+                                                    HỌP</label>
+                                                <input type="text" v-model="formTaoPhong.ten_phong" required
+                                                    class="form-control form-control-lg bg-light border-0 shadow-none px-3 py-3"
+                                                    placeholder="ví dụ, Đồng bộ nhóm hàng tuần"
+                                                    style="border-radius: 12px; font-size: 0.95rem; color: #475569;">
+                                            </div>
+                                            <div class="mb-4">
+                                                <label class="form-label fw-bold mb-2 text-muted"
+                                                    style="font-size: 0.75rem; letter-spacing: 1px;">MÔ TẢ</label>
+                                                <textarea v-model="formTaoPhong.mo_ta"
+                                                    class="form-control form-control-lg bg-light border-0 shadow-none px-3 py-3"
+                                                    rows="4"
+                                                    placeholder="Phác thảo chương trình nghị sự cuộc họp hoặc mục tiêu..."
+                                                    style="border-radius: 12px; font-size: 0.95rem; color: #475569; resize: none;"></textarea>
+                                            </div>
+                                            <div class="mb-5">
+                                                <label class="form-label fw-bold mb-2 text-muted"
+                                                    style="font-size: 0.75rem; letter-spacing: 1px;">MỜI NGƯỜI THAM
+                                                    GIA</label>
+                                                <div class="position-relative">
+                                                    <i class='bx bx-at position-absolute top-50 translate-middle-y fs-5'
+                                                        style="left: 1rem; color: #94a3b8;"></i>
+                                                    <input type="text" v-model="formTaoPhong.email_khach_moi"
+                                                        class="form-control form-control-lg bg-light border-0 shadow-none ps-5 py-3"
+                                                        placeholder="Thêm địa chỉ email được phân tách bằng dấu phẩy"
+                                                        style="border-radius: 12px; font-size: 0.95rem; color: #475569;">
+                                                </div>
+                                            </div>
+                                            <button type="submit"
+                                                class="btn text-white fw-bold px-4 py-3 d-flex justify-content-center align-items-center"
+                                                :disabled="isCreating"
+                                                style="background-color: #ea580c; border-radius: 8px; font-size: 1rem; min-width: 180px;">
+                                                <span v-if="isCreating"
+                                                    class="spinner-border spinner-border-sm me-2"></span>
+                                                {{ isCreating ? 'Đang khởi tạo...' : 'Tạo cuộc họp' }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Right Col: Join Card -->
+                                <div class="col-lg-5">
+                                    <div class="card border-0 shadow-sm p-4 p-md-5 text-center h-100 d-flex flex-column justify-content-center"
+                                        style="border-radius: 16px;">
+                                        <div class="mb-4">
+                                            <div class="d-flex justify-content-center align-items-center rounded-3 mx-auto mb-3 shadow-sm"
+                                                style="background-color: #fff7ed; width: 56px; height: 56px;">
+                                                <i class="bx bxs-keyboard fs-3" style="color: #ea580c;"></i>
+                                            </div>
+                                            <h4 class="fw-bolder mb-2 text-dark">Tham gia cuộc họp</h4>
+                                            <p class="text-muted small">Nhập mã phòng để kết nối ngay lập tức.</p>
+                                        </div>
+                                        <div class="mt-2">
+                                            <div class="d-flex gap-3 mb-3">
+                                                <div class="flex-grow-1">
+                                                    <input type="text" v-model="ma_phong_tham_gia"
+                                                        class="form-control form-control-lg bg-light border-0 shadow-none ps-3 fw-medium"
+                                                        placeholder="Mã phòng..."
+                                                        style="font-size: 1rem; border-radius: 12px; height: 56px; color: #475569;">
+                                                </div>
+                                            </div>
+                                            <button @click="kiemTraTruocKhiJoin" :disabled="isJoining"
+                                                class="btn text-white fw-bold w-100 py-3"
+                                                style="background-color: #ea580c; border-radius: 10px; font-size: 1.1rem;">
+                                                <span v-if="isJoining" class="spinner-border spinner-border-sm me-2"></span>
+                                                <span v-else>Tham gia ngay</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB: SETTINGS -->
+                        <div v-if="currentTab === 'settings'">
+                            <h2 class="fw-bolder mb-1" style="color: #0f172a; letter-spacing: -0.5px; font-size: 2rem;">
+
+                                Cài đặt</h2>
+                            <p class="mb-5" style="color: #64748b; font-size: 0.95rem;">Quản lý hồ sơ, bảo mật và
+                                tùy chọn xác thực sinh trắc học của bạn.</p>
+
+                            <!-- Profile Information -->
+                            <!-- Avatar Upload Section -->
+                            <div class="row mb-5 align-items-center">
+                                <div class="col-auto">
+                                    <div class="position-relative">
+                                        <img :src="avatar_preview || avatar_url" alt="Profile"
+                                            class="rounded-circle border border-4 shadow-sm" width="100" height="100"
+                                            style="border-color: #fff !important; outline: 2px solid #ea580c; object-fit: cover;">
+                                        <button @click="$refs.avatarInput.click()"
+                                            class="btn btn-sm btn-dark position-absolute bottom-0 end-0 rounded-circle d-flex align-items-center justify-content-center shadow"
+                                            style="width: 32px; height: 32px; border: 2px solid #fff;">
+                                            <i class="bx bx-camera fs-6"></i>
+                                        </button>
+                                        <input type="file" ref="avatarInput" @change="handleAvatarChange" class="d-none"
+                                            accept="image/*">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h6 class="fw-bold mb-1 text-dark">Ảnh đại diện</h6>
+                                    <p class="text-muted small mb-0">Hỗ trợ JPG, PNG. Kích thước tối đa 2MB.</p>
+                                    <button v-if="avatar_file" @click="capNhatAvatar" :disabled="isUploadingAvatar"
+                                        class="btn btn-sm text-white fw-bold px-3 py-1 mt-2 animate__animated animate__fadeIn"
+                                        style="background-color: #ea580c; border-radius: 8px; font-size: 0.8rem;">
+                                        <span v-if="isUploadingAvatar"
+                                            class="spinner-border spinner-border-sm me-1"></span>
+                                        Xác nhận lưu
+                                    </button>
+                                </div>
                             </div>
 
-                            <button @click="dang_xuat"
-                                class="dropdown-item px-3 py-2 d-flex align-items-center text-danger fw-bold border-0 bg-transparent w-100 text-start">
-                                <i class="bx bx-log-out-circle me-2 fs-5"></i>
-                                <span>Đăng xuất</span>
+                            <!-- Profile Information -->
+                            <div class="card border-0 shadow-sm p-4 p-md-5 mb-4" style="border-radius: 16px;">
+                                <div class="d-flex align-items-center mb-4">
+                                    <div class="d-flex justify-content-center align-items-center rounded me-3"
+                                        style="background-color: #fff7ed; width: 36px; height: 36px;">
+                                        <i class="bx bxs-user fs-5" style="color: #ea580c;"></i>
+                                    </div>
+
+                                    <h5 class="fw-bolder mb-0 text-dark">Thông tin hồ sơ</h5>
+                                </div>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small mb-2" style="color: #334155;">Họ và
+                                            tên
+                                            đầy đủ</label>
+                                        <input type="text" v-model="settings.ho_va_ten"
+                                            class="form-control form-control-lg bg-light border-0 shadow-none px-3"
+                                            placeholder="Họ và tên"
+                                            style="border-radius: 10px; font-size: 0.95rem; color: #475569;">
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold small mb-2" style="color: #334155;">Địa chỉ
+                                            email</label>
+                                        <input type="email" v-model="settings.email"
+                                            class="form-control form-control-lg bg-light border-0 shadow-none px-3"
+                                            placeholder="Email"
+                                            style="border-radius: 10px; font-size: 0.95rem; color: #475569;">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button @click="capNhatHoSo" :disabled="isUpdatingProfile"
+                                        class="btn text-white fw-bold px-4 py-2"
+                                        style="background-color: #ea580c; border-radius: 10px; font-size: 0.95rem;">
+                                        <span v-if="isUpdatingProfile"
+                                            class="spinner-border spinner-border-sm me-2"></span>
+                                        Cập nhật hồ sơ
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Security -->
+                            <div class="card border-0 shadow-sm p-4 p-md-5 mb-4" style="border-radius: 16px;">
+                                <div class="d-flex align-items-center mb-4">
+                                    <div class="d-flex justify-content-center align-items-center rounded me-3"
+                                        style="background-color: #fff7ed; width: 36px; height: 36px;">
+                                        <i class="bx bxs-lock fs-5" style="color: #ea580c;"></i>
+                                    </div>
+
+                                    <h5 class="fw-bolder mb-0 text-dark">Bảo mật</h5>
+                                </div>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold small mb-2" style="color: #334155;">Mật
+                                            khẩu
+                                            hiện tại</label>
+                                        <input type="password" v-model="settings.current_password"
+                                            class="form-control form-control-lg bg-light border-0 shadow-none px-3"
+                                            placeholder="••••••••"
+                                            style="border-radius: 10px; font-size: 0.95rem; letter-spacing: 2px;">
+                                    </div>
+                                    <div class="col-md-4">
+
+                                        <label class="form-label fw-semibold small mb-2" style="color: #334155;">Mật
+                                            khẩu
+                                            mới</label>
+                                        <input type="password" v-model="settings.new_password"
+                                            class="form-control form-control-lg bg-light border-0 shadow-none px-3"
+                                            placeholder="••••••••"
+                                            style="border-radius: 10px; font-size: 0.95rem; letter-spacing: 2px;">
+                                    </div>
+                                    <div class="col-md-4">
+
+                                        <label class="form-label fw-semibold small mb-2" style="color: #334155;">Xác
+                                            nhận
+                                            mật khẩu</label>
+                                        <input type="password" v-model="settings.confirm_password"
+                                            class="form-control form-control-lg bg-light border-0 shadow-none px-3"
+                                            placeholder="••••••••"
+                                            style="border-radius: 10px; font-size: 0.95rem; letter-spacing: 2px;">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button @click="doiMatKhau" :disabled="isChangingPassword"
+                                        class="btn text-white fw-bold px-4 py-2"
+                                        style="background-color: #ea580c; border-radius: 10px; font-size: 0.95rem;">
+                                        <span v-if="isChangingPassword"
+                                            class="spinner-border spinner-border-sm me-2"></span>
+                                        Thay đổi mật khẩu
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- AI Face ID -->
+                            <div class="card border-0 shadow-sm p-4 p-md-5 mb-5" style="border-radius: 16px;">
+                                <div class="d-flex align-items-center mb-5">
+                                    <div class="d-flex justify-content-center align-items-center rounded me-3 shadow-sm"
+                                        style="background-color: #fff7ed; width: 36px; height: 36px;">
+                                        <i class="bx bx-face fs-5" style="color: #ea580c;"></i>
+                                    </div>
+                                    <h5 class="fw-bolder mb-0 text-dark">Xác thực Face ID AI</h5>
+                                    <span v-if="da_xac_minh"
+                                        class="ms-auto badge d-flex align-items-center gap-1 px-3 py-2 fw-bold animate__animated animate__fadeIn"
+                                        style="background-color: #f0fdf4; color: #166534; border-radius: 100px; font-size: 0.75rem; border: 1px solid #dcfce7;">
+                                        <span class="rounded-circle pulse-green"
+                                            style="width: 6px; height: 6px; background-color: #22c55e;"></span> Đã kích hoạt
+                                    </span>
+                                </div>
+
+                                <div class="row align-items-center g-4">
+                                    <template v-if="da_xac_minh">
+                                        <div class="col-12 p-0">
+                                            <div class="biometric-activated-box d-flex flex-column align-items-center justify-content-center text-center p-5 rounded-5 mb-5"
+                                                style="min-height: 400px;">
+                                                <div class="biometric-shield-icon mb-4">
+                                                    <i class='bx bxs-shield-alt-2'
+                                                        style="font-size: 6rem; color: #64748b; opacity: 0.6;"></i>
+                                                </div>
+                                                <h5 class="text-white fw-medium px-4 opacity-75"
+                                                    style="line-height: 1.6; max-width: 420px; font-size: 1.25rem;">
+                                                    Khuôn mặt là chìa khóa truy cập bảo mật của bạn.
+                                                </h5>
+                                            </div>
+
+                                            <div class="d-flex flex-column align-items-center gap-3 mt-2">
+                                                <button @click="resetFaceID"
+                                                    class="btn btn-orange-pro w-100 py-3 fw-900 rounded-4 shadow-orange d-flex align-items-center justify-content-center gap-2"
+                                                    style="max-width: 500px; height: 60px; font-size: 1.1rem;">
+                                                    <i class='bx bx-scan fs-4'></i> Thiết lập lại Face ID
+                                                </button>
+                                                <p class="text-muted small fw-bold mt-2"
+                                                    style="letter-spacing: 0.5px; opacity: 0.8;">
+                                                    Dữ liệu được mã hóa chuẩn biometrics
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <template v-else>
+                                        <div class="col-md-5 d-flex justify-content-center">
+                                            <div class="position-relative d-flex justify-content-center align-items-center"
+                                                style="width: 200px; height: 200px;">
+                                                <template v-if="!isScanning">
+                                                    <div class="position-absolute rounded-circle"
+                                                        style="width: 200px; height: 200px; border: 2px solid #fed7aa; background: #fff7ed;">
+                                                    </div>
+                                                    <div class="position-absolute rounded-circle d-flex justify-content-center align-items-center"
+                                                        style="width: 150px; height: 150px; background: #f1f5f9;">
+                                                        <i class="bx bx-user"
+                                                            style="font-size: 4rem; color: #cbd5e1;"></i>
+                                                    </div>
+                                                    <div class="position-absolute bottom-0 bg-dark text-white px-3 py-1 rounded-pill"
+                                                        style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px;">
+                                                        SẴN SÀNG QUÉT
+                                                    </div>
+                                                </template>
+
+                                                <template v-else>
+                                                    <video ref="videoElement" autoplay muted playsinline
+                                                        style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid #ea580c; transform: scaleX(-1); z-index: 10;">
+                                                    </video>
+                                                    <canvas ref="overlayCanvas"
+                                                        style="position: absolute; top: 0; left: 0; width: 200px; height: 200px; border-radius: 50%; z-index: 11; pointer-events: none;">
+                                                    </canvas>
+                                                    <div class="scan-line-circle"></div>
+                                                </template>
+                                            </div>
+                                            <div class="mt-3 text-center" style="min-height: 24px;">
+                                                <small v-if="isScanning" class="status-text-anim"
+                                                    :style="{ color: isScanning ? '#ea580c' : '#64748b' }">
+                                                    <i class='bx bx-loader-alt bx-spin me-1'></i>
+                                                    {{ scanStatus }}
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-7">
+                                            <span class="badge mb-3 fw-bold px-3 py-2"
+                                                style="background-color: #fef9c3; color: #854d0e; font-size: 0.75rem; border-radius: 20px;">
+                                                <i class="bx bxs-circle me-1"
+                                                    style="font-size: 0.5rem; vertical-align: middle; color: #ca8a04;"></i>
+                                                Yêu cầu xác thực
+                                            </span>
+                                            <h4 class="fw-bolder mb-2"
+                                                style="color: #0f172a; font-size: 1.3rem; line-height: 1.3;">
+                                                Bảo mật cuộc họp với Face ID AI
+                                            </h4>
+                                            <p class="mb-4"
+                                                style="color: #64748b; font-size: 0.9rem; line-height: 1.6;">
+                                                Vui lòng xác thực khuôn mặt để kích hoạt các tính năng bảo mật nâng cao
+                                                và
+                                                tham gia phòng họp nhanh.
+                                            </p>
+
+                                            <div class="d-flex gap-2">
+                                                <button @click="startFaceScan"
+                                                    class="btn text-white fw-bold px-4 py-3 d-inline-flex align-items-center gap-2"
+                                                    style="background-color: #0f172a; border-radius: 10px; font-size: 0.95rem;">
+                                                    <i class="bx bx-scan fs-5"></i> Bắt đầu quét khuôn mặt
+                                                </button>
+                                                <button v-if="isScanning" @click="stopFaceScan"
+                                                    class="btn btn-outline-danger fw-bold px-4 py-3"
+                                                    style="border-radius: 10px;">
+                                                    Dừng quét
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </main>
+        </div>
+        <!-- Modal xác thực khuôn mặt -->
+        <div v-if="showJoinAuthModal"
+            class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3"
+            style="background-color: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
+            <div class="card border-0 shadow-lg p-4 text-center animate__animated animate__fadeInUp"
+                style="border-radius: 24px; width: 420px; background-color: #1e293b; border: 1px solid #334155 !important;">
+                <template v-if="!isMatched">
+                    <h4 class="text-white fw-bolder mb-3">Xác nhận danh tính</h4>
+                    <p class="text-secondary small mb-4">Hệ thống đang đối chiếu sinh trắc học để bảo mật cuộc họp.</p>
+
+                    <div class="position-relative mx-auto mb-4" style="width: 220px; height: 220px;">
+                        <video ref="authVideo" autoplay muted playsinline
+                            class="w-100 h-100 rounded-circle object-fit-cover shadow-lg"
+                            :style="{ border: authError ? '4px solid #ef4444' : '4px solid #ea580c', transform: 'scaleX(-1)' }"></video>
+                        <div v-if="!authError" class="scan-line-circle"></div>
+                    </div>
+
+                    <div class="mb-4" style="min-height: 24px;">
+                        <p class="fw-bold mb-0" :style="{ color: authError ? '#ef4444' : '#ea580c' }">
+                            <i v-if="authError" class='bx bx-error-circle fs-5 align-middle me-1'></i>
+                            <i v-else class='bx bx-loader-alt bx-spin fs-5 align-middle me-1'></i>
+                            {{ authScanStatus }}
+                        </p>
+                    </div>
+
+                    <button @click="dongModalXacThucJoin"
+                        class="btn btn-link text-secondary text-decoration-none fw-medium">
+                        Hủy bỏ
+                    </button>
+                </template>
+
+                <template v-else>
+                    <div class="py-4 animate__animated animate__zoomIn">
+                        <div class="mx-auto mb-4 d-flex justify-content-center align-items-center rounded-circle"
+                            style="width: 100px; height: 100px; background-color: #f0fdf4;">
+                            <i class='bx bxs-check-shield' style="font-size: 4rem; color: #22c55e;"></i>
+                        </div>
+
+                        <h3 class="text-white fw-bolder mb-2">Xác thực thành công!</h3>
+                        <p class="text-secondary mb-4">Chào mừng <b>{{ ten_nguoi_dung }}</b>. Hệ thống đã xác nhận danh
+                            tính
+                            của bạn.</p>
+
+                        <div class="d-grid gap-2">
+                            <button @click="thamGiaPhongHop" :disabled="isJoining"
+                                class="btn text-white fw-bold py-3 shadow-lg"
+                                style="background-color: #ea580c; border-radius: 12px; font-size: 1.1rem;">
+                                <span v-if="isJoining" class="spinner-border spinner-border-sm me-2"></span>
+                                <template v-else><i class='bx bx-video me-2'></i> Tham gia phòng họp</template>
+                            </button>
+                            <button @click="dongModalXacThucJoin"
+                                class="btn btn-link text-secondary text-decoration-none small">
+                                Để sau
                             </button>
                         </div>
                     </div>
-                </div>
-                <!--  -->
-            </header>
-
-            <!-- Scrollable Content Area -->
-            <div class="flex-grow-1 overflow-auto p-4 p-xl-5">
-                <div style="max-width: 1100px; margin: 0 auto;">
-
-                    <!-- TAB: DASHBOARD -->
-                    <div v-if="currentTab === 'dashboard'">
-                        <!-- User Welcome Row -->
-                        <div class="row mb-4">
-                            <div class="col-md-6 d-flex flex-column justify-content-end">
-                                <h2 class="fw-bolder mb-2"
-                                    style="color: #0f172a; letter-spacing: -0.5px; font-size: 2rem;">Chào mừng trở lại,
-                                    Alex!
-                                </h2>
-                                <p class="mb-0" style="font-size: 1rem; color: #64748b;">Bạn có <strong>3
-                                        cuộc họp</strong> được lên lịch cho hôm nay.</p>
-                            </div>
-                            <div class="col-md-6 d-none d-md-flex flex-column justify-content-end align-items-end mb-1">
-                                <p class="text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">
-                                    GIỜ ĐỊA PHƯƠNG</p>
-                                <h3 class="fw-bolder mb-0"
-                                    style="color: #0f172a; font-size: 1.5rem; letter-spacing: -0.5px;">10:45 AM</h3>
-                            </div>
-                        </div>
-
-                        <!-- Action Cards Row -->
-                        <div class="row g-4 mb-5">
-                            <!-- New Meeting -->
-                            <div class="col-lg-4 col-md-6">
-                                <div class="card border-0 h-100 p-4 text-white shadow-sm d-flex flex-column"
-                                    style="background-color: #ea580c; border-radius: 16px;">
-                                    <div>
-                                        <div class="d-flex justify-content-center align-items-center rounded mb-4 shadow-sm"
-                                            style="background-color: rgba(255,255,255,0.25); width: 44px; height: 44px;">
-                                            <i class="bx bx-video-plus fs-4"></i>
-                                        </div>
-
-                                        <h4 class="fw-bolder mb-2" style="font-size: 1.35rem;">Cuộc họp mới</h4>
-                                        <p class="mb-4 text-white"
-                                            style="font-size: 0.95rem; opacity: 0.9; line-height: 1.5;">Bắt đầu cuộc họp
-                                            tức thì
-                                            với theo dõi khuôn mặt AI đang hoạt động.</p>
-                                    </div>
-                                    <div class="mt-auto">
-                                        <button class="btn bg-white fw-bolder w-100 py-2"
-                                            style="border-radius: 8px; color: #ea580c; font-size: 1rem;">Bắt đầu
-                                            ngay</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Join Meeting -->
-                            <div class="col-lg-4 col-md-6">
-                                <div class="card border-0 h-100 p-4 shadow-sm d-flex flex-column"
-                                    style="background-color: #ffffff; border-radius: 16px; border: 1px solid #f1f5f9 !important;">
-                                    <div>
-                                        <div class="d-flex justify-content-center align-items-center rounded-3 mb-4 shadow-sm"
-                                            style="background-color: #fff7ed; width: 44px; height: 44px;">
-                                            <i class="bx bxs-keyboard fs-4" style="color: #ea580c;"></i>
-                                        </div>
-
-                                        <h4 class="fw-bolder mb-2 text-dark" style="font-size: 1.35rem;">Tham gia cuộc
-                                            họp
-                                        </h4>
-                                        <p class="mb-4" style="font-size: 0.95rem; color: #64748b; line-height: 1.5;">
-                                            Nhập ID cuộc họp hoặc liên kết để kết nối.</p>
-                                    </div>
-                                    <div class="d-flex mt-auto gap-3">
-                                        <div class="flex-grow-1 position-relative">
-                                            <input type="text"
-                                                class="form-control bg-light border-0 shadow-none h-100 ps-3 fw-medium"
-                                                placeholder="ID: 000-000-000"
-                                                style="font-size: 0.9rem; border-radius: 8px; color: #475569;">
-                                        </div>
-                                        <button class="btn text-white fw-bold px-4"
-                                            style="background-color: #ea580c; border-radius: 8px;">Tham gia</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Face ID Status -->
-                            <div class="col-lg-4 col-md-12">
-                                <div class="card border-0 h-100 p-4 text-white shadow-sm position-relative overflow-hidden d-flex flex-column"
-                                    style="background-color: #0f172a; border-radius: 16px;">
-                                    <div class="d-flex justify-content-between align-items-start mb-4">
-                                        <div>
-
-                                            <h4 class="fw-bolder mb-2" style="font-size: 1.3rem;">Trạng thái Face ID
-                                            </h4>
-                                            <div class="d-flex align-items-center" style="color: #ea580c;">
-                                                <i class='bx bxs-check-shield me-2 fs-5'></i>
-                                                <span class="fw-semibold small">Đã đồng bộ hoàn toàn</span>
-                                            </div>
-                                        </div>
-                                        <div class="rounded-3 overflow-hidden"
-                                            style="width: 55px; height: 55px; background-color: #334155; border: 2px solid #334155;">
-                                            <img :src="avatar_url" class="w-100 h-100 object-fit-cover"
-                                                alt="Face Scanned" style="filter: contrast(1.1) brightness(0.9);">
-                                        </div>
-                                    </div>
-
-                                    <div class="mt-auto pt-2">
-                                        <div class="progress mb-3 shadow-none"
-                                            style="height: 6px; background-color: #334155; border-radius: 10px;">
-                                            <div class="progress-bar rounded-pill" role="progressbar"
-                                                style="width: 94.2%; background-color: #ea580c;"></div>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-end">
-                                            <div>
-                                                <p class="small mb-0 fw-medium"
-                                                    style="color: #94a3b8; font-size: 0.75rem;">Điểm tin cậy:</p>
-                                                <h5 class="fw-bolder mb-0 mt-1">94.2%</h5>
-                                            </div>
-                                            <a href="#" class="small text-decoration-none fw-semibold"
-                                                style="color: #ea580c; line-height: 1.3; text-align: right;">Quản
-                                                lý<br>Sinh trắc học</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lists Row -->
-                        <div class="row g-4">
-                            <!-- Upcoming Meetings -->
-                            <div class="col-lg-7">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-
-                                    <h4 class="fw-bolder mb-0 text-dark" style="font-size: 1.25rem;">Cuộc họp sắp tới
-                                    </h4>
-                                    <a href="#" class="fw-bolder text-decoration-none small" style="color: #ea580c;">Xem
-                                        lịch</a>
-                                </div>
-
-                                <div class="d-flex flex-column gap-3">
-                                    <!-- Meeting Item 1 -->
-                                    <div class="card border-0 shadow-sm p-3" style="border-radius: 12px;">
-                                        <div class="d-flex align-items-center">
-                                            <div class="rounded-3 d-flex flex-column justify-content-center align-items-center px-3 py-2 me-4"
-                                                style="background-color: #f8fafc; min-width: 65px; border: 1px solid #f1f5f9;">
-                                                <span class="fw-bolder"
-                                                    style="color: #ea580c; font-size: 1.15rem;">24</span>
-                                                <span class="small fw-bolder text-muted"
-                                                    style="font-size: 0.65rem;">OCT</span>
-                                            </div>
-                                            <div class="flex-grow-1 pe-3">
-
-                                                <h6 class="fw-bolder mb-1 text-dark" style="font-size: 0.95rem;">Đồng bộ
-                                                    sản phẩm: Đánh giá thiết kế</h6>
-                                                <div class="d-flex align-items-center fw-medium mt-1"
-                                                    style="color: #94a3b8; font-size: 0.8rem;">
-                                                    <span>11:00 AM - 12:00 PM</span>
-                                                    <span class="mx-2">•</span>
-                                                    <span>ID: 882-192-331</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-none d-sm-flex align-items-center me-4">
-                                                <div class="avatar-group d-flex">
-                                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
-                                                        class="rounded-circle border border-2 border-white ms-n2 shadow-sm"
-                                                        width="32" height="32" style="margin-left: -12px; z-index: 3;">
-                                                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=100&q=80"
-                                                        class="rounded-circle border border-2 border-white ms-n2 shadow-sm"
-                                                        width="32" height="32" style="margin-left: -12px; z-index: 2;">
-                                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80"
-                                                        class="rounded-circle border border-2 border-white ms-n2 shadow-sm"
-                                                        width="32" height="32" style="margin-left: -12px; z-index: 1;">
-                                                    <div class="rounded-circle border border-2 border-white ms-n2 d-flex justify-content-center align-items-center bg-light text-muted fw-bold shadow-sm"
-                                                        style="width: 32px; height: 32px; margin-left: -12px; z-index: 0; font-size: 0.7rem;">
-                                                        +5</div>
-                                                </div>
-                                            </div>
-                                            <button class="btn text-white fw-bold px-4 py-2"
-                                                style="background-color: #ea580c; border-radius: 8px; font-size: 0.9rem;">Join</button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Meeting Item 2 -->
-                                    <div class="card border-0 shadow-sm p-3 bg-white"
-                                        style="border-radius: 12px; border: 1px solid #f1f5f9 !important;">
-                                        <div class="d-flex align-items-center">
-                                            <div class="rounded-3 d-flex flex-column justify-content-center align-items-center px-3 py-2 me-4"
-                                                style="background-color: #f8fafc; min-width: 65px; opacity: 0.7;">
-                                                <span class="fw-bolder"
-                                                    style="color: #94a3b8; font-size: 1.15rem;">25</span>
-                                                <span class="small fw-bolder text-muted"
-                                                    style="font-size: 0.65rem;">OCT</span>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <h6 class="fw-bolder mb-1 text-dark" style="font-size: 0.95rem;">
-                                                    Cập nhật hàng tháng cho nhà đầu tư</h6>
-                                                <div class="d-flex align-items-center fw-medium mt-1"
-                                                    style="color: #94a3b8; font-size: 0.8rem;">
-                                                    <span>09:30 AM - 10:30 AM</span>
-                                                    <span class="mx-2">•</span>
-                                                    <span>ID: 110-349-882</span>
-                                                </div>
-                                            </div>
-                                            <button class="btn fw-semibold px-4 py-2 bg-white"
-                                                style="border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">Chi
-                                                tiết</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Meeting History -->
-                            <div class="col-lg-5">
-
-                                <h4 class="fw-bolder mb-4 text-dark" style="font-size: 1.25rem;">Lịch sử cuộc họp</h4>
-                                <div class="card border-0 shadow-sm p-0" style="border-radius: 12px;">
-                                    <div class="list-group list-group-flush" style="border-radius: 12px;">
-
-                                        <!-- History Item 1 -->
-                                        <div class="list-group-item p-4 border-bottom-0 pb-3 bg-transparent">
-                                            <div class="d-flex align-items-start">
-                                                <div class="mt-1 me-3">
-                                                    <div class="rounded-circle d-flex justify-content-center align-items-center bg-success bg-opacity-10"
-                                                        style="width: 24px; height: 24px; color: #22c55e;">
-                                                        <i class='bx bx-check fs-6'></i>
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1">
-
-                                                    <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">QA
-                                                        Testing Call</h6>
-                                                    <p class="fw-medium mb-2"
-                                                        style="color: #94a3b8; font-size: 0.75rem;">Yesterday, 4:15 PM •
-                                                        45 mins</p>
-                                                    <div class="d-flex gap-2">
-                                                        <span class="badge fw-bold"
-                                                            style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">TRANSCRIPT</span>
-                                                        <span class="badge fw-bold"
-                                                            style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">RECORDING</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <hr class="m-0 mx-4" style="border-color: #e2e8f0; border-top-style: dashed;">
-
-                                        <!-- History Item 2 -->
-                                        <div class="list-group-item p-4 border-bottom-0 py-3 bg-transparent">
-                                            <div class="d-flex align-items-start">
-                                                <div class="mt-1 me-3">
-                                                    <div class="rounded-circle d-flex justify-content-center align-items-center bg-secondary bg-opacity-10"
-                                                        style="width: 24px; height: 24px; color: #64748b;">
-                                                        <i class='bx bx-video-off fs-6'></i>
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
-
-                                                        Bỏ lỡ: Thảo luận marketing</h6>
-                                                    <p class="fw-medium mb-0"
-                                                        style="color: #94a3b8; font-size: 0.75rem;">Oct 22, 2:00 PM</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <hr class="m-0 mx-4" style="border-color: #e2e8f0; border-top-style: dashed;">
-
-                                        <!-- History Item 3 -->
-                                        <div class="list-group-item p-4 border-bottom-0 pt-3 bg-transparent">
-                                            <div class="d-flex align-items-start">
-                                                <div class="mt-1 me-3">
-                                                    <div class="rounded-circle d-flex justify-content-center align-items-center bg-success bg-opacity-10"
-                                                        style="width: 24px; height: 24px; color: #22c55e;">
-                                                        <i class='bx bx-check fs-6'></i>
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
-
-                                                        Một-một với Sarah</h6>
-                                                    <p class="fw-medium mb-0"
-                                                        style="color: #94a3b8; font-size: 0.75rem;">22 tháng 10, 11:30
-                                                        SA
-                                                        • 30 phút</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="list-group-item text-center p-3 mt-2 border-top-0 rounded-bottom"
-                                            style="background-color: #f8fafc; border-radius: 0 0 12px 12px;">
-                                            <a href="#" class="fw-bold text-decoration-none small"
-                                                style="color: #64748b;">Xem lịch sử đầy đủ</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB: MEETINGS -->
-                    <div v-if="currentTab === 'meetings'">
-                        <h2 class="fw-bolder mb-5" style="color: #0f172a; letter-spacing: -0.5px; font-size: 2rem;">
-
-                            Cuộc họp</h2>
-
-                        <div class="row g-4">
-                            <!-- Left Col: Create Room -->
-                            <div class="col-lg-7">
-                                <div class="card border-0 shadow-sm p-4 p-md-5" style="border-radius: 16px;">
-                                    <div class="d-flex align-items-center mb-5">
-                                        <div class="d-flex justify-content-center align-items-center rounded me-3 shadow-sm"
-                                            style="background-color: #fff7ed; width: 44px; height: 44px;">
-                                            <i class="bx bx-calendar-check fs-4" style="color: #ea580c;"></i>
-                                        </div>
-
-                                        <h4 class="fw-bolder mb-0 text-dark" style="font-size: 1.35rem;">Tạo phòng họp
-                                        </h4>
-                                    </div>
-
-                                    <form @submit.prevent="taoPhongHop">
-                                        <div class="mb-4">
-                                            <label class="form-label fw-bold mb-2 text-muted"
-                                                style="font-size: 0.75rem; letter-spacing: 1px;">TIÊU ĐỀ CUỘC
-                                                HỌP</label>
-                                            <input type="text" v-model="formTaoPhong.ten_phong" required
-                                                class="form-control form-control-lg bg-light border-0 shadow-none px-3 py-3"
-                                                placeholder="ví dụ, Đồng bộ nhóm hàng tuần"
-                                                style="border-radius: 12px; font-size: 0.95rem; color: #475569;">
-                                        </div>
-                                        <div class="mb-4">
-                                            <label class="form-label fw-bold mb-2 text-muted"
-                                                style="font-size: 0.75rem; letter-spacing: 1px;">MÔ TẢ</label>
-                                            <textarea v-model="formTaoPhong.mo_ta"
-                                                class="form-control form-control-lg bg-light border-0 shadow-none px-3 py-3"
-                                                rows="4"
-                                                placeholder="Phác thảo chương trình nghị sự cuộc họp hoặc mục tiêu..."
-                                                style="border-radius: 12px; font-size: 0.95rem; color: #475569; resize: none;"></textarea>
-                                        </div>
-                                        <div class="mb-5">
-                                            <label class="form-label fw-bold mb-2 text-muted"
-                                                style="font-size: 0.75rem; letter-spacing: 1px;">MỜI NGƯỜI THAM
-                                                GIA</label>
-                                            <div class="position-relative">
-                                                <i class='bx bx-at position-absolute top-50 translate-middle-y fs-5'
-                                                    style="left: 1rem; color: #94a3b8;"></i>
-                                                <input type="text" v-model="formTaoPhong.email_khach_moi"
-                                                    class="form-control form-control-lg bg-light border-0 shadow-none ps-5 py-3"
-                                                    placeholder="Thêm địa chỉ email được phân tách bằng dấu phẩy"
-                                                    style="border-radius: 12px; font-size: 0.95rem; color: #475569;">
-                                            </div>
-                                        </div>
-                                        <button type="submit"
-                                            class="btn text-white fw-bold px-4 py-3 d-flex justify-content-center align-items-center"
-                                            :disabled="isCreating"
-                                            style="background-color: #ea580c; border-radius: 8px; font-size: 1rem; min-width: 180px;">
-                                            <span v-if="isCreating"
-                                                class="spinner-border spinner-border-sm me-2"></span>
-                                            {{ isCreating ? 'Đang khởi tạo...' : 'Tạo cuộc họp' }}
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-
-                            <!-- Right Col: Join & History -->
-                            <div class="col-lg-5">
-                                <!-- Join Meeting Mini Card -->
-                                <div class="card border-0 shadow-sm p-4 text-center mb-5" style="border-radius: 16px;">
-                                    <div class="d-flex gap-3">
-                                        <div class="flex-grow-1">
-                                            <input type="text" v-model="ma_phong_tham_gia"
-                                                class="form-control bg-light border-0 shadow-none h-100 ps-3 fw-medium"
-                                                placeholder="Ví dụ: u2c-c1t5-etj"
-                                                style="font-size: 0.95rem; border-radius: 8px; color: #475569;">
-                                        </div>
-                                        <button @click="kiemTraTruocKhiJoin" :disabled="isJoining"
-                                            class="btn text-white fw-bold px-4"
-                                            style="background-color: #ea580c; border-radius: 8px;">
-                                            <span v-if="isJoining" class="spinner-border spinner-border-sm"></span>
-                                            <span v-else>Join</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Meeting History -->
-                                <div>
-
-                                    <h4 class="fw-bolder mb-4 text-dark" style="font-size: 1.25rem;">Lịch sử cuộc họp
-                                    </h4>
-
-                                    <div class="card border-0 shadow-sm p-0" style="border-radius: 12px;">
-                                        <div class="list-group list-group-flush" style="border-radius: 12px;">
-
-                                            <!-- History Item 1 -->
-                                            <div class="list-group-item p-4 border-bottom-0 pb-3 bg-transparent">
-                                                <div class="d-flex align-items-start">
-                                                    <div class="mt-1 me-3">
-                                                        <div class="rounded-circle d-flex justify-content-center align-items-center bg-success bg-opacity-10"
-                                                            style="width: 24px; height: 24px; color: #22c55e;">
-                                                            <i class='bx bx-check fs-6'></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
-                                                            Cuộc gọi kiểm tra QA</h6>
-                                                        <p class="fw-medium mb-2"
-                                                            style="color: #94a3b8; font-size: 0.75rem;">Hôm qua, 4:15
-                                                            CH • 45 phút</p>
-                                                        <div class="d-flex gap-2">
-                                                            <span class="badge fw-bold"
-                                                                style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">BẢN
-                                                                GHI</span>
-                                                            <span class="badge fw-bold"
-                                                                style="background-color: #fff7ed; color: #ea580c; font-size: 0.6rem; padding: 4px 8px; letter-spacing: 0.5px;">BẢN
-                                                                GHI HÌNH</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <hr class="m-0 mx-4"
-                                                style="border-color: #e2e8f0; border-top-style: dashed;">
-
-                                            <!-- History Item 2 -->
-                                            <div class="list-group-item p-4 border-bottom-0 py-3 bg-transparent">
-                                                <div class="d-flex align-items-start">
-                                                    <div class="mt-1 me-3">
-                                                        <div class="rounded-circle d-flex justify-content-center align-items-center bg-secondary bg-opacity-10"
-                                                            style="width: 24px; height: 24px; color: #64748b;">
-                                                            <i class='bx bx-video-off fs-6'></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
-                                                            Missed: Marketing Brainstorm</h6>
-                                                        <p class="fw-medium mb-0"
-                                                            style="color: #94a3b8; font-size: 0.75rem;">22 tháng 10,
-                                                            2:00 CH
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <hr class="m-0 mx-4"
-                                                style="border-color: #e2e8f0; border-top-style: dashed;">
-
-                                            <!-- History Item 3 -->
-                                            <div class="list-group-item p-4 border-bottom-0 pt-3 bg-transparent">
-                                                <div class="d-flex align-items-start">
-                                                    <div class="mt-1 me-3">
-                                                        <div class="rounded-circle d-flex justify-content-center align-items-center bg-success bg-opacity-10"
-                                                            style="width: 24px; height: 24px; color: #22c55e;">
-                                                            <i class='bx bx-check fs-6'></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
-                                                            One-on-one with Sarah</h6>
-                                                        <p class="fw-medium mb-0"
-                                                            style="color: #94a3b8; font-size: 0.75rem;">Oct 22, 11:30 AM
-                                                            • 30 mins</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="list-group-item text-center p-3 mt-2 border-top-0 rounded-bottom"
-                                                style="background-color: #f8fafc; border-radius: 0 0 12px 12px;">
-                                                <a href="#" class="fw-bold text-decoration-none small"
-                                                    style="color: #64748b;">View Full History</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB: SETTINGS -->
-                    <div v-if="currentTab === 'settings'">
-                        <h2 class="fw-bolder mb-1" style="color: #0f172a; letter-spacing: -0.5px; font-size: 2rem;">
-
-                            Cài đặt</h2>
-                        <p class="mb-5" style="color: #64748b; font-size: 0.95rem;">Quản lý hồ sơ, bảo mật và
-                            tùy chọn xác thực sinh trắc học của bạn.</p>
-
-                        <!-- Profile Information -->
-                        <!-- Avatar Upload Section -->
-                        <div class="row mb-5 align-items-center">
-                            <div class="col-auto">
-                                <div class="position-relative">
-                                    <img :src="avatar_preview || avatar_url" alt="Profile"
-                                        class="rounded-circle border border-4 shadow-sm" width="100" height="100"
-                                        style="border-color: #fff !important; outline: 2px solid #ea580c; object-fit: cover;">
-                                    <button @click="$refs.avatarInput.click()"
-                                        class="btn btn-sm btn-dark position-absolute bottom-0 end-0 rounded-circle d-flex align-items-center justify-content-center shadow"
-                                        style="width: 32px; height: 32px; border: 2px solid #fff;">
-                                        <i class="bx bx-camera fs-6"></i>
-                                    </button>
-                                    <input type="file" ref="avatarInput" @change="handleAvatarChange" class="d-none"
-                                        accept="image/*">
-                                </div>
-                            </div>
-                            <div class="col">
-                                <h6 class="fw-bold mb-1 text-dark">Ảnh đại diện</h6>
-                                <p class="text-muted small mb-0">Hỗ trợ JPG, PNG. Kích thước tối đa 2MB.</p>
-                                <button v-if="avatar_file" @click="capNhatAvatar" :disabled="isUploadingAvatar"
-                                    class="btn btn-sm text-white fw-bold px-3 py-1 mt-2 animate__animated animate__fadeIn"
-                                    style="background-color: #ea580c; border-radius: 8px; font-size: 0.8rem;">
-                                    <span v-if="isUploadingAvatar" class="spinner-border spinner-border-sm me-1"></span>
-                                    Xác nhận lưu
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Profile Information -->
-                        <div class="card border-0 shadow-sm p-4 p-md-5 mb-4" style="border-radius: 16px;">
-                            <div class="d-flex align-items-center mb-4">
-                                <div class="d-flex justify-content-center align-items-center rounded me-3"
-                                    style="background-color: #fff7ed; width: 36px; height: 36px;">
-                                    <i class="bx bxs-user fs-5" style="color: #ea580c;"></i>
-                                </div>
-
-                                <h5 class="fw-bolder mb-0 text-dark">Thông tin hồ sơ</h5>
-                            </div>
-                            <div class="row g-3 mb-4">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Họ và tên
-                                        đầy đủ</label>
-                                    <input type="text" v-model="settings.ho_va_ten"
-                                        class="form-control form-control-lg bg-light border-0 shadow-none px-3"
-                                        placeholder="Họ và tên"
-                                        style="border-radius: 10px; font-size: 0.95rem; color: #475569;">
-                                </div>
-                                <div class="col-md-6">
-
-                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Địa chỉ
-                                        email</label>
-                                    <input type="email" v-model="settings.email"
-                                        class="form-control form-control-lg bg-light border-0 shadow-none px-3"
-                                        placeholder="Email"
-                                        style="border-radius: 10px; font-size: 0.95rem; color: #475569;">
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button @click="capNhatHoSo" :disabled="isUpdatingProfile"
-                                    class="btn text-white fw-bold px-4 py-2"
-                                    style="background-color: #ea580c; border-radius: 10px; font-size: 0.95rem;">
-                                    <span v-if="isUpdatingProfile" class="spinner-border spinner-border-sm me-2"></span>
-                                    Cập nhật hồ sơ
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Security -->
-                        <div class="card border-0 shadow-sm p-4 p-md-5 mb-4" style="border-radius: 16px;">
-                            <div class="d-flex align-items-center mb-4">
-                                <div class="d-flex justify-content-center align-items-center rounded me-3"
-                                    style="background-color: #fff7ed; width: 36px; height: 36px;">
-                                    <i class="bx bxs-lock fs-5" style="color: #ea580c;"></i>
-                                </div>
-
-                                <h5 class="fw-bolder mb-0 text-dark">Bảo mật</h5>
-                            </div>
-                            <div class="row g-3 mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Mật khẩu
-                                        hiện tại</label>
-                                    <input type="password" v-model="settings.current_password"
-                                        class="form-control form-control-lg bg-light border-0 shadow-none px-3"
-                                        placeholder="••••••••"
-                                        style="border-radius: 10px; font-size: 0.95rem; letter-spacing: 2px;">
-                                </div>
-                                <div class="col-md-4">
-
-                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Mật khẩu
-                                        mới</label>
-                                    <input type="password" v-model="settings.new_password"
-                                        class="form-control form-control-lg bg-light border-0 shadow-none px-3"
-                                        placeholder="••••••••"
-                                        style="border-radius: 10px; font-size: 0.95rem; letter-spacing: 2px;">
-                                </div>
-                                <div class="col-md-4">
-
-                                    <label class="form-label fw-semibold small mb-2" style="color: #334155;">Xác nhận
-                                        mật khẩu</label>
-                                    <input type="password" v-model="settings.confirm_password"
-                                        class="form-control form-control-lg bg-light border-0 shadow-none px-3"
-                                        placeholder="••••••••"
-                                        style="border-radius: 10px; font-size: 0.95rem; letter-spacing: 2px;">
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button @click="doiMatKhau" :disabled="isChangingPassword"
-                                    class="btn text-white fw-bold px-4 py-2"
-                                    style="background-color: #ea580c; border-radius: 10px; font-size: 0.95rem;">
-                                    <span v-if="isChangingPassword"
-                                        class="spinner-border spinner-border-sm me-2"></span>
-                                    Thay đổi mật khẩu
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- AI Face ID -->
-                        <div class="card border-0 shadow-sm p-4 p-md-5" style="border-radius: 16px;">
-                            <div class="d-flex align-items-center mb-4">
-                                <div class="d-flex justify-content-center align-items-center rounded me-3"
-                                    style="background-color: #fff7ed; width: 36px; height: 36px;">
-                                    <i class="bx bx-face fs-5" style="color: #ea580c;"></i>
-                                </div>
-                                <h5 class="fw-bolder mb-0 text-dark">Xác thực Face ID AI</h5>
-                            </div>
-
-                            <div class="row align-items-center g-4">
-                                <template v-if="da_xac_minh">
-                                    <div class="col-12 text-center py-4">
-                                        <div class="position-relative d-inline-block mb-4">
-                                            <div class="rounded-circle d-flex justify-content-center align-items-center shadow-sm"
-                                                style="width: 150px; height: 150px; background-color: #f0fdf4; border: 2px solid #bbf7d0;">
-                                                <i class="bx bx-check-double"
-                                                    style="font-size: 5rem; color: #22c55e;"></i>
-                                            </div>
-                                            <div class="position-absolute bottom-0 end-0 bg-success rounded-circle d-flex justify-content-center align-items-center border border-3 border-white"
-                                                style="width: 40px; height: 40px;">
-                                                <i class="bx bxs-shield-alt-2 text-white"></i>
-                                            </div>
-                                        </div>
-
-                                        <h3 class="fw-bolder text-dark mb-2">Tài khoản đã xác thực</h3>
-                                        <p class="text-muted mx-auto mb-4" style="max-width: 500px;">
-                                            Hệ thống AI đã ghi nhận mẫu khuôn mặt của bạn. Danh tính của bạn hiện đã
-                                            được bảo vệ và sẵn sàng cho các cuộc họp bảo mật.
-                                        </p>
-
-                                        <span class="badge px-4 py-2 fw-bold"
-                                            style="background-color: #dcfce7; color: #15803d; border-radius: 30px; font-size: 0.85rem;">
-                                            <i class="bx bxs-lock-alt me-1"></i> Mã hóa sinh trắc học 256-bit
-                                        </span>
-                                    </div>
-                                </template>
-
-                                <template v-else>
-                                    <div class="col-md-5 d-flex justify-content-center">
-                                        <div class="position-relative d-flex justify-content-center align-items-center"
-                                            style="width: 200px; height: 200px;">
-                                            <template v-if="!isScanning">
-                                                <div class="position-absolute rounded-circle"
-                                                    style="width: 200px; height: 200px; border: 2px solid #fed7aa; background: #fff7ed;">
-                                                </div>
-                                                <div class="position-absolute rounded-circle d-flex justify-content-center align-items-center"
-                                                    style="width: 150px; height: 150px; background: #f1f5f9;">
-                                                    <i class="bx bx-user" style="font-size: 4rem; color: #cbd5e1;"></i>
-                                                </div>
-                                                <div class="position-absolute bottom-0 bg-dark text-white px-3 py-1 rounded-pill"
-                                                    style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px;">
-                                                    SẴN SÀNG QUÉT
-                                                </div>
-                                            </template>
-
-                                            <template v-else>
-                                                <video ref="videoElement" autoplay muted playsinline
-                                                    style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid #ea580c; transform: scaleX(-1); z-index: 10;">
-                                                </video>
-                                                <canvas ref="overlayCanvas"
-                                                    style="position: absolute; top: 0; left: 0; width: 200px; height: 200px; border-radius: 50%; z-index: 11; pointer-events: none;">
-                                                </canvas>
-                                                <div class="scan-line-circle"></div>
-                                            </template>
-                                        </div>
-                                        <div class="mt-3 text-center" style="min-height: 24px;">
-                                            <small v-if="isScanning" class="status-text-anim"
-                                                :style="{ color: isScanning ? '#ea580c' : '#64748b' }">
-                                                <i class='bx bx-loader-alt bx-spin me-1'></i>
-                                                {{ scanStatus }}
-                                            </small>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-7">
-                                        <span class="badge mb-3 fw-bold px-3 py-2"
-                                            style="background-color: #fef9c3; color: #854d0e; font-size: 0.75rem; border-radius: 20px;">
-                                            <i class="bx bxs-circle me-1"
-                                                style="font-size: 0.5rem; vertical-align: middle; color: #ca8a04;"></i>
-                                            Yêu cầu xác thực
-                                        </span>
-                                        <h4 class="fw-bolder mb-2"
-                                            style="color: #0f172a; font-size: 1.3rem; line-height: 1.3;">
-                                            Bảo mật cuộc họp với Face ID AI
-                                        </h4>
-                                        <p class="mb-4" style="color: #64748b; font-size: 0.9rem; line-height: 1.6;">
-                                            Vui lòng xác thực khuôn mặt để kích hoạt các tính năng bảo mật nâng cao và
-                                            tham gia phòng họp nhanh.
-                                        </p>
-
-                                        <div class="d-flex gap-2">
-                                            <button @click="startFaceScan"
-                                                class="btn text-white fw-bold px-4 py-3 d-inline-flex align-items-center gap-2"
-                                                style="background-color: #0f172a; border-radius: 10px; font-size: 0.95rem;">
-                                                <i class="bx bx-scan fs-5"></i> Bắt đầu quét khuôn mặt
-                                            </button>
-                                            <button v-if="isScanning" @click="stopFaceScan"
-                                                class="btn btn-outline-danger fw-bold px-4 py-3"
-                                                style="border-radius: 10px;">
-                                                Dừng quét
-                                            </button>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </template>
             </div>
-        </main>
-    </div>
-    <!-- Modal xác thực khuôn mặt -->
-    <div v-if="showJoinAuthModal"
-        class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3"
-        style="background-color: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);">
-        <div class="card border-0 shadow-lg p-4 text-center animate__animated animate__fadeInUp"
-            style="border-radius: 24px; width: 420px; background-color: #1e293b; border: 1px solid #334155 !important;">
-            <template v-if="!isMatched">
-                <h4 class="text-white fw-bolder mb-3">Xác nhận danh tính</h4>
-                <p class="text-secondary small mb-4">Hệ thống đang đối chiếu sinh trắc học để bảo mật cuộc họp.</p>
-
-                <div class="position-relative mx-auto mb-4" style="width: 220px; height: 220px;">
-                    <video ref="authVideo" autoplay muted playsinline
-                        class="w-100 h-100 rounded-circle object-fit-cover shadow-lg"
-                        :style="{ border: authError ? '4px solid #ef4444' : '4px solid #ea580c', transform: 'scaleX(-1)' }"></video>
-                    <div v-if="!authError" class="scan-line-circle"></div>
-                </div>
-
-                <div class="mb-4" style="min-height: 24px;">
-                    <p class="fw-bold mb-0" :style="{ color: authError ? '#ef4444' : '#ea580c' }">
-                        <i v-if="authError" class='bx bx-error-circle fs-5 align-middle me-1'></i>
-                        <i v-else class='bx bx-loader-alt bx-spin fs-5 align-middle me-1'></i>
-                        {{ authScanStatus }}
-                    </p>
-                </div>
-
-                <button @click="dongModalXacThucJoin"
-                    class="btn btn-link text-secondary text-decoration-none fw-medium">
-                    Hủy bỏ
-                </button>
-            </template>
-
-            <template v-else>
-                <div class="py-4 animate__animated animate__zoomIn">
-                    <div class="mx-auto mb-4 d-flex justify-content-center align-items-center rounded-circle"
-                        style="width: 100px; height: 100px; background-color: #f0fdf4;">
-                        <i class='bx bxs-check-shield' style="font-size: 4rem; color: #22c55e;"></i>
-                    </div>
-
-                    <h3 class="text-white fw-bolder mb-2">Xác thực thành công!</h3>
-                    <p class="text-secondary mb-4">Chào mừng <b>{{ ten_nguoi_dung }}</b>. Hệ thống đã xác nhận danh tính
-                        của bạn.</p>
-
-                    <div class="d-grid gap-2">
-                        <button @click="thamGiaPhongHop" :disabled="isJoining"
-                            class="btn text-white fw-bold py-3 shadow-lg"
-                            style="background-color: #ea580c; border-radius: 12px; font-size: 1.1rem;">
-                            <span v-if="isJoining" class="spinner-border spinner-border-sm me-2"></span>
-                            <template v-else><i class='bx bx-video me-2'></i> Tham gia phòng họp</template>
-                        </button>
-                        <button @click="dongModalXacThucJoin"
-                            class="btn btn-link text-secondary text-decoration-none small">
-                            Để sau
-                        </button>
-                    </div>
-                </div>
-            </template>
         </div>
-    </div>
     </div>
 </template>
 
@@ -909,8 +753,11 @@
 const apiUrl = import.meta.env.VITE_API_URL;
 import * as faceapi from 'face-api.js';
 import axios from 'axios';
+
 export default {
     name: 'TrangChinhNguoiDung',
+    components: {
+    },
     data() {
         return {
             currentTab: 'dashboard',
@@ -1003,6 +850,10 @@ export default {
             // Nếu cột du_lieu_khuon_mat không trống (null) thì coi như đã xác minh
             // Vue sẽ tự động theo dõi biến da_xac_minh_phu
             return this.da_xac_minh_phu;
+        },
+        // 4. Kiểm tra quyền Đối tác
+        la_doi_tac() {
+            return this.thong_tin_dang_nhap ? (!!this.thong_tin_dang_nhap.id_doi_tac) : false;
         }
     },
     methods: {
@@ -1747,5 +1598,50 @@ textarea:focus {
 
 .avatar-group img:first-child {
     margin-left: 0;
+}
+.text-orange {
+    color: #ea580c !important;
+}
+
+.biometric-activated-box {
+    box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.4);
+    border: 1px solid #334155;
+    background-image: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+}
+
+.biometric-shield-icon {
+    filter: drop-shadow(0 0 15px rgba(234, 88, 12, 0.2));
+}
+
+.shadow-orange {
+    box-shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.4);
+}
+
+.shadow-inner {
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-orange-pro {
+    background-color: #ea580c;
+    color: white !important;
+    transition: all 0.3s ease;
+}
+
+.btn-orange-pro:hover {
+    background-color: #f97316;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(234, 88, 12, 0.5);
+}
+
+.fw-900 {
+    font-weight: 900;
+}
+
+.rounded-4 {
+    border-radius: 1rem !important;
+}
+
+.rounded-5 {
+    border-radius: 2rem !important;
 }
 </style>

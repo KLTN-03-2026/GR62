@@ -24,7 +24,7 @@
                         <i class="bx bxs-video"></i>
                         <span>Tham gia cuộc họp</span>
                     </button>
-                    <button class="nav-business-item">
+                    <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>
                     </button>
@@ -74,25 +74,10 @@
 
                 <div class="p-5 pt-4">
                     <!-- Title Section -->
-                    <div class="d-flex justify-content-between align-items-center mb-5">
-                        <div class="greeting-section">
-                            <h2 class="fw-800 text-dark mb-2">Chào mừng trở lại, Công ty Công nghệ Ánh Kim</h2>
-                            <p class="text-muted mb-0 fw-500">Đối tác Premium. Hôm nay bạn có 12 cuộc họp mới cần quản lý.</p>
-                        </div>
-                        <div class="header-actions-business d-flex gap-3">
-                            <button class="btn btn-light-orange-pro px-4 py-3 fw-800 rounded-4 border-0">
-                                <i class="bx bx-download me-2"></i> Xuất báo cáo
-                            </button>
-                            <button class="btn btn-orange-pro px-4 py-3 fw-800 rounded-4 border-0 text-white shadow-orange">
-                                <i class="bx bx-plus-circle me-2"></i> Tạo cuộc họp AI
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Metrics Grid (4 items) -->
+                    <!-- Metrics & Quick Join Row -->
                     <div class="row g-4 mb-5">
                         <div class="col-md-3">
-                            <div class="metric-card-business p-4 rounded-5 border-0">
+                            <div class="metric-card-business p-4 rounded-5 border-0 h-100">
                                 <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-user-detail"></i></div>
                                 <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Nhân viên sử dụng</label>
                                 <div class="d-flex align-items-baseline gap-2">
@@ -102,7 +87,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="metric-card-business p-4 rounded-5 border-0">
+                            <div class="metric-card-business p-4 rounded-5 border-0 h-100">
                                 <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-time-five"></i></div>
                                 <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Tổng giờ họp tháng</label>
                                 <div class="d-flex align-items-baseline gap-2">
@@ -111,26 +96,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="metric-card-business p-4 rounded-5 border-0">
-                                <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-face"></i></div>
-                                <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Chính xác Face ID</label>
-                                <div class="d-flex align-items-center gap-3">
-                                    <h2 class="fw-900 mb-0">99.9%</h2>
-                                    <div class="verified-badge-business"><i class="bx bxs-check-shield"></i></div>
+                        
+                        <!-- NEW: Quick Join Meeting Card for Partners -->
+                        <div class="col-md-6">
+                            <div class="metric-card-business p-4 rounded-5 border-0 h-100 shadow-sm" style="background: white; border: 1px solid #fee7d1 !important;">
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <div class="metric-icon bg-soft-orange text-orange"><i class="bx bxs-keyboard"></i></div>
+                                    <h5 class="fw-800 text-dark mb-0">Tham gia cuộc họp nhanh</h5>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="metric-card-business p-4 rounded-5 border-0">
-                                <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-cloud"></i></div>
-                                <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Lưu trữ đối tác</label>
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <h4 class="fw-900 mb-0" style="font-size: 1.1rem;">1.4 TB</h4>
-                                    <span class="text-muted small fw-bold">Không giới hạn</span>
-                                </div>
-                                <div class="progress-premium-business">
-                                    <div class="progress-bar-business" style="width: 35%"></div>
+                                <p class="text-muted small fw-500 mb-4">Kết nối ngay lập tức với các phòng ban bằng mã định danh.</p>
+                                <div class="d-flex gap-3">
+                                    <input type="text" v-model="ma_phong_tham_gia" 
+                                        class="form-control bg-light border-0 py-3 px-4 rounded-4 fw-800" 
+                                        placeholder="Nhập mã phòng..."
+                                        @keyup.enter="kiemTraTruocKhiJoin">
+                                    <button @click="kiemTraTruocKhiJoin" :disabled="isJoining"
+                                        class="btn btn-orange-pro px-4 rounded-4 fw-800 shadow-orange border-0 text-white">
+                                        {{ isJoining ? '...' : 'Tham Gia' }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -217,6 +200,56 @@
                 </div>
             </main>
         </div>
+
+        <!-- Modal Tạo Cuộc Họp AI for Partner -->
+        <div v-if="showCreateMeetingModal" 
+            class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3"
+            style="background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);">
+            <div class="card border-0 shadow-lg p-5 animate__animated animate__fadeInUp"
+                style="border-radius: 30px; width: 550px; background-color: #fff;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-900 text-dark mb-0">Tạo cuộc họp AI mới</h3>
+                    <button @click="showCreateMeetingModal = false" class="btn-close shadow-none"></button>
+                </div>
+                
+                <form @submit.prevent="taoPhongHop">
+                    <div class="mb-4">
+                        <label class="form-label fw-800 text-muted small text-uppercase mb-2">Tiêu đề cuộc họp</label>
+                        <input type="text" v-model="formTaoPhong.ten_phong" required
+                            class="form-control form-control-lg bg-light border-0 shadow-none px-4 py-3 rounded-4"
+                            placeholder="Ví dụ: Họp chiến lược quý 2"
+                            style="font-weight: 600;">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-800 text-muted small text-uppercase mb-2">Mô tả chi tiết</label>
+                        <textarea v-model="formTaoPhong.mo_ta"
+                            class="form-control form-control-lg bg-light border-0 shadow-none px-4 py-3 rounded-4"
+                            rows="4"
+                            placeholder="Nội dung cuộc họp..."
+                            style="font-weight: 600; resize: none;"></textarea>
+                    </div>
+                    <div class="mb-5">
+                        <label class="form-label fw-800 text-muted small text-uppercase mb-2">Mời qua Email (tùy chọn)</label>
+                        <input type="text" v-model="formTaoPhong.email_khach_moi"
+                            class="form-control form-control-lg bg-light border-0 shadow-none px-4 py-3 rounded-4"
+                            placeholder="email1@company.com, email2@company.com"
+                            style="font-weight: 600;">
+                    </div>
+                    
+                    <div class="d-flex gap-3">
+                        <button type="button" @click="showCreateMeetingModal = false" 
+                            class="btn btn-light-orange-pro flex-grow-1 py-3 fw-800 rounded-4 border-0">
+                            Hủy bỏ
+                        </button>
+                        <button type="submit" :disabled="isCreating"
+                            class="btn btn-orange-pro flex-grow-1 py-3 fw-800 rounded-4 border-0 text-white shadow-orange">
+                            <span v-if="isCreating" class="spinner-border spinner-border-sm me-2"></span>
+                            {{ isCreating ? 'Đang tạo...' : 'Khởi tạo ngay' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -228,6 +261,16 @@ export default {
     name: 'TrangChinhDoiTac',
     data() {
         return {
+            partnerId: null,
+            showCreateMeetingModal: false,
+            isCreating: false,
+            formTaoPhong: {
+                ten_phong: '',
+                mo_ta: '',
+                email_khach_moi: ''
+            },
+            ma_phong_tham_gia: '',
+            isJoining: false,
             partnerName: 'Công ty Công nghệ Ánh Kim',
             avatarUrl: 'https://i.pravatar.cc/150?u=admin_anhkim',
             currentTime: '',
@@ -291,7 +334,9 @@ export default {
                     headers: { Authorization: 'Bearer ' + token }
                 });
                 if (res.data.status) {
-                    // Update dynamic info but stick to mockup defaults for now
+                    // Update dynamic info
+                    this.partnerId = res.data.data.id;
+                    this.partnerName = res.data.data.ho_va_ten;
                     const hinh_anh = res.data.data.hinh_anh;
                     if(hinh_anh) {
                          const baseUrl = apiUrl.replace('/api', '');
@@ -311,7 +356,56 @@ export default {
         logout() {
             localStorage.removeItem('token_doi_tac');
             this.$router.push('/nguoi-dung/dang-nhap');
-        }
+        },
+        async taoPhongHop() {
+            if (!this.formTaoPhong.ten_phong.trim()) {
+                if (this.$toast) this.$toast.error("Vui lòng nhập tiêu đề cuộc họp!");
+                return;
+            }
+
+            if (!this.partnerId) {
+                if (this.$toast) this.$toast.error("Lỗi: Không xác định được danh tính đối tác.");
+                return;
+            }
+            this.isCreating = true;
+
+            try {
+                const payload = {
+                    ten_phong: this.formTaoPhong.ten_phong,
+                    id_chu_phong: this.partnerId,
+                    so_nguoi_toi_da: 100,
+                };
+
+                const response = await axios.post(`${apiUrl}/phong-hop/create`, payload);
+
+                if (response.data.status) {
+                    if (this.$toast) this.$toast.success("Khởi tạo phòng họp thành công!");
+
+                    const phongMoi = response.data.data;
+                    alert(`TẠO THÀNH CÔNG!\n\nMã phòng của bạn là: ${phongMoi.ma_phong}\nHãy copy mã này để tham gia.`);
+
+                    // Reset form và đóng modal
+                    this.showCreateMeetingModal = false;
+                    this.formTaoPhong.ten_phong = '';
+                    this.formTaoPhong.mo_ta = '';
+                    this.formTaoPhong.email_khach_moi = '';
+                }
+            } catch (error) {
+                console.error("Lỗi khi tạo phòng:", error);
+                if (this.$toast) this.$toast.error("Hệ thống bận, không thể tạo phòng lúc này.");
+            } finally {
+                this.isCreating = false;
+            }
+        },
+        async kiemTraTruocKhiJoin() {
+            if (!this.ma_phong_tham_gia.trim()) {
+                if (this.$toast) this.$toast.warning("Vui lòng nhập mã phòng họp!");
+                return;
+            }
+            // Điều hướng sang trang tham gia chính thức của đối tác để thực hiện Face ID
+            sessionStorage.setItem('join_ma_phong_tmp', this.ma_phong_tham_gia.trim());
+            this.$router.push('/doi-tac/phong-hop');
+        },
     }
 }
 </script>

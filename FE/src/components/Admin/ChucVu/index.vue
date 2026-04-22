@@ -23,6 +23,7 @@
                             <tr class="bg-primary text-light text-nowrap">
                                 <th class="text-center align-middle">#</th>
                                 <th class="text-center align-middle">Tên Chức Vụ</th>
+                                <th class="text-center align-middle">Mô Tả</th>
                                 <th class="text-center align-middle">Tình Trạng</th>
                                 <th class="text-center align-middle">Thao Tác</th>
                             </tr>
@@ -31,6 +32,7 @@
                             <tr v-for="(value, index) in list_chuc_vu" :key="index" class="text-nowrap">
                                 <th class="align-middle text-center">{{ index + 1 }}</th>
                                 <td class="align-middle">{{ value.ten_chuc_vu }}</td>
+                                <td class="align-middle">{{ value.mo_ta }}</td>
                                 <td class="align-middle text-center" v-on:click="changeStatus(value)">
                                     <button v-if="value.trang_thai == 1" class="btn btn-info w-100"
                                         style="color:white">Hoạt động</button>
@@ -75,6 +77,10 @@
                                     <option value="0">Tạm tắt</option>
                                 </select>
                             </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label font-weight-bold">Mô Tả</label>
+                                <textarea v-model="create_chuc_vu.mo_ta" class="form-control" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -107,6 +113,10 @@
                                     <option value="1">Hoạt động</option>
                                     <option value="0">Tạm tắt</option>
                                 </select>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label font-weight-bold">Mô Tả</label>
+                                <textarea v-model="edit_chuc_vu.mo_ta" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
@@ -157,10 +167,12 @@ export default {
             tu_khoa: '',
             create_chuc_vu: {
                 ten_chuc_vu: "",
+                mo_ta: "",
                 trang_thai: 1
             },
             edit_chuc_vu: {
                 ten_chuc_vu: "",
+                mo_ta: "",
                 trang_thai: 1
             },
             del_chuc_vu: {},
@@ -195,7 +207,7 @@ export default {
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);
-                        this.create_chuc_vu = { ten_chuc_vu: "", trang_thai: 1 };
+                        this.create_chuc_vu = { ten_chuc_vu: "", mo_ta: "", trang_thai: 1 };
                         this.loadData();
                     } else {
                         this.$toast.error(res.data.message);

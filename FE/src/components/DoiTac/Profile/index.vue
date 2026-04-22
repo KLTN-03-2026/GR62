@@ -205,6 +205,7 @@
 
 <script>
 import axios from 'axios';
+import * as faceapi from 'face-api.js';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default {
@@ -228,7 +229,10 @@ export default {
             isPasswordLoading: false,
             isScanning: false,
             scanMessage: 'Đang khởi tạo camera...',
-            stream: null
+            stream: null,
+            scanInterval: null,
+            stableFaceCounter: 0,
+            requiredStability: 20
         }
     },
     mounted() {
@@ -263,51 +267,108 @@ export default {
             }
         },
 
+        async loadModels() {
+            try {
+                this.scanMessage = "Đang tải dữ liệu AI...";
+                const MODEL_URL = '/model';
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+                ]);
+                return true;
+            } catch (e) {
+                console.error("Lỗi tải model:", e);
+                this.$toast.error("Lỗi khởi tạo hệ thống AI!");
+                return false;
+            }
+        },
+
         async toggleScanning() {
             if (this.isScanning) {
                 this.stopCamera();
                 this.isScanning = false;
             } else {
+                const modelsLoaded = await this.loadModels();
+                if (!modelsLoaded) return;
+
                 this.isScanning = true;
-                this.scanMessage = "Vui lòng nhìn thẳng...";
+                this.scanMessage = "Đang khởi động camera...";
+                this.stableFaceCounter = 0;
+
                 try {
-                    this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                    this.$nextTick(() => { this.$refs.video.srcObject = this.stream; });
-
-                    // Simulation of scanning process
-                    setTimeout(() => { this.scanMessage = "Đang nhận diện sinh trắc..."; }, 1500);
-                    setTimeout(() => { this.scanMessage = "Đang mã hóa FaceID..."; }, 3500);
-                    setTimeout(async () => {
-                        await this.saveFaceData();
-                        this.stopCamera();
-                        this.isScanning = false;
-                    }, 5000);
-
+                    this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                    this.$nextTick(() => {
+                        const video = this.$refs.video;
+                        video.srcObject = this.stream;
+                        video.onplay = () => {
+                            this.startAnalysis(video);
+                        };
+                    });
                 } catch (e) {
-                    this.$toast.error("Không thể bật camera!");
+                    this.$toast.error("Không thể truy cập camera!");
                     this.isScanning = false;
                 }
             }
         },
 
-        async saveFaceData() {
+        startAnalysis(video) {
+            this.scanMessage = "Vui lòng nhìn thẳng vào camera...";
+            
+            this.scanInterval = setInterval(async () => {
+                if (!this.isScanning) return;
+
+                const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+                    .withFaceLandmarks()
+                    .withFaceDescriptors();
+
+                if (detections.length === 1) {
+                    this.stableFaceCounter++;
+                    const progress = Math.min(Math.round((this.stableFaceCounter / this.requiredStability) * 100), 100);
+                    this.scanMessage = `Đang phân tích sinh trắc học... ${progress}%`;
+
+                    if (this.stableFaceCounter >= this.requiredStability) {
+                        clearInterval(this.scanInterval);
+                        this.scanMessage = "Đã nhận diện thành công!";
+                        const descriptor = Array.from(detections[0].descriptor);
+                        await this.saveFaceData(descriptor);
+                    }
+                } else if (detections.length > 1) {
+                    this.stableFaceCounter = 0;
+                    this.scanMessage = "Cảnh báo: Phát hiện nhiều người!";
+                } else {
+                    this.stableFaceCounter = 0;
+                    this.scanMessage = "Vui lòng đưa mặt vào khung hình";
+                }
+            }, 250);
+        },
+
+        async saveFaceData(descriptor) {
             try {
-                const fakeHash = "FACE_" + Math.random().toString(36).substring(7).toUpperCase();
                 const token = localStorage.getItem('token_doi_tac');
                 const res = await axios.post(`${apiUrl}/doi-tac/profile/update-face-data`, 
-                    { face_data: fakeHash }, 
+                    { face_data: JSON.stringify(descriptor) }, 
                     { headers: { Authorization: 'Bearer ' + token } }
                 );
                 if (res.data.status) {
-                    this.$toast.success("Đã đồng bộ vân mặt bảo mật!");
-                    this.doi_tac.du_lieu_khuon_mat = fakeHash;
+                    this.$toast.success("Đăng ký Face ID doanh nghiệp thành công!");
+                    this.doi_tac.du_lieu_khuon_mat = JSON.stringify(descriptor);
+                    this.stopCamera();
+                    this.isScanning = false;
                 }
             } catch (e) {
-                this.$toast.error("Lỗi đồng bộ sinh trắc học.");
+                const msg = e.response?.data?.message || "Lỗi đồng bộ sinh trắc học.";
+                this.$toast.error(msg);
+                this.stopCamera();
+                this.isScanning = false;
             }
         },
 
         stopCamera() {
+            if (this.scanInterval) {
+                clearInterval(this.scanInterval);
+                this.scanInterval = null;
+            }
             if (this.stream) {
                 this.stream.getTracks().forEach(t => t.stop());
                 this.stream = null;

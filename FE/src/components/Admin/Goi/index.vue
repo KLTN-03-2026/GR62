@@ -23,10 +23,13 @@
                             <tr class="bg-primary text-light text-nowrap">
                                 <th class="text-center">#</th>
                                 <th class="text-center">Tên Gói</th>
-                                <th class="text-center">Số Người Tối Đa</th>
-                                <th class="text-center">Số Phòng Tối Đa</th>
-                                <th class="text-center">Thời Hạn (ngày)</th>
-                                <th class="text-center">Mô Tả</th>
+                                <th class="text-center">Giá (VNĐ)</th>
+                                <th class="text-center">Số Người</th>
+                                <th class="text-center">Số Phòng</th>
+                                <th class="text-center">Thời Hạn</th>
+                                <th class="text-center">ND?</th>
+                                <th class="text-center">Mở?</th>
+                                <th class="text-center">Hiển thị?</th>
                                 <th class="text-center">Trạng Thái</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -36,10 +39,22 @@
                                 <tr class="text-nowrap">
                                     <th class="align-middle text-center">{{ index + 1 }}</th>
                                     <td class="align-middle">{{ value.ten_goi }}</td>
+                                    <td class="align-middle text-end">{{ value.gia_goi?.toLocaleString() }}</td>
                                     <td class="align-middle text-center">{{ value.so_nguoi_toi_da }}</td>
                                     <td class="align-middle text-center">{{ value.so_phong_toi_da }}</td>
-                                    <td class="align-middle text-center">{{ value.thoi_han }}</td>
-                                    <td class="align-middle">{{ value.mo_ta }}</td>
+                                    <td class="align-middle text-center">{{ value.thoi_han }} ngày</td>
+                                    <td class="align-middle text-center">
+                                        <i v-if="value.is_nguoi_dung" class="fa-solid fa-check-circle text-success"></i>
+                                        <i v-else class="fa-solid fa-times-circle text-danger"></i>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <i v-if="value.is_open" class="fa-solid fa-check-circle text-success"></i>
+                                        <i v-else class="fa-solid fa-times-circle text-danger"></i>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <i v-if="value.is_hien_thi" class="fa-solid fa-check-circle text-success"></i>
+                                        <i v-else class="fa-solid fa-times-circle text-danger"></i>
+                                    </td>
                                     <td class="align-middle text-center" v-on:click="changeStatus(value)">
                                         <button v-if="value.trang_thai == 1" class="btn btn-info w-100" style="color:white">Hoạt động</button>
                                         <button v-else class="btn btn-secondary w-100">Tạm tắt</button>
@@ -78,12 +93,29 @@
                             <input v-model="create_goi.so_nguoi_toi_da" type="number" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Số Phòng Tối Đa</label>
-                            <input v-model="create_goi.so_phong_toi_da" type="number" class="form-control" />
+                            <label class="form-label">Giá Gói</label>
+                            <input v-model="create_goi.gia_goi" type="number" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Thời Hạn (ngày)</label>
-                            <input v-model="create_goi.thoi_han" type="number" class="form-control" />
+                            <label class="form-label">Dành Cho Người Dùng?</label>
+                            <select v-model="create_goi.is_nguoi_dung" class="form-select">
+                                <option :value="1">Có</option>
+                                <option :value="0">Không</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mở?</label>
+                            <select v-model="create_goi.is_open" class="form-select">
+                                <option :value="1">Có</option>
+                                <option :value="0">Không</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Hiển Thị?</label>
+                            <select v-model="create_goi.is_hien_thi" class="form-select">
+                                <option :value="1">Có</option>
+                                <option :value="0">Không</option>
+                            </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
@@ -125,12 +157,29 @@
                             <input v-model="edit_goi.so_nguoi_toi_da" type="number" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Số Phòng Tối Đa</label>
-                            <input v-model="edit_goi.so_phong_toi_da" type="number" class="form-control" />
+                            <label class="form-label">Giá Gói</label>
+                            <input v-model="edit_goi.gia_goi" type="number" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Thời Hạn (ngày)</label>
-                            <input v-model="edit_goi.thoi_han" type="number" class="form-control" />
+                            <label class="form-label">Dành Cho Người Dùng?</label>
+                            <select v-model="edit_goi.is_nguoi_dung" class="form-select">
+                                <option :value="true">Có</option>
+                                <option :value="false">Không</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mở?</label>
+                            <select v-model="edit_goi.is_open" class="form-select">
+                                <option :value="true">Có</option>
+                                <option :value="false">Không</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Hiển Thị?</label>
+                            <select v-model="edit_goi.is_hien_thi" class="form-select">
+                                <option :value="true">Có</option>
+                                <option :value="false">Không</option>
+                            </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
@@ -181,8 +230,8 @@ export default {
     data() {
         return {
             list_goi: [],
-            create_goi: { ten_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "1" },
-            edit_goi: { ten_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "" },
+            create_goi: { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", is_nguoi_dung: 1, is_open: 1, is_hien_thi: 1, trang_thai: "1" },
+            edit_goi: { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", is_nguoi_dung: "", is_open: "", is_hien_thi: "", trang_thai: "" },
             del_goi: {},
             tim_kiem: {},
         };
@@ -200,7 +249,11 @@ export default {
         themGoi() {
             axios.post('http://127.0.0.1:8000/api/goi/create', this.create_goi)
                 .then((res) => {
-                    if (res.data.status) { this.$toast.success(res.data.message); this.loadData(); }
+                    if (res.data.status) {
+                        this.$toast.success(res.data.message);
+                        this.create_goi = { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", is_nguoi_dung: 1, is_open: 1, is_hien_thi: 1, trang_thai: "1" };
+                        this.loadData();
+                    }
                     else this.$toast.error(res.data.message);
                 }).catch(res => Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0])));
         },

@@ -32,6 +32,17 @@ class NguoiDung extends Authenticatable
         return [
             'password' => 'hashed',
             'trang_thai' => 'boolean',
+            'id_doi_tac' => 'boolean',
         ];
+    }
+
+    public function doiTac()
+    {
+        return $this->belongsTo(DoiTac::class, 'id_doi_tac');
+    }
+
+    public function chucVu()
+    {
+        return $this->belongsTo(ChucVu::class, 'id_chuc_vu');
     }
 }

@@ -266,19 +266,24 @@ export default {
                     if (res.data.status === 'paid') {
                         clearInterval(this.timer);
 
-                        if (this.user && res.data.id_doi_tac) {
-                            this.user.id_doi_tac = res.data.id_doi_tac;
+                        if (this.user && (res.data.id_doi_tac == 1 || res.data.id_doi_tac === true)) {
+                            // Cập nhật trạng thái đối tác ngay lập tức
+                            this.user.id_doi_tac = 1;
                             localStorage.setItem('thong_tin_user', JSON.stringify(this.user));
+                            
+                            // Đồng bộ token sang token_doi_tac nếu cần
                             const token = localStorage.getItem('token_nguoi_dung');
                             if (token) {
                                 localStorage.setItem('token_doi_tac', token);
                             }
                         }
 
-                        if (this.$toast) this.$toast.success("Thanh toán hoàn tất!");
+                        if (this.$toast) this.$toast.success("Thanh toán thành công! Chào mừng đối tác mới.");
                         
-                        const redirectUrl = res.data.id_doi_tac ? '/doi-tac/trang-chinh' : '/nguoi-dung/trang-chinh';
-                        setTimeout(() => this.$router.push(redirectUrl), 2500);
+                        // Chuyển hướng dựa trên trạng thái đối tác
+                        const isPartner = res.data.id_doi_tac == 1 || res.data.id_doi_tac === true;
+                        const redirectUrl = isPartner ? '/doi-tac/trang-chinh' : '/nguoi-dung/trang-chinh';
+                        setTimeout(() => this.$router.push(redirectUrl), 2000);
                     }
                 } catch (e) { }
             }, 4000);

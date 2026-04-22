@@ -209,4 +209,20 @@ class PhongHopController extends Controller
             ], 200);
         }
     }
+
+    public function getDataByChuPhong(Request $request)
+    {
+        $request->validate([
+            'id_chu_phong' => 'required|integer'
+        ]);
+
+        $data = PhongHop::where('id_chu_phong', $request->id_chu_phong)
+                        ->orderBy('id', 'desc')
+                        ->get();
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ]);
+    }
 }
