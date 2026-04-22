@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PhongHopCreateRequest;
+use App\Http\Requests\PhongHopSearchRequest;
+use App\Http\Requests\PhongHopUpdateRequest;
+use App\Models\ChiTietPhongHop;
 use App\Models\NguoiDung;
 use App\Models\PhongHop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PhanQuyen;
 use Firebase\JWT\JWT;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use LiveKit\RoomServiceClient;
 
@@ -22,14 +28,8 @@ class PhongHopController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(PhongHopCreateRequest $request)
     {
-        // 1. Kiểm tra dữ liệu gửi lên
-        $request->validate([
-            'ten_phong'       => 'required|string|max:255',
-            'id_chu_phong'    => 'required|integer',
-            'so_nguoi_toi_da' => 'nullable|integer|min:2',
-        ]);
 
         // 2. Tự động sinh ma_phong duy nhất (VD: xya-qwer-zxc)
         do {
@@ -53,7 +53,7 @@ class PhongHopController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(PhongHopUpdateRequest $request)
     {
         $data = PhongHop::where('id', $request->id)->first();
         if ($data) {
@@ -86,7 +86,7 @@ class PhongHopController extends Controller
         ]);
     }
 
-    public function search(Request $request)
+    public function search(PhongHopSearchRequest $request)
     {
         $query = PhongHop::query();
         if ($request->has('keyword') && $request->keyword != '') {
@@ -183,7 +183,8 @@ class PhongHopController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Cấp quyền vào phòng thành công!',
-                'token' => $token
+                'token' => $token,
+                'id_phong_hop' => $phong->id
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -209,7 +210,6 @@ class PhongHopController extends Controller
             ], 200);
         }
     }
-
     public function getDataByChuPhong(Request $request)
     {
         $request->validate([
@@ -224,5 +224,85 @@ class PhongHopController extends Controller
             'status' => true,
             'data'   => $data
         ]);
+    }
+
+    public function roiPhongHop(Request $request)
+    {
+        try {
+            ChiTietPhongHop::where('id_phong_hop', $request->id_phong_hop)
+                ->where('id_nguoi_dung', $request->id_nguoi_dung)
+                ->update(['is_active' => false]);
+
+            $soNguoiConLai = ChiTietPhongHop::where('id_phong_hop', $request->id_phong_hop)
+                ->where('is_active', true)
+                ->count();
+
+            if ($soNguoiConLai == 0) {
+                PhongHop::where('id', $request->id_phong_hop)->update([
+                    'thoi_gian_ket_thuc' => \Carbon\Carbon::now(),
+                    'trang_thai' => false
+                ]);
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Đã rời phòng và cập nhật lịch sử thành công!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Lỗi khi cập nhật rời phòng: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    public function livekitWebhook(Request $request)
+    {
+        $payload = $request->all();
+
+        // Ghi log
+        Log::info('LiveKit Webhook Received:', $payload);
+
+        $event = $payload['event'] ?? null;
+        if (!$event) {
+            return response()->json(['status' => false, 'message' => 'No event type']);
+        }
+
+        // xuất Mã phòng
+        $ma_phong = $payload['room']['name'] ?? null;
+        $phong = PhongHop::where('ma_phong', $ma_phong)->first();
+
+        if (!$phong) {
+            return response()->json(['status' => false, 'message' => 'Không tìm thấy phòng trong DB']);
+        }
+
+        // XỬ LÝ SỰ KIỆN: 1 NGƯỜI DÙNG THOÁT HOẶC RỚT MẠNG
+        if ($event === 'participant_left' || $event === 'participant_disconnected') {
+            // Lấy identity của người dùng
+            $userName = $payload['participant']['identity'] ?? null;
+
+            // Tìm ID người dùng dựa vào tên
+            $user = NguoiDung::where('ho_va_ten', $userName)->first();
+
+            if ($user) {
+                ChiTietPhongHop::where('id_phong_hop', $phong->id)
+                    ->where('id_nguoi_dung', $user->id)
+                    ->update(['is_active' => false]);
+            }
+        }
+
+        // XỬ LÝ SỰ KIỆN: PHÒNG HỌP CHÍNH THỨC KẾT THÚC (Mọi người đã thoát hết)
+        if ($event === 'room_finished') {
+            // Cập nhật thời gian kết thúc vào bảng phong_hops
+            $phong->update([
+                'thoi_gian_ket_thuc' => Carbon::now(),
+                'trang_thai' => false // Đóng phòng
+            ]);
+
+            // Quét sạch: Đảm bảo mọi người trong phòng này đều được update thành is_active = 0
+            ChiTietPhongHop::where('id_phong_hop', $phong->id)
+                ->update(['is_active' => false]);
+        }
+        // Trả về 200
+        return response()->json(['status' => true]);
+
     }
 }

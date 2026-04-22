@@ -20,9 +20,14 @@
                         <i class="bx bxs-dashboard"></i>
                         <span>Tổng quan</span>
                     </button>
+                    
                     <button @click="$router.push('/doi-tac/phong-hop')" class="nav-business-item">
                         <i class="bx bxs-video"></i>
                         <span>Tham gia cuộc họp</span>
+                    </button>
+                    <button @click="$router.push('/doi-tac/quan-ly-phong-hop')" class="nav-business-item">
+                        <i class="bx bxs-megaphone"></i>
+                        <span>Quản lý phòng họp</span>
                     </button>
                     <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
                         <i class="bx bxs-bar-chart-alt-2"></i>

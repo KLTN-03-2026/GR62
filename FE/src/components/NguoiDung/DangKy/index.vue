@@ -87,19 +87,6 @@
                     </form>
 
                     <p class="switch-auth">Đã có tài khoản? <router-link to="/nguoi-dung/dang-nhap">Đăng nhập</router-link></p>
-
-                    <div class="divider"><span>HOẶC ĐĂNG KÝ BẰNG</span></div>
-
-                    <div class="social-row">
-                        <button class="social-btn">
-                            <img src="https://www.google.com/favicon.ico" alt="Google" width="18" />
-                            Google
-                        </button>
-                        <button class="social-btn">
-                            <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" alt="LinkedIn" width="18" />
-                            LinkedIn
-                        </button>
-                    </div>
                 </div>
 
                 <!-- Footer -->

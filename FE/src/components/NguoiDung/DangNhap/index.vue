@@ -88,20 +88,7 @@
                         </button>
                     </form>
 
-                    <!-- Divider -->
-                    <div class="divider"><span>Hoặc đăng nhập với</span></div>
-
-                    <!-- Social -->
-                    <div class="social-row">
-                        <button class="social-btn">
-                            <img src="https://www.google.com/favicon.ico" width="18" alt="Google" />
-                            Google
-                        </button>
-                        <button class="social-btn">
-                            <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="18" alt="LinkedIn" />
-                            LinkedIn
-                        </button>
-                    </div>
+                   
 
                     <!-- Switch -->
                     <p class="switch-auth">

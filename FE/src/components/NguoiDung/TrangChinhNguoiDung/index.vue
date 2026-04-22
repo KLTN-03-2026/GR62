@@ -160,7 +160,7 @@
                                     <h2 class="fw-bolder mb-2"
                                         style="color: #0f172a; letter-spacing: -0.5px; font-size: 2rem;">Chào mừng trở
                                         lại,
-                                        Alex!
+                                        {{ ten_nguoi_dung }}
                                     </h2>
                                     <p class="mb-0" style="font-size: 1rem; color: #64748b;">Bạn có <strong>3
                                             cuộc họp</strong> được lên lịch cho hôm nay.</p>
@@ -747,6 +747,33 @@
             </div>
         </div>
     </div>
+    <!-- Modal Hiển thị mã phòng -->
+    <div v-if="showRoomModal"
+        class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3"
+        style="background-color: rgba(15, 23, 42, 0.85); backdrop-filter: blur(5px);">
+        <div class="card border-0 shadow-lg p-4 text-center animate__animated animate__zoomIn"
+            style="border-radius: 20px; width: 400px; background-color: #ffffff;">
+            <div class="mx-auto mb-3 d-flex justify-content-center align-items-center rounded-circle"
+                style="width: 80px; height: 80px; background-color: #fff7ed;">
+                <i class='bx bx-party' style="font-size: 3rem; color: #ea580c;"></i>
+            </div>
+            <h4 class="fw-bolder mb-2 text-dark">Tạo thành công!</h4>
+            <p class="text-muted small mb-4">Mã phòng họp của bạn đã sẵn sàng. Hãy copy mã này để tham gia.</p>
+
+            <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-4"
+                style="background-color: #f8fafc; border: 1px dashed #cbd5e1;">
+                <span class="fw-bolder fs-5" style="color: #0f172a; letter-spacing: 2px;">{{ createdRoomCode }}</span>
+                <button @click="copyRoomCode" class="btn btn-sm btn-outline-secondary rounded-pill px-3 fw-bold">
+                    <i class='bx bx-copy me-1'></i> Copy
+                </button>
+            </div>
+
+            <button @click="showRoomModal = false" class="btn text-white w-100 fw-bold py-2"
+                style="background-color: #ea580c; border-radius: 10px;">
+                Đóng
+            </button>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -805,6 +832,10 @@ export default {
             authStream: null,
             authInterval: null,
             isMatched: false, // biến này để tránh quét trúng nhiều lần
+            list_goi: [],
+            chi_tiet_phong_hop: [],
+            showRoomModal: false,
+            createdRoomCode: '',
         }
     },
     mounted() {
@@ -817,6 +848,8 @@ export default {
         window.addEventListener('click', () => {
             this.showDropdown = false;
         });
+        this.getGoi();
+        this.getChiTietPhongHop();
     },
     computed: {
         id_nguoi_dung() {
@@ -857,6 +890,48 @@ export default {
         }
     },
     methods: {
+        copyRoomCode() {
+            navigator.clipboard.writeText(this.createdRoomCode).then(() => {
+                if (this.$toast) this.$toast.success("Đã copy mã phòng!");
+            }).catch(err => {
+                console.error('Lỗi khi copy', err);
+            });
+        },
+        getChiTietPhongHop() {
+            const user = JSON.parse(localStorage.getItem('thong_tin_user'));
+            if (!user) return;
+
+            axios
+                .get(`${apiUrl}/chi-tiet-phong-hop/data`, {
+                    params: {
+                        id_nguoi_dung: user.id
+                    }
+                })
+                .then((res) => {
+                    if (res.data.status) {
+                        this.chi_tiet_phong_hop = res.data.data
+                    }
+                    else {
+                        this.$toast.info(res.data.message)
+                    }
+                })
+                .catch((err) => {
+                    console.error("Lỗi lấy chi tiết phòng họp:", err);
+                    this.$toast.error("Không thể tải chi tiết phòng họp.");
+                });
+        },
+        getGoi() {
+            axios
+                .get(`${apiUrl}/goi/data`)
+                .then((res) => {
+                    if (res.data.status) {
+                        this.list_goi = res.data.data
+                    }
+                    else {
+                        this.$toast.info(res.data.message)
+                    }
+                })
+        },
         dang_xuat() {
             localStorage.removeItem('token_nguoi_dung');
             localStorage.removeItem('thong_tin_user');
@@ -1184,8 +1259,9 @@ export default {
                     const phongMoi = response.data.data;
                     console.log("Mã phòng vừa tạo:", phongMoi.ma_phong);
 
-                    // Tạm thời hiển thị mã phòng bằng Alert để bạn copy dễ dàng
-                    alert(`TẠO THÀNH CÔNG!\n\nMã phòng của bạn là: ${phongMoi.ma_phong}\nHãy copy mã này để tham gia.`);
+                    // Mở Modal hiển thị mã phòng
+                    this.createdRoomCode = phongMoi.ma_phong;
+                    this.showRoomModal = true;
 
                     // Reset form sau khi tạo xong
                     this.formTaoPhong.ten_phong = '';
@@ -1338,7 +1414,7 @@ export default {
                 if (detections.length === 1) {
                     const liveDescriptor = detections[0].descriptor;
 
-                    // SO SÁNH: Tính khoảng cách Euclidean giữa 2 véc-tơ
+                    // Tính khoảng cách Euclidean giữa 2 véc-tơ
                     const distance = faceapi.euclideanDistance(savedDescriptor, liveDescriptor);
 
                     // Ngưỡng 0.5 là mức độ an toàn cao (càng nhỏ càng giống)
@@ -1352,12 +1428,6 @@ export default {
 
                         // Tắt camera modal
                         this.dongModalXacThucJoin(false);
-
-
-                        // Đợi 800ms để nhả camera phần cứng, sau đó mới gọi API và chuyển trang
-
-
-                        // ĐÃ XÓA CÁC DÒNG CODE BỊ LẶP Ở ĐÂY
                     }
                     else {
                         this.authError = true;
@@ -1401,7 +1471,8 @@ export default {
                     sessionStorage.setItem('livekit_token', response.data.token);
                     sessionStorage.setItem('livekit_room', this.ma_phong_tham_gia.trim());
                     if (this.$toast) this.$toast.success("Đang tham gia phòng họp");
-
+                    // Lưu ID phòng
+                    sessionStorage.setItem('id_phong_hop', response.data.id_phong_hop);
                     // Ẩn modal và sang phòng
                     this.showJoinAuthModal = false;
                     window.location.href = `/phong-hop/${this.ma_phong_tham_gia.trim()}`;
@@ -1457,8 +1528,6 @@ export default {
         this.stopFaceScan();
     }
 }
-
-
 </script>
 
 <style scoped>

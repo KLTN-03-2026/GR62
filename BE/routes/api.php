@@ -19,6 +19,9 @@ use App\Http\Controllers\Api\SepayPollingController;
 //SEPAY
 Route::post('/sepay/create-order', [SepayPollingController::class, 'createOrder']);
 Route::get('/sepay/status/{orderCode}', [SepayPollingController::class, 'checkStatus']);
+// Thanh Toán
+
+
 // Admin
 Route::post('/admin/login', [AdminController::class, 'login']);
 
@@ -27,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/create', [AdminController::class, 'store']);
     Route::post('/admin/update', [AdminController::class, 'update']);
     Route::post('/admin/delete', [AdminController::class, 'destroy']);
-    
+
     Route::get('/admin/profile/data', [AdminController::class, 'getProfile']);
     Route::post('/admin/profile/update', [AdminController::class, 'updateProfile']);
     Route::post('/admin/profile/change-password', [AdminController::class, 'changePassword']);
@@ -122,6 +125,8 @@ Route::get('/phong-hop/ma-phong', [PhongHopController::class, 'getByMaPhong']);
 Route::post('/phong-hop/tao-token', [PhongHopController::class, 'taoToken']);
 Route::post('/phong-hop/kiem-tra-phong-hop', [PhongHopController::class, 'kiemTraPhongHop']);
 Route::get('/phong-hop/data-by-chu-phong', [PhongHopController::class, 'getDataByChuPhong']);
+Route::post('/phong-hop/roi-phong', [PhongHopController::class, 'roiPhongHop']); // Bắt sự kiện người dùng rời phòng họp thủ công
+Route::post('/webhook/livekit', [PhongHopController::class, 'livekitWebhook']); // Bắt sự kiện người dùng rời phòng họp từ LiveKit
 
 // 9. Chi Tiết Phòng Họp
 Route::get('/chi-tiet-phong-hop/data', [ChiTietPhongHopController::class, 'index']);
@@ -143,4 +148,3 @@ Route::post('/hoa-don/create', [HoaDonController::class, 'store']);
 Route::post('/hoa-don/update', [HoaDonController::class, 'update']);
 Route::post('/hoa-don/delete', [HoaDonController::class, 'destroy']);
 Route::post('/hoa-don/tim-kiem', [HoaDonController::class, 'search']);
-

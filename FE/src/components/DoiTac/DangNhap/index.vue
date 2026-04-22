@@ -28,14 +28,16 @@
                     <div class="px-xl-4 pb-4">
                         <div class="mb-4">
                             <h2 class="fw-bolder mb-2"
-                                style="color: #0f172a; font-size: 1.75rem; letter-spacing: -0.5px;">Đăng nhập Đối tác</h2>
+                                style="color: #0f172a; font-size: 1.75rem; letter-spacing: -0.5px;">Đăng nhập Đối tác
+                            </h2>
                             <p class="small mb-0" style="color: #64748b;">Dành riêng cho các đối tác của AI-Meet.</p>
                         </div>
 
                         <form @submit.prevent="login()">
                             <!-- Email Input -->
                             <div class="mb-4">
-                                <label class="form-label fw-bold small mb-2" style="color: #334155;">Email Đăng nhập</label>
+                                <label class="form-label fw-bold small mb-2" style="color: #334155;">Email Đăng
+                                    nhập</label>
                                 <input v-model="doi_tac.email" type="email"
                                     class="form-control form-control-lg bg-transparent shadow-none px-3 py-3 fs-6"
                                     placeholder="partner@company.com"
@@ -45,7 +47,8 @@
                             <!-- Password Input -->
                             <div class="mb-4">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <label class="form-label fw-bold small mb-0" style="color: #334155;">Mật khẩu</label>
+                                    <label class="form-label fw-bold small mb-0" style="color: #334155;">Mật
+                                        khẩu</label>
                                 </div>
                                 <input v-model="doi_tac.password" type="password"
                                     class="form-control form-control-lg bg-transparent shadow-none px-3 py-3 fs-6"
@@ -93,10 +96,10 @@ export default {
                 const res = await axios.post('http://127.0.0.1:8000/api/doi-tac/login', this.doi_tac);
                 if (res.data.status) {
                     localStorage.setItem('token_doi_tac', res.data.data.token);
-                    try { this.$toast.success('Đăng nhập đối tác thành công!'); } catch(e) {}
-                    this.$router.push('/doi-tac/dashboard'); // Adjust redirection if needed
+                    try { this.$toast.success('Đăng nhập đối tác thành công!'); } catch (e) { }
+                    this.$router.push('/doi-tac/trang-chinh'); // Adjust redirection if needed
                 } else {
-                    try { this.$toast.error(res.data.message || 'Đăng nhập thất bại!'); } catch(e) {}
+                    try { this.$toast.error(res.data.message || 'Đăng nhập thất bại!'); } catch (e) { }
                 }
             } catch (errors) {
                 const msg = errors.response?.data?.message
@@ -104,7 +107,7 @@ export default {
                         ? Object.values(errors.response.data.errors)[0][0]
                         : null)
                     || 'Đăng nhập thất bại!';
-                try { this.$toast.error(msg); } catch(e) {}
+                try { this.$toast.error(msg); } catch (e) { }
             }
         }
     }

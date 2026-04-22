@@ -200,7 +200,11 @@ const routes = [
         component: () => import('../components/DoiTac/Profile/index.vue'),
         meta: { layout: 'black' }
     },
-
+    {
+    path: '/doi-tac/quan-ly-phong-hop',
+    component: () => import('../components/DoiTac/QuanLyPhongHop/index.vue'),
+    meta: { layout: 'black' }
+    },
 
 
 ]

@@ -24,6 +24,10 @@
                         <i class="bx bxs-video"></i>
                         <span>Tham gia cuộc họp</span>
                     </button>
+                                        <button @click="$router.push('/doi-tac/quan-ly-phong-hop')" class="nav-business-item">
+                        <i class="bx bxs-megaphone"></i>
+                        <span>Quản lý phòng họp</span>
+                    </button>
                     <button class="nav-business-item">
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>
@@ -283,6 +287,9 @@ export default {
                 return false;
             }
         },
+                return false;
+            }
+        },
 
         async toggleScanning() {
             if (this.isScanning) {
@@ -306,6 +313,13 @@ export default {
                         };
                     });
                 } catch (e) {
+                    this.$toast.error("Không thể truy cập camera.");
+                    this.isScanning = false;
+                }
+                        };
+                    });
+                } catch (e) {
+                    
                     this.$toast.error("Không thể truy cập camera!");
                     this.isScanning = false;
                 }
@@ -372,6 +386,10 @@ export default {
             if (this.stream) {
                 this.stream.getTracks().forEach(t => t.stop());
                 this.stream = null;
+            }
+            if (this.vong_lap_nhan_dien) {
+                clearInterval(this.vong_lap_nhan_dien);
+                this.vong_lap_nhan_dien = null;
             }
         },
 

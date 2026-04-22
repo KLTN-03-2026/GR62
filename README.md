@@ -21,7 +21,8 @@
 | Tính năng | Mô tả | Trạng thái |
 | :--- | :--- | :---: |
 | 🛡️ **Bảo mật đa tầng** | Xác thực OTP & JWT cho người dùng và đối tác. | ✅ |
-| 🤖 **Trợ lý AI** | Tích hợp xử lý ngôn ngữ tự nhiên trong phòng họp. | 🚧 |
+| 🤖 **Face ID Sinh trắc học** | Tích hợp nhận diện khuôn mặt thực tế bằng AI để bảo mật. | ✅ |
+| 💬 **Real-time Chat** | Tích hợp hệ thống Chat thời gian thực. | ✅ |
 | 🎨 **Neo-UI Design** | Giao diện hiện đại, tối ưu trải nghiệm (UX). | ✅ |
 | ☁️ **Cloud Sync** | Đồng bộ hóa hồ sơ và lịch họp trên đám mây. | ✅ |
 | 📽️ **4K HDR Video** | Chất lượng truyền tải hình ảnh độ phân giải cao. | ✅ |
