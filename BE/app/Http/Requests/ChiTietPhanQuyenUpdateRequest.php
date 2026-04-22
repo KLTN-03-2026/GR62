@@ -15,7 +15,7 @@ class ChiTietPhanQuyenUpdateRequest extends FormRequest
     {
         return [
             'id'            => 'required|exists:chi_tiet_phan_quyens,id',
-            'id_phan_quyen' => 'required|exists:phan_quyens,id',
+            'id_chuc_vu'    => 'required|exists:chuc_vus,id',
             'id_chuc_nang'  => 'required|integer',
             'hanh_dong'     => 'nullable|string|max:255',
             'mo_ta'         => 'nullable|string',
@@ -28,8 +28,8 @@ class ChiTietPhanQuyenUpdateRequest extends FormRequest
             'id.required'            => 'ID không được để trống',
             'id.exists'              => 'Chi tiết phân quyền không tồn tại',
 
-            'id_phan_quyen.required' => 'ID phân quyền không được để trống',
-            'id_phan_quyen.exists'   => 'Phân quyền không tồn tại',
+            'id_chuc_vu.required'   => 'ID chức vụ không được để trống',
+            'id_chuc_vu.exists'     => 'Chức vụ không tồn tại',
 
             'id_chuc_nang.required'  => 'ID chức năng không được để trống',
             'id_chuc_nang.integer'   => 'ID chức năng phải là số nguyên',

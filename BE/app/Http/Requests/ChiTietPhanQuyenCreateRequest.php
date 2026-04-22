@@ -14,7 +14,7 @@ class ChiTietPhanQuyenCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id_phan_quyen' => 'required|exists:phan_quyens,id',
+            'id_chuc_vu'    => 'required|exists:chuc_vus,id',
             'id_chuc_nang'  => 'required|integer',
             'hanh_dong'     => 'nullable|string|max:255',
             'mo_ta'         => 'nullable|string',
@@ -24,8 +24,8 @@ class ChiTietPhanQuyenCreateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'id_phan_quyen.required' => 'ID phân quyền không được để trống',
-            'id_phan_quyen.exists'   => 'Phân quyền không tồn tại',
+            'id_chuc_vu.required'   => 'ID chức vụ không được để trống',
+            'id_chuc_vu.exists'     => 'Chức vụ không tồn tại',
 
             'id_chuc_nang.required'  => 'ID chức năng không được để trống',
             'id_chuc_nang.integer'   => 'ID chức năng phải là số nguyên',
