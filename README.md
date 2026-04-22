@@ -1,9 +1,6 @@
 # 🚀 AI-Meet: Nền tảng Họp Trực tuyến Thông minh
 
-<div align="center">
-  <img src="FE/public/ai_login_v2.png" alt="AI-Meet UI Banner" width="100%" />
-  <p><i>Kiến tạo không gian số thông minh - Kết nối mọi lúc, mọi nơi.</i></p>
-</div>
+
 
 ---
 
@@ -115,7 +112,7 @@ npm run dev
 
 ### Trang đăng nhập (Neo-Futuristic UI)
 <div align="center">
-  <img src="FE/public/ai_login_v2.png" width="80%" alt="Login UI" />
+  <img src="FE/src/assets/images/nguoi-dung-dang-nhap.png.png" width="80%" alt="Login UI" />
 </div>
 
 ---
