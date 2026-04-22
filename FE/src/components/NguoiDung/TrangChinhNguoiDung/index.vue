@@ -194,7 +194,8 @@
                                                 với theo dõi khuôn mặt AI đang hoạt động.</p>
                                         </div>
                                         <div class="mt-auto">
-                                            <button @click="currentTab = 'meetings'" class="btn bg-white fw-bolder w-100 py-2"
+                                            <button @click="currentTab = 'meetings'"
+                                                class="btn bg-white fw-bolder w-100 py-2"
                                                 style="border-radius: 8px; color: #ea580c; font-size: 1rem;">Bắt đầu
                                                 ngay</button>
                                         </div>
@@ -284,8 +285,10 @@
                                 <!-- Upcoming Meetings -->
                                 <div class="col-lg-12">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
-                                        <h4 class="fw-bolder mb-0 text-dark" style="font-size: 1.25rem;">Cuộc họp sắp tới</h4>
-                                        <a href="#" class="fw-bolder text-decoration-none small" style="color: #ea580c;">Xem lịch</a>
+                                        <h4 class="fw-bolder mb-0 text-dark" style="font-size: 1.25rem;">Cuộc họp sắp
+                                            tới</h4>
+                                        <a href="#" class="fw-bolder text-decoration-none small"
+                                            style="color: #ea580c;">Xem lịch</a>
                                     </div>
 
                                     <div class="row g-4">
@@ -294,38 +297,52 @@
                                                 <div class="d-flex align-items-center">
                                                     <div class="rounded-3 d-flex flex-column justify-content-center align-items-center px-3 py-2 me-4"
                                                         style="background-color: #f8fafc; min-width: 65px; border: 1px solid #f1f5f9;">
-                                                        <span class="fw-bolder" style="color: #ea580c; font-size: 1.15rem;">24</span>
-                                                        <span class="small fw-bolder text-muted" style="font-size: 0.65rem;">OCT</span>
+                                                        <span class="fw-bolder"
+                                                            style="color: #ea580c; font-size: 1.15rem;">24</span>
+                                                        <span class="small fw-bolder text-muted"
+                                                            style="font-size: 0.65rem;">OCT</span>
                                                     </div>
                                                     <div class="flex-grow-1 pe-3">
-                                                        <h6 class="fw-bolder mb-1 text-dark" style="font-size: 0.95rem;">Đồng bộ sản phẩm: Đánh giá thiết kế</h6>
-                                                        <div class="d-flex align-items-center fw-medium mt-1" style="color: #94a3b8; font-size: 0.8rem;">
+                                                        <h6 class="fw-bolder mb-1 text-dark"
+                                                            style="font-size: 0.95rem;">Đồng bộ sản phẩm: Đánh giá thiết
+                                                            kế</h6>
+                                                        <div class="d-flex align-items-center fw-medium mt-1"
+                                                            style="color: #94a3b8; font-size: 0.8rem;">
                                                             <span>11:00 AM - 12:00 PM</span>
                                                             <span class="mx-2">•</span>
                                                             <span>ID: 882-192-331</span>
                                                         </div>
                                                     </div>
-                                                    <button class="btn text-white fw-bold px-4 py-2" style="background-color: #ea580c; border-radius: 8px; font-size: 0.9rem;">Join</button>
+                                                    <button class="btn text-white fw-bold px-4 py-2"
+                                                        style="background-color: #ea580c; border-radius: 8px; font-size: 0.9rem;">Join</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="card border-0 shadow-sm p-3 bg-white" style="border-radius: 12px; border: 1px solid #f1f5f9 !important;">
+                                            <div class="card border-0 shadow-sm p-3 bg-white"
+                                                style="border-radius: 12px; border: 1px solid #f1f5f9 !important;">
                                                 <div class="d-flex align-items-center">
                                                     <div class="rounded-3 d-flex flex-column justify-content-center align-items-center px-3 py-2 me-4"
                                                         style="background-color: #f8fafc; min-width: 65px; opacity: 0.7;">
-                                                        <span class="fw-bolder" style="color: #94a3b8; font-size: 1.15rem;">25</span>
-                                                        <span class="small fw-bolder text-muted" style="font-size: 0.65rem;">OCT</span>
+                                                        <span class="fw-bolder"
+                                                            style="color: #94a3b8; font-size: 1.15rem;">25</span>
+                                                        <span class="small fw-bolder text-muted"
+                                                            style="font-size: 0.65rem;">OCT</span>
                                                     </div>
                                                     <div class="flex-grow-1">
-                                                        <h6 class="fw-bolder mb-1 text-dark" style="font-size: 0.95rem;">Cập nhật hàng tháng cho nhà đầu tư</h6>
-                                                        <div class="d-flex align-items-center fw-medium mt-1" style="color: #94a3b8; font-size: 0.8rem;">
+                                                        <h6 class="fw-bolder mb-1 text-dark"
+                                                            style="font-size: 0.95rem;">Cập nhật hàng tháng cho nhà đầu
+                                                            tư</h6>
+                                                        <div class="d-flex align-items-center fw-medium mt-1"
+                                                            style="color: #94a3b8; font-size: 0.8rem;">
                                                             <span>09:30 AM - 10:30 AM</span>
                                                             <span class="mx-2">•</span>
                                                             <span>ID: 110-349-882</span>
                                                         </div>
                                                     </div>
-                                                    <button class="btn fw-semibold px-4 py-2 bg-white" style="border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">Chi tiết</button>
+                                                    <button class="btn fw-semibold px-4 py-2 bg-white"
+                                                        style="border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">Chi
+                                                        tiết</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -423,7 +440,8 @@
                                             <button @click="kiemTraTruocKhiJoin" :disabled="isJoining"
                                                 class="btn text-white fw-bold w-100 py-3"
                                                 style="background-color: #ea580c; border-radius: 10px; font-size: 1.1rem;">
-                                                <span v-if="isJoining" class="spinner-border spinner-border-sm me-2"></span>
+                                                <span v-if="isJoining"
+                                                    class="spinner-border spinner-border-sm me-2"></span>
                                                 <span v-else>Tham gia ngay</span>
                                             </button>
                                         </div>
@@ -564,47 +582,40 @@
                             </div>
 
                             <!-- AI Face ID -->
-                            <div class="card border-0 shadow-sm p-4 p-md-5 mb-5" style="border-radius: 16px;">
-                                <div class="d-flex align-items-center mb-5">
-                                    <div class="d-flex justify-content-center align-items-center rounded me-3 shadow-sm"
+                            <div class="card border-0 shadow-sm p-4 p-md-5" style="border-radius: 16px;">
+                                <div class="d-flex align-items-center mb-4">
+                                    <div class="d-flex justify-content-center align-items-center rounded me-3"
                                         style="background-color: #fff7ed; width: 36px; height: 36px;">
                                         <i class="bx bx-face fs-5" style="color: #ea580c;"></i>
                                     </div>
                                     <h5 class="fw-bolder mb-0 text-dark">Xác thực Face ID AI</h5>
-                                    <span v-if="da_xac_minh"
-                                        class="ms-auto badge d-flex align-items-center gap-1 px-3 py-2 fw-bold animate__animated animate__fadeIn"
-                                        style="background-color: #f0fdf4; color: #166534; border-radius: 100px; font-size: 0.75rem; border: 1px solid #dcfce7;">
-                                        <span class="rounded-circle pulse-green"
-                                            style="width: 6px; height: 6px; background-color: #22c55e;"></span> Đã kích hoạt
-                                    </span>
                                 </div>
 
                                 <div class="row align-items-center g-4">
                                     <template v-if="da_xac_minh">
-                                        <div class="col-12 p-0">
-                                            <div class="biometric-activated-box d-flex flex-column align-items-center justify-content-center text-center p-5 rounded-5 mb-5"
-                                                style="min-height: 400px;">
-                                                <div class="biometric-shield-icon mb-4">
-                                                    <i class='bx bxs-shield-alt-2'
-                                                        style="font-size: 6rem; color: #64748b; opacity: 0.6;"></i>
+                                        <div class="col-12 text-center py-4">
+                                            <div class="position-relative d-inline-block mb-4">
+                                                <div class="rounded-circle d-flex justify-content-center align-items-center shadow-sm"
+                                                    style="width: 150px; height: 150px; background-color: #f0fdf4; border: 2px solid #bbf7d0;">
+                                                    <i class="bx bx-check-double"
+                                                        style="font-size: 5rem; color: #22c55e;"></i>
                                                 </div>
-                                                <h5 class="text-white fw-medium px-4 opacity-75"
-                                                    style="line-height: 1.6; max-width: 420px; font-size: 1.25rem;">
-                                                    Khuôn mặt là chìa khóa truy cập bảo mật của bạn.
-                                                </h5>
+                                                <div class="position-absolute bottom-0 end-0 bg-success rounded-circle d-flex justify-content-center align-items-center border border-3 border-white"
+                                                    style="width: 40px; height: 40px;">
+                                                    <i class="bx bxs-shield-alt-2 text-white"></i>
+                                                </div>
                                             </div>
 
-                                            <div class="d-flex flex-column align-items-center gap-3 mt-2">
-                                                <button @click="resetFaceID"
-                                                    class="btn btn-orange-pro w-100 py-3 fw-900 rounded-4 shadow-orange d-flex align-items-center justify-content-center gap-2"
-                                                    style="max-width: 500px; height: 60px; font-size: 1.1rem;">
-                                                    <i class='bx bx-scan fs-4'></i> Thiết lập lại Face ID
-                                                </button>
-                                                <p class="text-muted small fw-bold mt-2"
-                                                    style="letter-spacing: 0.5px; opacity: 0.8;">
-                                                    Dữ liệu được mã hóa chuẩn biometrics
-                                                </p>
-                                            </div>
+                                            <h3 class="fw-bolder text-dark mb-2">Tài khoản đã xác thực</h3>
+                                            <p class="text-muted mx-auto mb-4" style="max-width: 500px;">
+                                                Hệ thống AI đã ghi nhận mẫu khuôn mặt của bạn. Danh tính của bạn hiện đã
+                                                được bảo vệ và sẵn sàng cho các cuộc họp bảo mật.
+                                            </p>
+
+                                            <span class="badge px-4 py-2 fw-bold"
+                                                style="background-color: #dcfce7; color: #15803d; border-radius: 30px; font-size: 0.85rem;">
+                                                <i class="bx bxs-lock-alt me-1"></i> Mã hóa sinh trắc học 256-bit
+                                            </span>
                                         </div>
                                     </template>
 
@@ -660,8 +671,7 @@
                                             <p class="mb-4"
                                                 style="color: #64748b; font-size: 0.9rem; line-height: 1.6;">
                                                 Vui lòng xác thực khuôn mặt để kích hoạt các tính năng bảo mật nâng cao
-                                                và
-                                                tham gia phòng họp nhanh.
+                                                và tham gia phòng họp nhanh.
                                             </p>
 
                                             <div class="d-flex gap-2">
@@ -727,8 +737,7 @@
 
                         <h3 class="text-white fw-bolder mb-2">Xác thực thành công!</h3>
                         <p class="text-secondary mb-4">Chào mừng <b>{{ ten_nguoi_dung }}</b>. Hệ thống đã xác nhận danh
-                            tính
-                            của bạn.</p>
+                            tính của bạn.</p>
 
                         <div class="d-grid gap-2">
                             <button @click="thamGiaPhongHop" :disabled="isJoining"
@@ -1414,7 +1423,7 @@ export default {
                 if (detections.length === 1) {
                     const liveDescriptor = detections[0].descriptor;
 
-                    // Tính khoảng cách Euclidean giữa 2 véc-tơ
+                    // SO SÁNH: Tính khoảng cách Euclidean giữa 2 véc-tơ
                     const distance = faceapi.euclideanDistance(savedDescriptor, liveDescriptor);
 
                     // Ngưỡng 0.5 là mức độ an toàn cao (càng nhỏ càng giống)
@@ -1428,6 +1437,12 @@ export default {
 
                         // Tắt camera modal
                         this.dongModalXacThucJoin(false);
+
+
+                        // Đợi 800ms để nhả camera phần cứng, sau đó mới gọi API và chuyển trang
+
+
+                        // ĐÃ XÓA CÁC DÒNG CODE BỊ LẶP Ở ĐÂY
                     }
                     else {
                         this.authError = true;
@@ -1456,7 +1471,6 @@ export default {
                 this.showJoinAuthModal = false;
             }
         },
-
         // Sửa lại hàm thamGiaPhongHop cũ một chút: Bỏ phần check da_xac_minh đi vì đã check ở hàm trên rồi
         async thamGiaPhongHop() {
             this.isJoining = true;
@@ -1668,6 +1682,7 @@ textarea:focus {
 .avatar-group img:first-child {
     margin-left: 0;
 }
+
 .text-orange {
     color: #ea580c !important;
 }
