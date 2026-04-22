@@ -14,7 +14,7 @@ class NguoiDungSeeder extends Seeder
     {
         \App\Models\NguoiDung::create([
             'id_chuc_vu' => 1, // Giả sử có chức vụ với id 1
-            'id_doi_tac' => null,
+            'id_doi_tac' => 0,
             'ho_va_ten' => 'Nguyễn Văn A',
             'so_dien_thoai' => '0987654321',
             'email' => 'nguyenvana@gmail.com',
@@ -38,7 +38,7 @@ class NguoiDungSeeder extends Seeder
 
         \App\Models\NguoiDung::create([
             'id_chuc_vu' => 3, // Giả sử có chức vụ với id 3
-            'id_doi_tac' => null,
+            'id_doi_tac' => 0,
             'ho_va_ten' => 'Lê Văn C',
             'so_dien_thoai' => '0933445566',
             'email' => 'levanc@gmail.com',
@@ -62,7 +62,7 @@ class NguoiDungSeeder extends Seeder
 
         \App\Models\NguoiDung::create([
             'id_chuc_vu' => 2,
-            'id_doi_tac' => null,
+            'id_doi_tac' => 0,
             'ho_va_ten' => 'Hoàng Văn E',
             'so_dien_thoai' => '0966554433',
             'email' => 'hoangvane@gmail.com',
