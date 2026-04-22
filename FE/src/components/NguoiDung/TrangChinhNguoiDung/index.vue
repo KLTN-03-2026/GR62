@@ -62,7 +62,7 @@
                             <h6 class="fw-bolder mb-1"
                                 style="color: #ea580c; font-size: 0.75rem; letter-spacing: 0.5px;">
 
-                                GÓI PRO</h6>
+                                GÓI Đối Tác</h6>
                             <p class="small text-muted mb-3 lh-sm"
                                 style="font-size: 0.8rem; color: #64748b !important;">
                                 Theo dõi khuôn mặt AI không giới hạn & lưu trữ.</p>

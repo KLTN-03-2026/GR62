@@ -22,7 +22,7 @@ class DoiTacSeeder extends Seeder
             'ho_va_ten'         => 'Nguyễn Văn Đối Tác',
             'so_dien_thoai'     => '0912345678',
             'email'             => 'doitac1@gmail.com',
-            'password'          => Hash::make('123456'),
+            'password'          => Hash::make('12345678'),
             'dia_chi'           => '123 Đường ABC, Quận 1, TP. Hồ Chí Minh',
             'trang_thai'        => true,
         ]);
@@ -32,7 +32,7 @@ class DoiTacSeeder extends Seeder
             'ho_va_ten'         => 'Trần Thị Hợp Tác',
             'so_dien_thoai'     => '0987654321',
             'email'             => 'doitac2@gmail.com',
-            'password'          => Hash::make('123456'),
+            'password'          => Hash::make('12345678'),
             'dia_chi'           => '456 Đường XYZ, Quận 3, TP. Hồ Chí Minh',
             'trang_thai'        => true,
         ]);
@@ -42,7 +42,7 @@ class DoiTacSeeder extends Seeder
             'ho_va_ten'         => 'Lê Văn Cung Cấp',
             'so_dien_thoai'     => '0901234567',
             'email'             => 'doitac3@gmail.com',
-            'password'          => Hash::make('123456'),
+            'password'          => Hash::make('12345678'),
             'dia_chi'           => '789 Đường LMN, Quận Bình Thạnh, TP. Hồ Chí Minh',
             'trang_thai'        => true,
         ]);
@@ -52,7 +52,7 @@ class DoiTacSeeder extends Seeder
             'ho_va_ten'         => 'Phạm Minh Quân',
             'so_dien_thoai'     => '0933445566',
             'email'             => 'doitac4@gmail.com',
-            'password'          => Hash::make('123456'),
+            'password'          => Hash::make('12345678'),
             'dia_chi'           => '101 Đường PQR, Quận Tân Bình, TP. Hồ Chí Minh',
             'trang_thai'        => false,
         ]);
@@ -62,7 +62,7 @@ class DoiTacSeeder extends Seeder
             'ho_va_ten'         => 'Hoàng Anh Tuấn',
             'so_dien_thoai'     => '0977889900',
             'email'             => 'doitac5@gmail.com',
-            'password'          => Hash::make('123456'),
+            'password'          => Hash::make('12345678'),
             'dia_chi'           => '202 Đường STU, Quận 7, TP. Hồ Chí Minh',
             'trang_thai'        => true,
         ]);
