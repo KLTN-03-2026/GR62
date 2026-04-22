@@ -23,16 +23,17 @@ class LoginNguoiDungRequest extends FormRequest
     {
         return [
             'email'    => 'required|email',
-            'password' => 'required|string',
+            'password' => 'required|string|min:6',
         ];
     }
 
     public function messages()
     {
         return [
-            'email.required'    => 'Email không được để trống',
-            'email.email'       => 'Email không đúng định dạng',
-            'password.required' => 'Mật khẩu không được để trống',
+            'email.required'    => 'Địa chỉ Email là bắt buộc.',
+            'email.email'       => 'Địa chỉ Email không đúng định dạng.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.min'      => 'Mật khẩu phải có ít nhất 6 ký tự.',
         ];
     }
 }

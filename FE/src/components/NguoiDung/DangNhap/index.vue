@@ -49,7 +49,7 @@
                         <div class="field-group">
                             <label class="field-label">Địa chỉ Email</label>
                             <div class="input-wrap">
-                                <input v-model="nguoi_dung.email" type="email" placeholder="name@company.com" required />
+                                <input v-model="nguoi_dung.email" type="email" placeholder="name@company.com" />
                                 <span class="icon-right"><i class="bx bx-envelope"></i></span>
                             </div>
                         </div>
@@ -65,7 +65,6 @@
                                     v-model="nguoi_dung.password"
                                     :type="showPass ? 'text' : 'password'"
                                     placeholder="••••••••"
-                                    required
                                 />
                                 <span class="icon-right clickable" @click="showPass = !showPass">
                                     <i :class="showPass ? 'bx bx-show' : 'bx bx-hide'"></i>
@@ -143,11 +142,18 @@ export default {
                 } else {
                     if (this.$toast) this.$toast.error(res.data.message || 'Email hoặc mật khẩu không chính xác.');
                 }
-            } catch (errors) {
-                const msg = errors.response?.data?.message
-                    || (errors.response?.data?.errors ? Object.values(errors.response.data.errors)[0] : null)
-                    || 'Hệ thống gián đoạn. Vui lòng thử lại sau.';
-                if (this.$toast) this.$toast.error(msg);
+            } catch (error) {
+                if (error.response && error.response.status === 422) {
+                    const errors = error.response.data.errors;
+                    Object.values(errors).forEach(errList => {
+                        errList.forEach(message => {
+                            if (this.$toast) this.$toast.error(message);
+                        });
+                    });
+                } else {
+                    const msg = error.response?.data?.message || 'Hệ thống gián đoạn. Vui lòng thử lại sau.';
+                    if (this.$toast) this.$toast.error(msg);
+                }
             } finally {
                 this.isLoading = false;
             }

@@ -23,29 +23,26 @@ class RegisterNguoiDungRequest extends FormRequest
     {
         return [
             'ho_va_ten'     => 'required|string|max:255',
-            'so_dien_thoai' => 'required|string|max:15',
+            'so_dien_thoai' => 'required|string|max:15|regex:/^([0-9\s\-\+\(\)]*)$/',
             'email'         => 'required|email|unique:nguoi_dungs,email',
             'password'      => 'required|string|min:8',
             're_password'   => 'required|same:password',
-            'id_chuc_vu'    => 'nullable|exists:chuc_vus,id',
-            'id_doi_tac'    => 'nullable|exists:doi_tacs,id',
         ];
     }
 
     public function messages()
     {
         return [
-            'ho_va_ten.required'     => 'Họ và tên không được để trống',
-            'so_dien_thoai.required' => 'Số điện thoại không được để trống',
-            'email.required'         => 'Email không được để trống',
-            'email.email'            => 'Email không đúng định dạng',
-            'email.unique'           => 'Email đã tồn tại trong hệ thống',
-            'password.required'      => 'Mật khẩu không được để trống',
-            'password.min'           => 'Mật khẩu phải từ 8 ký tự',
-            're_password.required'   => 'Mật khẩu nhập lại không được để trống',
-            're_password.same'       => 'Mật khẩu nhập lại không khớp',
-            'id_chuc_vu.exists'      => 'Chức vụ không tồn tại',
-            'id_doi_tac.exists'      => 'Đối tác không tồn tại',
+            'ho_va_ten.required'     => 'Họ và tên là bắt buộc.',
+            'so_dien_thoai.required' => 'Số điện thoại là bắt buộc.',
+            'so_dien_thoai.regex'    => 'Số điện thoại không đúng định dạng.',
+            'email.required'         => 'Địa chỉ Email là bắt buộc.',
+            'email.email'            => 'Địa chỉ Email không đúng định dạng.',
+            'email.unique'           => 'Địa chỉ Email này đã được đăng ký trong hệ thống.',
+            'password.required'      => 'Mật khẩu là bắt buộc.',
+            'password.min'           => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            're_password.required'   => 'Vui lòng xác nhận lại mật khẩu.',
+            're_password.same'       => 'Mật khẩu xác nhận không trùng khớp.',
         ];
     }
 }

@@ -33,21 +33,21 @@
                         <div class="field-group">
                             <label class="field-label">HỌ VÀ TÊN</label>
                             <div class="input-wrap">
-                                <input v-model="dang_ky.ho_va_ten" type="text" placeholder="Nguyễn Văn A" required />
+                                <input v-model="dang_ky.ho_va_ten" type="text" placeholder="Nguyễn Văn A" />
                             </div>
                         </div>
 
                         <div class="field-group">
                             <label class="field-label">SỐ ĐIỆN THOẠI</label>
                             <div class="input-wrap">
-                                <input v-model="dang_ky.so_dien_thoai" type="text" placeholder="0123 456 789" required />
+                                <input v-model="dang_ky.so_dien_thoai" type="text" placeholder="0123 456 789" />
                             </div>
                         </div>
 
                         <div class="field-group">
                             <label class="field-label">EMAIL</label>
                             <div class="input-wrap">
-                                <input v-model="dang_ky.email" type="email" placeholder="email@example.com" required />
+                                <input v-model="dang_ky.email" type="email" placeholder="email@example.com" />
                             </div>
                         </div>
 
@@ -55,7 +55,7 @@
                             <div class="field-group">
                                 <label class="field-label">MẬT KHẨU</label>
                                 <div class="input-wrap">
-                                    <input v-model="dang_ky.password" :type="showPass ? 'text' : 'password'" placeholder="••••••••" required />
+                                    <input v-model="dang_ky.password" :type="showPass ? 'text' : 'password'" placeholder="••••••••" />
                                     <span class="input-icon clickable" @click="showPass = !showPass">
                                         <i :class="showPass ? 'bx bx-show' : 'bx bx-hide'"></i>
                                     </span>
@@ -65,7 +65,7 @@
                             <div class="field-group">
                                 <label class="field-label">XÁC NHẬN MẬT KHẨU</label>
                                 <div class="input-wrap">
-                                    <input v-model="dang_ky.re_password" :type="showRePass ? 'text' : 'password'" placeholder="••••••••" required />
+                                    <input v-model="dang_ky.re_password" :type="showRePass ? 'text' : 'password'" placeholder="••••••••" />
                                     <span class="input-icon clickable" @click="showRePass = !showRePass">
                                         <i :class="showRePass ? 'bx bx-show' : 'bx bx-hide'"></i>
                                     </span>
@@ -143,14 +143,17 @@ export default {
                         this.$toast.error(res.data.message || 'Gặp sự cố khi đăng ký.');
                     }
                 }
-            } catch (errors) {
-                const msg = errors.response?.data?.message
-                    || (errors.response?.data?.errors
-                        ? Object.values(errors.response.data.errors)[0][0]
-                        : null)
-                    || 'Lỗi hệ thống, vui lòng thử lại sau.';
-                if (this.$toast) {
-                    this.$toast.error(msg);
+            } catch (error) {
+                if (error.response && error.response.status === 422) {
+                    const errors = error.response.data.errors;
+                    Object.values(errors).forEach(errList => {
+                        errList.forEach(message => {
+                            if (this.$toast) this.$toast.error(message);
+                        });
+                    });
+                } else {
+                    const msg = error.response?.data?.message || 'Lỗi hệ thống, vui lòng thử lại sau.';
+                    if (this.$toast) this.$toast.error(msg);
                 }
             } finally {
                 this.isLoading = false;
