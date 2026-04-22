@@ -1,9 +1,7 @@
 <template>
-    <router-view v-slot="{ Component }">
-        <transition name="fade-page" mode="out-in">
-            <component :is="Component" />
-        </transition>
-    </router-view>
+    <transition name="fade-page" mode="out-in">
+        <slot />
+    </transition>
 </template>
 <script>
 export default {

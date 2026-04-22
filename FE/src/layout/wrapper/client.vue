@@ -2,7 +2,7 @@
     <div>
         <div class="client-wrapper" style="min-height: 100vh;">
             <TopClient></TopClient>
-            <router-view></router-view>
+            <slot />
 
         </div>
         <BotClient></BotClient>
