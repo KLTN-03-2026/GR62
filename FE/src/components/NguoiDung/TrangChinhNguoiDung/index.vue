@@ -247,15 +247,23 @@
 
                                                 <h4 class="fw-bolder mb-2" style="font-size: 1.3rem;">Trạng thái Face ID
                                                 </h4>
-                                                <div class="d-flex align-items-center" style="color: #ea580c;">
+                                                <div v-if="da_xac_minh" class="d-flex align-items-center"
+                                                    style="color: #ea580c;">
                                                     <i class='bx bxs-check-shield me-2 fs-5'></i>
                                                     <span class="fw-semibold small">Đã đồng bộ hoàn toàn</span>
+                                                </div>
+                                                <div v-else class="d-flex align-items-center text-muted">
+                                                    <i class='bx bx-x-circle me-2 fs-5'></i>
+                                                    <span class="fw-semibold small">Chưa đăng ký Face ID</span>
                                                 </div>
                                             </div>
                                             <div class="rounded-3 overflow-hidden"
                                                 style="width: 55px; height: 55px; background-color: #334155; border: 2px solid #334155;">
-                                                <img :src="avatar_url" class="w-100 h-100 object-fit-cover"
-                                                    alt="Face Scanned" style="filter: contrast(1.1) brightness(0.9);">
+                                                <img v-if="da_xac_minh" :src="avatar_url"
+                                                    class="w-100 h-100 object-fit-cover" alt="Face Scanned"
+                                                    style="filter: contrast(1.1) brightness(0.9);">
+                                                <i v-else class='bx bx-user'
+                                                    style="font-size: 2rem; color: #94a3b8; display: flex; align-items: center; justify-content: center; height: 100%;"></i>
                                             </div>
                                         </div>
 
@@ -263,15 +271,19 @@
                                             <div class="progress mb-3 shadow-none"
                                                 style="height: 6px; background-color: #334155; border-radius: 10px;">
                                                 <div class="progress-bar rounded-pill" role="progressbar"
-                                                    style="width: 94.2%; background-color: #ea580c;"></div>
+                                                    :style="{ width: da_xac_minh ? '100%' : '0%', backgroundColor: da_xac_minh ? '#ea580c' : 'transparent' }">
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-between align-items-end">
                                                 <div>
                                                     <p class="small mb-0 fw-medium"
                                                         style="color: #94a3b8; font-size: 0.75rem;">Điểm tin cậy:</p>
-                                                    <h5 class="fw-bolder mb-0 mt-1">94.2%</h5>
+                                                    <h5 class="fw-bolder mb-0 mt-1"
+                                                        :class="da_xac_minh ? 'text-white' : 'text-muted'">{{
+                                                        da_xac_minh ? '100%' : '0%' }}</h5>
                                                 </div>
                                                 <a href="#" class="small text-decoration-none fw-semibold"
+                                                    @click.prevent="currentTab = 'faceid'"
                                                     style="color: #ea580c; line-height: 1.3; text-align: right;">Quản
                                                     lý<br>Sinh trắc học</a>
                                             </div>
@@ -291,61 +303,42 @@
                                             style="color: #ea580c;">Xem lịch</a>
                                     </div>
 
-                                    <div class="row g-4">
-                                        <div class="col-md-6">
-                                            <div class="card border-0 shadow-sm p-3" style="border-radius: 12px;">
-                                                <div class="d-flex align-items-center">
+                                    <div class="row g-4" v-if="chi_tiet_phong_hop.length > 0">
+                                        <div class="col-md-6" v-for="phong in chi_tiet_phong_hop" :key="phong.id">
+                                            <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 12px;" :class="{'bg-white': phong.trang_thai_phong == 0}" :style="phong.trang_thai_phong == 0 ? 'border: 1px solid #f1f5f9 !important;' : ''">
+                                                <div class="d-flex align-items-center h-100">
                                                     <div class="rounded-3 d-flex flex-column justify-content-center align-items-center px-3 py-2 me-4"
-                                                        style="background-color: #f8fafc; min-width: 65px; border: 1px solid #f1f5f9;">
+                                                        :style="phong.trang_thai_phong == 0 ? 'background-color: #f8fafc; min-width: 65px; opacity: 0.7;' : 'background-color: #f8fafc; min-width: 65px; border: 1px solid #f1f5f9;'">
                                                         <span class="fw-bolder"
-                                                            style="color: #ea580c; font-size: 1.15rem;">24</span>
+                                                            :style="phong.trang_thai_phong == 0 ? 'color: #94a3b8; font-size: 1.15rem;' : 'color: #ea580c; font-size: 1.15rem;'">
+                                                            {{ formatDay(phong.thoi_gian_bat_dau) }}
+                                                        </span>
                                                         <span class="small fw-bolder text-muted"
-                                                            style="font-size: 0.65rem;">OCT</span>
+                                                            style="font-size: 0.65rem;">{{ formatMonth(phong.thoi_gian_bat_dau) }}</span>
                                                     </div>
                                                     <div class="flex-grow-1 pe-3">
                                                         <h6 class="fw-bolder mb-1 text-dark"
-                                                            style="font-size: 0.95rem;">Đồng bộ sản phẩm: Đánh giá thiết
-                                                            kế</h6>
+                                                            style="font-size: 0.95rem;">{{ phong.ten_phong }}</h6>
                                                         <div class="d-flex align-items-center fw-medium mt-1"
                                                             style="color: #94a3b8; font-size: 0.8rem;">
-                                                            <span>11:00 AM - 12:00 PM</span>
+                                                            <span>{{ formatTime(phong.thoi_gian_bat_dau) }}</span>
                                                             <span class="mx-2">•</span>
-                                                            <span>ID: 882-192-331</span>
+                                                            <span>ID: {{ phong.ma_phong }}</span>
                                                         </div>
                                                     </div>
-                                                    <button class="btn text-white fw-bold px-4 py-2"
+                                                    <button v-if="phong.trang_thai_phong == 1" @click="thamGiaTuLich(phong.ma_phong)" class="btn text-white fw-bold px-4 py-2"
                                                         style="background-color: #ea580c; border-radius: 8px; font-size: 0.9rem;">Join</button>
+                                                    <button v-else class="btn fw-semibold px-4 py-2 bg-white" disabled
+                                                        style="border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">Đã kết thúc</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="card border-0 shadow-sm p-3 bg-white"
-                                                style="border-radius: 12px; border: 1px solid #f1f5f9 !important;">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="rounded-3 d-flex flex-column justify-content-center align-items-center px-3 py-2 me-4"
-                                                        style="background-color: #f8fafc; min-width: 65px; opacity: 0.7;">
-                                                        <span class="fw-bolder"
-                                                            style="color: #94a3b8; font-size: 1.15rem;">25</span>
-                                                        <span class="small fw-bolder text-muted"
-                                                            style="font-size: 0.65rem;">OCT</span>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="fw-bolder mb-1 text-dark"
-                                                            style="font-size: 0.95rem;">Cập nhật hàng tháng cho nhà đầu
-                                                            tư</h6>
-                                                        <div class="d-flex align-items-center fw-medium mt-1"
-                                                            style="color: #94a3b8; font-size: 0.8rem;">
-                                                            <span>09:30 AM - 10:30 AM</span>
-                                                            <span class="mx-2">•</span>
-                                                            <span>ID: 110-349-882</span>
-                                                        </div>
-                                                    </div>
-                                                    <button class="btn fw-semibold px-4 py-2 bg-white"
-                                                        style="border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">Chi
-                                                        tiết</button>
-                                                </div>
-                                            </div>
+                                    </div>
+                                    <div v-else class="text-center py-5">
+                                        <div class="mb-3">
+                                            <i class="bx bx-calendar-x fs-1 text-muted opacity-50"></i>
                                         </div>
+                                        <p class="text-muted fw-medium">Bạn chưa có lịch họp nào sắp tới.</p>
                                     </div>
                                 </div>
                             </div>
@@ -392,16 +385,46 @@
                                                     style="border-radius: 12px; font-size: 0.95rem; color: #475569; resize: none;"></textarea>
                                             </div>
                                             <div class="mb-5">
-                                                <label class="form-label fw-bold mb-2 text-muted"
-                                                    style="font-size: 0.75rem; letter-spacing: 1px;">MỜI NGƯỜI THAM
-                                                    GIA</label>
+                                                <div class="d-flex justify-content-between">
+                                                    <label class="form-label fw-bold mb-2 text-muted"
+                                                        style="font-size: 0.75rem; letter-spacing: 1px;">MỜI NGƯỜI THAM
+                                                        GIA</label>
+                                                    <button type="submit" class="btn btn-sm" style="background-color: rgba(234, 88, 12, 0.1); color: #ea580c; border: 1px solid #ea580c; border-radius: 6px; font-weight: 600;">
+                                                        <i class='bx bx-paper-plane me-1'></i>Mời Người
+                                                    </button>
+                                                </div>
                                                 <div class="position-relative">
                                                     <i class='bx bx-at position-absolute top-50 translate-middle-y fs-5'
                                                         style="left: 1rem; color: #94a3b8;"></i>
                                                     <input type="text" v-model="formTaoPhong.email_khach_moi"
+                                                        @input="handleEmailInput"
                                                         class="form-control form-control-lg bg-light border-0 shadow-none ps-5 py-3"
                                                         placeholder="Thêm địa chỉ email được phân tách bằng dấu phẩy"
                                                         style="border-radius: 12px; font-size: 0.95rem; color: #475569;">
+
+                                                    <!-- Dropdown kết quả tìm kiếm -->
+                                                    <ul v-if="searchResults.length > 0"
+                                                        class="dropdown-menu show w-100 position-absolute shadow-lg border-0 mt-1"
+                                                        style="top: 100%; z-index: 1000; max-height: 250px; overflow-y: auto; border-radius: 12px;">
+                                                        <li v-for="user in searchResults" :key="user.id">
+                                                            <a class="dropdown-item d-flex align-items-center py-2 px-3"
+                                                                href="#" @click.prevent="selectEmail(user.email)">
+                                                                <div class="rounded-circle bg-secondary me-3 d-flex align-items-center justify-content-center"
+                                                                    style="width: 36px; height: 36px; overflow: hidden;">
+                                                                    <img v-if="user.avatar" :src="user.avatar"
+                                                                        class="w-100 h-100 object-fit-cover">
+                                                                    <i v-else class="bx bx-user text-white fs-5"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="fw-bold"
+                                                                        style="font-size: 0.9rem; color: #1e293b;">{{
+                                                                        user.ho_va_ten }}</div>
+                                                                    <div class="text-muted" style="font-size: 0.8rem;">
+                                                                        {{ user.email }}</div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                             <button type="submit"
@@ -614,7 +637,7 @@
 
                                             <span class="badge px-4 py-2 fw-bold"
                                                 style="background-color: #dcfce7; color: #15803d; border-radius: 30px; font-size: 0.85rem;">
-                                                <i class="bx bxs-lock-alt me-1"></i> Mã hóa sinh trắc học 256-bit
+                                                <i class="bx bxs-lock-alt me-1"></i> Mã hóa sinh trắc học
                                             </span>
                                         </div>
                                     </template>
@@ -845,6 +868,8 @@ export default {
             chi_tiet_phong_hop: [],
             showRoomModal: false,
             createdRoomCode: '',
+            searchResults: [],
+            searchTimeout: null,
         }
     },
     mounted() {
@@ -899,6 +924,42 @@ export default {
         }
     },
     methods: {
+        async handleEmailInput() {
+            const emails = this.formTaoPhong.email_khach_moi.split(',');
+            const lastPart = emails[emails.length - 1].trim();
+
+            if (lastPart.length < 2) {
+                this.searchResults = [];
+                return;
+            }
+
+            if (this.searchTimeout) clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(async () => {
+                try {
+                    const response = await axios.post(`${apiUrl}/nguoi-dung/tim-kiem`, { keyword: lastPart });
+                    if (response.data.status) {
+                        // Lọc bỏ những email đã được chọn
+                        const selectedEmails = emails.slice(0, -1).map(e => e.trim().toLowerCase()).filter(e => e.length > 0);
+                        this.searchResults = response.data.data.filter(u =>
+                            !selectedEmails.includes(u.email.toLowerCase())
+                        );
+                    }
+                } catch (error) {
+                    console.error("Lỗi tìm kiếm email:", error);
+                }
+            }, 300);
+        },
+        selectEmail(email) {
+            const emails = this.formTaoPhong.email_khach_moi.split(',');
+            emails.pop(); // Xóa chuỗi đang gõ dở
+
+            // Thêm email đã chọn vào mảng và chuẩn hóa chuỗi
+            const cleanedEmails = emails.map(e => e.trim()).filter(e => e.length > 0);
+            cleanedEmails.push(email);
+
+            this.formTaoPhong.email_khach_moi = cleanedEmails.join(', ') + ', ';
+            this.searchResults = [];
+        },
         copyRoomCode() {
             navigator.clipboard.writeText(this.createdRoomCode).then(() => {
                 if (this.$toast) this.$toast.success("Đã copy mã phòng!");
@@ -928,6 +989,26 @@ export default {
                     console.error("Lỗi lấy chi tiết phòng họp:", err);
                     this.$toast.error("Không thể tải chi tiết phòng họp.");
                 });
+        },
+        formatDay(dateStr) {
+            if (!dateStr) return '--';
+            const d = new Date(dateStr);
+            return d.getDate().toString().padStart(2, '0');
+        },
+        formatMonth(dateStr) {
+            if (!dateStr) return 'MON';
+            const d = new Date(dateStr);
+            const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+            return months[d.getMonth()];
+        },
+        formatTime(dateStr) {
+            if (!dateStr) return '--:--';
+            const d = new Date(dateStr);
+            return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        },
+        thamGiaTuLich(ma_phong) {
+            this.ma_phong_tham_gia = ma_phong;
+            this.kiemTraTruocKhiJoin();
         },
         getGoi() {
             axios
@@ -1258,12 +1339,13 @@ export default {
                     id_chu_phong: this.id_nguoi_dung,
                     so_nguoi_toi_da: 100,
                     // mo_ta: this.formTaoPhong.mo_ta (Nếu DB bạn có cột này thì bật lên)
+                    email_khach_moi: this.formTaoPhong.email_khach_moi,
                 };
 
                 const response = await axios.post(`${apiUrl}/phong-hop/create`, payload);
 
                 if (response.data.status) {
-                    if (this.$toast) this.$toast.success("Khởi tạo phòng họp thành công!");
+                    if (this.$toast) this.$toast.success(response.data.message || "Khởi tạo phòng họp thành công!");
 
                     const phongMoi = response.data.data;
                     console.log("Mã phòng vừa tạo:", phongMoi.ma_phong);

@@ -86,7 +86,7 @@
                         </button>
                     </form>
 
-                    <p class="switch-auth">Đã có tài khoản? <router-link to="/nguoi-dung/dang-nhap">Đăng nhập</router-link></p>
+                    <p class="switch-auth">Đã có tài khoản? <router-link to="/dang-nhap">Đăng nhập</router-link></p>
                 </div>
 
                 <!-- Footer -->

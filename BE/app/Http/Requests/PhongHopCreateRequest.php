@@ -27,6 +27,7 @@ class PhongHopCreateRequest extends FormRequest
             'so_nguoi_toi_da'    => 'nullable|integer|min:2',
             'thoi_gian_bat_dau'  => 'nullable|date',
             'thoi_gian_ket_thuc' => 'nullable|date|after_or_equal:thoi_gian_bat_dau',
+            'email_khach_moi'    => 'nullable|string',
         ];
     }
 
