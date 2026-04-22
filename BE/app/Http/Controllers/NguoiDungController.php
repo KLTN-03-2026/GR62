@@ -32,11 +32,13 @@ class NguoiDungController extends Controller
 
     public function store(StoreNguoiDungRequest $request)
     {
-        $data = NguoiDung::create($request->all());
+        $data = $request->all();
+        $data['id_doi_tac'] = $request->id_doi_tac ?? 0;
+        $res = NguoiDung::create($data);
         return response()->json([
             'status' => true,
             'message' => 'Thêm mới thành công',
-            'data' => $data
+            'data' => $res
         ]);
     }
 
@@ -44,7 +46,11 @@ class NguoiDungController extends Controller
     {
         $data = NguoiDung::where('id', $request->id)->first();
         if ($data) {
-            $data->update($request->all());
+            $params = $request->all();
+            if (isset($params['id_doi_tac']) && is_null($params['id_doi_tac'])) {
+                $params['id_doi_tac'] = 0;
+            }
+            $data->update($params);
             return response()->json([
                 'status' => true,
                 'message' => 'Cập nhật thành công',
@@ -152,13 +158,13 @@ class NguoiDungController extends Controller
     public function register(RegisterNguoiDungRequest $request)
     {
         $user = NguoiDung::create([
-            'ho_va_ten' => $request->ho_va_ten,
+            'ho_va_ten'     => $request->ho_va_ten,
             'so_dien_thoai' => $request->so_dien_thoai,
-            'email' => $request->email,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
-            'id_chuc_vu' => $request->id_chuc_vu,
-            'id_doi_tac' => $request->id_doi_tac,
-            'trang_thai' => true, // Mặc định active
+            'email'         => $request->email,
+            'password'      => \Illuminate\Support\Facades\Hash::make($request->password),
+            'id_chuc_vu'    => $request->id_chuc_vu, // Nullable column
+            'id_doi_tac'    => $request->id_doi_tac ?? 0, // Non-nullable boolean, default to 0
+            'trang_thai'    => true, 
         ]);
 
         // Tạo token ngay sau khi đăng ký
