@@ -26,4 +26,9 @@ class HoaDon extends Model
     {
         return $this->belongsTo(Goi::class, 'id_goi');
     }
+
+    public function nguoiDung()
+    {
+        return $this->belongsTo(NguoiDung::class, 'id_nguoi_dung');
+    }
 }

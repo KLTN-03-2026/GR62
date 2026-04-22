@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/admin/profile/data', [AdminController::class, 'getProfile']);
     Route::post('/admin/profile/update', [AdminController::class, 'updateProfile']);
+    Route::post('/admin/profile/update-avatar', [AdminController::class, 'updateAvatar']);
     Route::post('/admin/profile/change-password', [AdminController::class, 'changePassword']);
 });
 

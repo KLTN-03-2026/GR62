@@ -28,7 +28,7 @@
                                 <tr v-for="(value, index) in danhSachLocChucVu" :key="index" class="align-middle"
                                     :class="{ 'table-info': chuc_vu_dang_chon && chuc_vu_dang_chon.id === value.id }">
                                     <th class="text-center">{{ index + 1 }}</th>
-                                    <td class="fw-bold text-primary cursor-pointer" @click="chonChucVuPhanQuyen(value)">
+                                    <td class="fw-bold " @click="chonChucVuPhanQuyen(value)">
                                         {{ value.ten_chuc_vu }}
                                     </td>
                                     <td class="text-center text-nowrap">
@@ -96,7 +96,8 @@
                 <div class="card-header">
                     <h6 class="mb-0 fw-bold">
                         ĐANG PHÂN QUYỀN:
-                        <span class="text-primary">{{ chuc_vu_dang_chon ? chuc_vu_dang_chon.ten_chuc_vu : '...' }}</span>
+                        <span class="text-primary">{{ chuc_vu_dang_chon ? chuc_vu_dang_chon.ten_chuc_vu : '...'
+                            }}</span>
                     </h6>
                 </div>
                 <div class="card-body p-2">
@@ -121,11 +122,7 @@
                                         </button>
                                     </td>
                                 </tr>
-                                <tr v-if="list_phan_quyen_hien_thi.length === 0">
-                                    <td colspan="3" class="text-center text-muted py-4">
-                                        {{ chuc_vu_dang_chon ? 'Chức vụ này chưa có quyền nào.' : 'Vui lòng chọn chức vụ để xem quyền.' }}
-                                    </td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>

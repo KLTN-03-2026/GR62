@@ -25,6 +25,7 @@ class Admin extends Authenticatable
         'so_dien_thoai',
         'email',
         'password',
+        'hinh_anh',
         'is_open',
         'is_master',
         'trang_thai',
@@ -52,5 +53,10 @@ class Admin extends Authenticatable
             'is_master' => 'boolean',
             'trang_thai' => 'boolean',
         ];
+    }
+
+    public function chucVu()
+    {
+        return $this->belongsTo(ChucVu::class, 'id_chuc_vu');
     }
 }

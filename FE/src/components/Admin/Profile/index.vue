@@ -40,7 +40,7 @@
                                     <div class="card-body p-4 pt-0">
                                         <div class="text-center mb-4 mt-n5 position-relative" style="top: -65px;">
                                             <div class="avatar-wrapper">
-                                                <img :src="anh_tmp || (profile.hinh_anh ? (profile.hinh_anh.startsWith('http') ? profile.hinh_anh : API_BASE + profile.hinh_anh) : '../../../assets/images/avatars/avatar-1.png')"
+                                                <img :src="anh_tmp || (profile.hinh_anh ? (profile.hinh_anh.startsWith('http') ? profile.hinh_anh : API_BASE + '/' + profile.hinh_anh) : '../../../assets/images/avatars/avatar-1.png')"
                                                     class="avatar-img shadow-sm">
                                                 <label for="inputAvatar" class="camera-btn" title="Thay đổi ảnh đại diện">
                                                     <i class="bx bx-camera"></i>
@@ -48,9 +48,9 @@
                                                 <input id="inputAvatar" type="file" class="d-none" accept="image/*"
                                                     @change="loadAnhTuLocal($event); uploadAvatar()">
                                             </div>
-                                            <h4 class="mt-3 fw-bold mb-1 text-dark">{{ profile.ho_ten }}</h4>
+                                            <h4 class="mt-3 fw-bold mb-1 text-dark">{{ profile.ho_va_ten }}</h4>
                                             <span class="text-primary fw-bold" style="font-size: 0.9rem;">
-                                                <i class="bx bx-crown me-1 text-warning"></i>{{ profile.ten_chuc_vu }}
+                                                <i class="bx bx-crown me-1 text-warning"></i>{{ profile.chuc_vu ? profile.chuc_vu.ten_chuc_vu : 'N/A' }}
                                             </span>
                                         </div>
                                         
@@ -62,7 +62,7 @@
                                                     </div>
                                                     <div>
                                                         <p class="text-muted mb-0 small fw-bold text-uppercase">Họ và Tên</p>
-                                                        <h6 class="mb-0 fw-bold text-dark">{{ profile.ho_ten}}</h6>
+                                                        <h6 class="mb-0 fw-bold text-dark">{{ profile.ho_va_ten }}</h6>
                                                     </div>
                                                 </div>
                                             </div>
@@ -95,7 +95,7 @@
                                                     </div>
                                                     <div>
                                                         <p class="text-muted mb-0 small fw-bold text-uppercase">Chức Vụ</p>
-                                                        <h6 class="mb-0 fw-bold text-dark">{{ profile.ten_chuc_vu}}</h6>
+                                                        <h6 class="mb-0 fw-bold text-dark">{{ profile.chuc_vu ? profile.chuc_vu.ten_chuc_vu : 'N/A' }}</h6>
                                                     </div>
                                                 </div>
                                             </div>

@@ -29,7 +29,7 @@ class AdminController extends Controller
             }
         }
         
-        $data = Admin::all();
+        $data = Admin::with('chucVu')->get();
         return response()->json([
             'status' => true,
             'data'   => $data
@@ -195,7 +195,7 @@ class AdminController extends Controller
 
     public function getProfile()
     {
-        $admin = Auth::guard('sanctum')->user();
+        $admin = Admin::where('id', Auth::guard('sanctum')->id())->with('chucVu')->first();
         return response()->json([
             'status' => true,
             'data'   => $admin,
@@ -232,6 +232,42 @@ class AdminController extends Controller
         return response()->json([
             'status'  => false,
             'message' => 'Mật khẩu cũ không chính xác',
+        ]);
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        $admin = Auth::guard('sanctum')->user();
+        if ($request->hasFile('hinh_anh')) {
+            $file = $request->file('hinh_anh');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            
+            // Ensure directory exists
+            $path = public_path('uploads/admins');
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+            
+            $file->move($path, $filename);
+            
+            $hinh_anh_path = 'uploads/admins/' . $filename;
+            
+            // Direct DB update for persistence guarantee
+            Admin::where('id', $admin->id)->update([
+                'hinh_anh' => $hinh_anh_path
+            ]);
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Cập nhật ảnh đại diện thành công',
+                'data'    => $hinh_anh_path
+            ]);
+        }
+
+        return response()->json([
+            'status'  => false,
+            'message' => 'Không tìm thấy file ảnh',
         ]);
     }
 }

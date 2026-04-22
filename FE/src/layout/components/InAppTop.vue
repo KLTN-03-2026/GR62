@@ -40,8 +40,8 @@
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img :src="getAvatar" class="user-img" alt="user avatar">
                         <div class="user-info d-none d-sm-block">
-                            <p class="user-name mb-0">{{ profile.ho_ten || 'Đang tải...' }}</p>
-                            <p class="designattion mb-0">{{ profile.ten_chuc_vu || '...' }}</p>
+                            <p class="user-name mb-0">{{ profile.ho_va_ten || 'Đang tải...' }}</p>
+                            <p class="designattion mb-0">{{ profile.chuc_vu ? profile.chuc_vu.ten_chuc_vu : '...' }}</p>
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -77,15 +77,14 @@ export default {
                 if (this.profile.hinh_anh.startsWith('http')) {
                     return this.profile.hinh_anh;
                 }
-                return 'http://127.0.0.1:8000' + this.profile.hinh_anh;
+                // Thêm dấu / giữa domain và path
+                return 'http://127.0.0.1:8000/' + this.profile.hinh_anh;
             }
-            // Use a fallback avatar URL if not available or default from relative path might fail on dynamic bind.
-            // Using a simple API placeholder or relative URL.
-            // When using import it is safer, but returning a generic placeholder works if the relative path fails.
-            return 'https://ui-avatars.com/api/?name=' + (this.profile.ho_ten || 'Admin') + '&background=random';
+            return 'https://ui-avatars.com/api/?name=' + (this.profile.ho_va_ten || 'Admin') + '&background=random';
         }
     },
     mounted() {
+        this.loadData();
         this.loadProfile();
         // Lắng nghe sự kiện cập nhật profile nếu có (tùy chọn)
         window.addEventListener('profile-updated', this.loadProfile);
@@ -94,11 +93,14 @@ export default {
         window.removeEventListener('profile-updated', this.loadProfile);
     },
     methods: {
+        loadData() {
+            this.apiUrl = import.meta.env.VITE_API_URL;
+        },
         loadProfile() {
             const token = localStorage.getItem('token_admin');
             if (!token) return;
             
-            axios.get('http://127.0.0.1:8000/api/admin/profile/data', {
+            axios.get(`${import.meta.env.VITE_API_URL}/admin/profile/data`, {
                 headers: {
                     Authorization: "Bearer " + token,
                 },
@@ -116,7 +118,7 @@ export default {
             try {
                 const token = localStorage.getItem('token_admin');
                 if (token) {
-                    await axios.post('http://127.0.0.1:8000/api/admin/logout', {}, {
+                    await axios.post(`${import.meta.env.VITE_API_URL}/admin/logout`, {}, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }

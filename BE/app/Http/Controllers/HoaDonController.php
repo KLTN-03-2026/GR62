@@ -11,7 +11,7 @@ class HoaDonController extends Controller
 {
     public function index()
     {
-        $data = HoaDon::with('goi')->get();
+        $data = HoaDon::with(['goi', 'nguoiDung'])->orderBy('id', 'desc')->get();
         return response()->json([
             'status' => true,
             'data' => $data
@@ -81,14 +81,18 @@ class HoaDonController extends Controller
 
     public function search(Request $request)
     {
-        $query = HoaDon::query();
+        $query = HoaDon::with(['goi', 'nguoiDung']);
         if ($request->has('keyword') && $request->keyword != '') {
             $keyword = $request->keyword;
-            $query->where(function($q) use ($keyword) {
-                $q->where('ma_giao_dich', 'like', '%' . $keyword . '%');
+            $query->where(function ($q) use ($keyword) {
+                $q->where('ma_giao_dich', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('nguoiDung', function ($q2) use ($keyword) {
+                        $q2->where('ho_va_ten', 'like', '%' . $keyword . '%')
+                            ->orWhere('email', 'like', '%' . $keyword . '%');
+                    });
             });
         }
-        $data = $query->get();
+        $data = $query->orderBy('id', 'desc')->get();
         return response()->json([
             'status' => true,
             'data' => $data
