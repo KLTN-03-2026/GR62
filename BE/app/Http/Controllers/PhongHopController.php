@@ -21,7 +21,7 @@ class PhongHopController extends Controller
 {
     public function index()
     {
-        $data = PhongHop::all();
+        $data = PhongHop::with('chuPhong')->get();
         return response()->json([
             'status' => true,
             'data' => $data
@@ -123,10 +123,15 @@ class PhongHopController extends Controller
         $data = PhongHop::where('id', $request->id)->first();
         if ($data) {
             $data->trang_thai = !$data->trang_thai;
+            if ($data->trang_thai == false) {
+                $data->thoi_gian_ket_thuc = now();
+            } else {
+                $data->thoi_gian_ket_thuc = null;
+            }
             $data->save();
             return response()->json([
                 'status' => true,
-                'message' => 'Đã thay đổi trạng thái thành công'
+                'message' => 'Đã cập nhật trạng thái phòng họp thành công'
             ]);
         }
         return response()->json([
@@ -216,7 +221,8 @@ class PhongHopController extends Controller
             'id_chu_phong' => 'required|integer'
         ]);
 
-        $data = PhongHop::where('id_chu_phong', $request->id_chu_phong)
+        $data = PhongHop::with('chuPhong')
+                        ->where('id_chu_phong', $request->id_chu_phong)
                         ->orderBy('id', 'desc')
                         ->get();
 

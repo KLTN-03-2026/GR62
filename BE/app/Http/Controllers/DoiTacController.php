@@ -103,6 +103,9 @@ class DoiTacController extends Controller
                     'message' => 'Tài khoản của bạn chưa được nâng cấp lên Đối tác!'
                 ], 403);
             }
+            // Load liên kết chức vụ
+            $user->load('chucVu');
+            // Đồng nhất trường hinh_anh cho cả 2 loại model
             $user->hinh_anh = $user->avatar;
         }
 
@@ -141,16 +144,15 @@ class DoiTacController extends Controller
                 }
                 $user->avatar = 'uploads/avatars/' . $filename;
                 $user->save();
-                // Trả về hinh_anh để đồng bộ với phía FE đang dùng hinh_anh
                 $return_filename = $user->avatar;
             } else {
                 // Xóa ảnh cũ của DoiTac
-                if ($user->hinh_anh && file_exists(public_path('uploads/avatars/' . $user->hinh_anh))) {
-                    unlink(public_path('uploads/avatars/' . $user->hinh_anh));
+                if ($user->hinh_anh && file_exists(public_path($user->hinh_anh))) {
+                    unlink(public_path($user->hinh_anh));
                 }
-                $user->hinh_anh = $filename;
+                $user->hinh_anh = 'uploads/avatars/' . $filename;
                 $user->save();
-                $return_filename = $filename;
+                $return_filename = $user->hinh_anh;
             }
 
             return response()->json([
@@ -400,5 +402,74 @@ class DoiTacController extends Controller
             'message' => 'Không tìm thấy dữ liệu'
         ]);
     }
-    
+    public function getStatistics(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Token không hợp lệ'
+            ], 401);
+        }
+
+        $id_partner = $user->id;
+
+        // 1. Thống kê số lượng nhân viên (người dùng tham gia các phòng của đối tác này)
+        $phong_ids = \App\Models\PhongHop::where('id_chu_phong', $id_partner)->pluck('id');
+        
+        $total_nhan_vien = \App\Models\ChiTietPhongHop::whereIn('id_phong_hop', $phong_ids)
+            ->distinct('id_nguoi_dung')
+            ->count('id_nguoi_dung');
+
+        // 2. Tổng giờ họp (Tính bằng phút rồi chia ra giờ)
+        $total_minutes = \App\Models\PhongHop::where('id_chu_phong', $id_partner)
+            ->whereNotNull('thoi_gian_ket_thuc')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, thoi_gian_bat_dau, thoi_gian_ket_thuc)) as total')
+            ->first()->total ?? 0;
+        
+        $total_hours = round($total_minutes / 60, 1);
+
+        // 3. Thống kê biểu đồ (7 ngày gần nhất)
+        $weekly_data = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = \Carbon\Carbon::now()->subDays($i);
+            $count = \App\Models\PhongHop::where('id_chu_phong', $id_partner)
+                ->whereDate('created_at', $date->toDateString())
+                ->count();
+            
+            $dayLabels = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+            $weekly_data[] = [
+                'label' => $dayLabels[$date->dayOfWeek],
+                'value' => $count > 0 ? min($count * 10, 100) : 0, // Scale for UI bar height
+                'actual' => $count
+            ];
+        }
+
+        // 4. Danh sách các phòng ban (Lấy các phòng họp gần đây làm đại diện)
+        $rooms = \App\Models\PhongHop::where('id_chu_phong', $id_partner)
+            ->orderBy('id', 'desc')
+            ->limit(3)
+            ->get()
+            ->map(function($phong) {
+                $members = \App\Models\ChiTietPhongHop::where('id_phong_hop', $phong->id)->count();
+                return [
+                    'name'    => $phong->ten_phong,
+                    'members' => $members,
+                    'code'    => strtoupper(substr($phong->ten_phong, 0, 2)),
+                    'color'   => '#' . substr(md5($phong->ten_phong), 0, 6),
+                    'status'  => $phong->trang_thai ? 'active' : 'idle',
+                    'statusLabel' => $phong->trang_thai ? 'Active' : 'Closed'
+                ];
+            });
+
+        return response()->json([
+            'status' => true,
+            'data'   => [
+                'total_nhan_vien' => $total_nhan_vien,
+                'total_hours'     => $total_hours,
+                'weekly_data'     => $weekly_data,
+                'departments'     => $rooms
+            ]
+        ]);
+    }
 }

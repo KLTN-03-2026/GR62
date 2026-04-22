@@ -40,7 +40,7 @@
                                     <div class="card-body p-4 pt-0">
                                         <div class="text-center mb-4 mt-n5 position-relative" style="top: -65px;">
                                             <div class="avatar-wrapper">
-                                                <img :src="anh_tmp || (profile.hinh_anh ? (profile.hinh_anh.startsWith('http') ? profile.hinh_anh : 'http://127.0.0.1:8000' + profile.hinh_anh) : '../../../assets/images/avatars/avatar-1.png')"
+                                                <img :src="anh_tmp || (profile.hinh_anh ? (profile.hinh_anh.startsWith('http') ? profile.hinh_anh : API_BASE + profile.hinh_anh) : '../../../assets/images/avatars/avatar-1.png')"
                                                     class="avatar-img shadow-sm">
                                                 <label for="inputAvatar" class="camera-btn" title="Thay đổi ảnh đại diện">
                                                     <i class="bx bx-camera"></i>
@@ -227,6 +227,8 @@
 
 <script>
 import axios from 'axios';
+const API = import.meta.env.VITE_API_URL;
+const API_BASE = 'http://127.0.0.1:8000'; // Or use another env if available
 
 export default {
     data() {
@@ -254,7 +256,7 @@ export default {
     },
     methods: {
         loadChucVu() {
-            axios.get('http://127.0.0.1:8000/api/admin/chuc-vu/data')
+            axios.get(`${API}/admin/chuc-vu/data`)
                 .then((res) => {
                     if (res.data.status) {
                         this.list_chuc_vu = res.data.data;
@@ -270,7 +272,7 @@ export default {
                 });
         },
         loadProfile() {
-            axios.get('http://127.0.0.1:8000/api/admin/profile/data', {
+            axios.get(`${API}/admin/profile/data`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("token_admin"),
                 },
@@ -291,7 +293,7 @@ export default {
                 });
         },
         updateProfile() {
-            axios.post('http://127.0.0.1:8000/api/admin/profile/update', this.update_profile, {
+            axios.post(`${API}/admin/profile/update`, this.update_profile, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("token_admin"),
                 },
@@ -317,7 +319,7 @@ export default {
                 });
         },
         updatePassword() {
-            axios.post('http://127.0.0.1:8000/api/admin/profile/change-password', this.update_password_profile, {
+            axios.post(`${API}/admin/profile/change-password`, this.update_password_profile, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("token_admin"),
                 },
@@ -361,7 +363,7 @@ export default {
         uploadAvatar() {
             const formData = new FormData();
             formData.append('hinh_anh', this.file_anh);
-            axios.post('http://127.0.0.1:8000/api/admin/profile/update-avatar', formData, {
+            axios.post(`${API}/admin/profile/update-avatar`, formData, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("token_admin"),
                     'Content-Type': 'multipart/form-data'

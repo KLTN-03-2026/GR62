@@ -1,32 +1,33 @@
 <template>
     <div class="partner-dashboard-wrapper h-100">
         <div class="main-layout d-flex h-100">
-            <!-- Sidebar -->
+            <!-- Sidebar (AI-Meet Business Branding) -->
             <aside class="sidebar-business d-flex flex-column py-5 shadow-sm">
-                <!-- Logo Section -->
                 <div class="logo-section px-4 mb-5">
-                    <div class="d-flex align-items-center gap-3" @click="$router.push('/doi-tac/trang-chinh')"
-                        style="cursor: pointer;">
+                    <div class="d-flex align-items-center gap-3" @click="$router.push('/doi-tac/trang-chinh')" style="cursor: pointer;">
                         <div class="logo-icon-business">
                             <i class="bx bxs-component fs-3"></i>
                         </div>
                         <div>
                             <h5 class="mb-0 fw-800 text-dark tracking-tighter">AI-Meet Business</h5>
-                            <small class="text-muted fw-bold text-uppercase"
-                                style="font-size: 0.6rem; letter-spacing: 1.5px;">Đối tác cao cấp</small>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 1.5px;">Đối tác cao cấp</small>
                         </div>
                     </div>
                 </div>
 
-                <!-- Navigation -->
                 <div class="nav-links d-flex flex-column gap-3 px-3 flex-grow-1 mt-3">
                     <button @click="$router.push('/doi-tac/trang-chinh')" class="nav-business-item">
                         <i class="bx bxs-dashboard"></i>
                         <span>Tổng quan</span>
                     </button>
+                    
                     <button class="nav-business-item active">
                         <i class="bx bxs-video"></i>
                         <span>Tham gia cuộc họp</span>
+                    </button>
+                    <button @click="$router.push('/doi-tac/quan-ly-phong-hop')" class="nav-business-item">
+                        <i class="bx bxs-megaphone"></i>
+                        <span>Quản lý phòng họp</span>
                     </button>
                     <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
                         <i class="bx bxs-bar-chart-alt-2"></i>
@@ -38,8 +39,11 @@
                     </button>
                 </div>
 
-                <!-- Bottom Sticky -->
                 <div class="px-3 mt-auto pt-5 border-top border-light">
+                    <button class="nav-business-item mb-2 border-0 bg-transparent w-100">
+                        <i class="bx bx-help-circle"></i>
+                        <span>Hỗ trợ</span>
+                    </button>
                     <button @click="logout" class="nav-business-item text-danger border-0 bg-transparent w-100">
                         <i class="bx bx-log-out-circle"></i>
                         <span>Đăng xuất</span>
@@ -70,34 +74,33 @@
 
                 <!-- Join Section Content -->
                 <div class="p-5 d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 100px);">
-                    <div class="glass-join-card p-5 rounded-5 border-0 shadow-lg text-center animate__animated animate__fadeInUp"
-                        style="width: 600px; max-width: 100%;">
+                    <div class="premium-join-card p-5 rounded-5 border-0 shadow-premium text-center"
+                        style="width: 600px; max-width: 100%; background: white;">
                         
-                        <div class="join-icon-bg mb-4 mx-auto">
-                            <i class="bx bxs-video fs-1 text-white"></i>
+                        <div class="feature-icon-pro mb-4 mx-auto pulse-orange-light">
+                            <i class="bx bxs-video fs-1"></i>
                         </div>
                         
-                        <h2 class="fw-900 text-dark mb-3">Kết nối cuộc họp AI</h2>
-                        <p class="text-muted mb-5 fw-500">Nhập mã phòng để xác thực khuôn mặt và tham gia cuộc thảo luận bảo mật của bạn.</p>
+                        <h2 class="fw-900 text-dark mb-3 tracking-tighter">Kết nối cuộc họp AI</h2>
+                        <p class="text-muted mb-5 fw-600 px-lg-5">Nhập mã phòng để xác thực khuôn mặt và tham gia cuộc thảo luận bảo mật của bạn.</p>
 
                         <div class="join-form-wrapper">
-                            <div class="position-relative mb-4">
-                                <i class="bx bx-key position-absolute top-50 start-0 translate-middle-y ms-4 text-orange fs-4"></i>
+                            <div class="input-premium-group mb-4">
+                                <i class="bx bx-key"></i>
                                 <input type="text" v-model="ma_phong_tham_gia" 
-                                    class="form-control form-control-lg border-0 shadow-none ps-5 py-4 rounded-4 bg-white"
                                     placeholder="Mã phòng (VD: u2c-c1t5-etj)"
-                                    style="font-weight: 700; letter-spacing: 1px; color: #1a1e29;">
+                                    class="fw-800">
                             </div>
 
                             <button @click="kiemTraTruocKhiJoin" :disabled="isJoining"
-                                class="btn btn-orange-pro w-100 py-4 fw-900 rounded-4 border-0 text-white shadow-orange mb-3">
+                                class="btn btn-orange-pro w-100 py-4 fw-900 rounded-4 border-0 text-white shadow-orange mb-4">
                                 <span v-if="isJoining" class="spinner-border spinner-border-sm me-2"></span>
                                 {{ isJoining ? 'Đang chuẩn bị...' : 'Bắt đầu xác thực & Tham gia' }}
                             </button>
                             
-                            <div class="d-flex align-items-center justify-content-center gap-2 text-muted fw-bold small">
+                            <div class="security-badge-mini mx-auto">
                                 <i class="bx bxs-shield-plus text-success"></i>
-                                MÃ HÓA SINH TRẮC HỌC ĐANG HOẠT ĐỘNG
+                                <span class="ms-2">MÃ HÓA SINH TRẮC HỌC ĐANG HOẠT ĐỘNG</span>
                             </div>
                         </div>
                     </div>
@@ -221,7 +224,8 @@ export default {
                     const hinh_anh = res.data.data.hinh_anh;
                     if(hinh_anh) {
                          const baseUrl = apiUrl.replace('/api', '');
-                         this.avatarUrl = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/uploads/avatars/${hinh_anh}`;
+                         const cleanPath = hinh_anh.includes('uploads/') ? hinh_anh : `uploads/avatars/${hinh_anh}`;
+                         this.avatarUrl = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/${cleanPath}`;
                     }
                     if(res.data.data.du_lieu_khuon_mat) {
                         this.savedDescriptor = new Float32Array(JSON.parse(res.data.data.du_lieu_khuon_mat));
@@ -378,25 +382,92 @@ export default {
 .nav-business-item.active i { color: #ea580c; }
 
 /* Join Page Specific */
-.glass-join-card {
+.premium-join-card {
     background: white;
     border: 1px solid #f0ece6 !important;
+    box-shadow: 0 40px 100px -20px rgba(0,0,0,0.08);
 }
 
-.join-icon-bg {
+.feature-icon-pro {
     width: 90px;
     height: 90px;
-    background: #ea580c;
+    background: linear-gradient(135deg, #ea580c, #f97316);
     border-radius: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 20px 40px rgba(234, 88, 12, 0.2);
+    color: white;
+    box-shadow: 0 15px 35px rgba(234, 88, 12, 0.25);
 }
 
-.text-orange { color: #ea580c; }
-.btn-orange-pro { background: #ea580c; color: white !important; }
+.pulse-orange-light {
+    animation: pulse-orange-light 2s infinite;
+}
+
+@keyframes pulse-orange-light {
+    0% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.4); }
+    70% { box-shadow: 0 0 0 20px rgba(234, 88, 12, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0); }
+}
+
+.input-premium-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-premium-group i {
+    position: absolute;
+    left: 20px;
+    color: #ea580c;
+    font-size: 1.4rem;
+}
+
+.input-premium-group input {
+    width: 100%;
+    padding: 18px 25px 18px 60px;
+    border-radius: 18px;
+    border: 2px solid #f0ece6;
+    background: #fbf9f6;
+    outline: none;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: 0.3s;
+    color: #1a1e29;
+}
+
+.input-premium-group input:focus {
+    border-color: #ea580c;
+    background: white;
+    box-shadow: 0 0 0 5px rgba(234, 88, 12, 0.05);
+}
+
+.security-badge-mini {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    background: #f0fdf4;
+    color: #166534;
+    border-radius: 100px;
+    font-weight: 800;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    width: fit-content;
+}
+
+.btn-orange-pro { 
+    background: linear-gradient(to right, #ea580c, #f97316); 
+    color: white !important; 
+    transition: 0.3s;
+}
+.btn-orange-pro:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(234, 88, 12, 0.3);
+}
+
 .shadow-orange { box-shadow: 0 12px 30px rgba(234, 88, 12, 0.25); }
+.shadow-premium { box-shadow: 0 40px 80px -15px rgba(0,0,0,0.1); }
 
 /* Face ID Styling */
 .scan-frame-business {
@@ -458,6 +529,7 @@ export default {
 
 .fw-900 { font-weight: 900; }
 .fw-800 { font-weight: 800; }
+.fw-600 { font-weight: 600; }
 .tracking-tighter { letter-spacing: -1.2px; }
 
 /* Header Utilities */

@@ -26,33 +26,23 @@
                                 <th class="text-center">Email</th>
                                 <th class="text-center">Số Điện Thoại</th>
                                 <th class="text-center">Chức Vụ</th>
-                                <th class="text-center">Mở?</th>
-                                <th class="text-center">Master?</th>
                                 <th class="text-center">Trạng Thái</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="(value, index) in list_nhan_vien" :key="index">
+                             <template v-for="(value, index) in list_nhan_vien" :key="index">
                                 <tr class="text-nowrap">
                                     <th class="align-middle text-center">{{ index + 1 }}</th>
                                     <td class="align-middle">{{ value.ho_va_ten }}</td>
                                     <td class="align-middle">{{ value.email }}</td>
                                     <td class="align-middle text-center">{{ value.so_dien_thoai }}</td>
-                                    <td class="align-middle">{{ tenChucVu(value.id_chuc_vu) }}</td>
+                                    <td class="align-middle text-center">{{ tenChucVu(value.id_chuc_vu) }}</td>
                                     <td class="align-middle text-center">
-                                        <i v-if="value.is_open" class="fa-solid fa-check-circle text-success"></i>
-                                        <i v-else class="fa-solid fa-times-circle text-danger"></i>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <i v-if="value.is_master" class="fa-solid fa-check-circle text-success"></i>
-                                        <i v-else class="fa-solid fa-times-circle text-danger"></i>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <button v-if="value.trang_thai == 1" class="btn btn-info w-100" style="color:white">
+                                        <button v-if="value.trang_thai == 1" v-on:click="doiTrangThai(value)" class="btn btn-info w-100" style="color:white">
                                             Hoạt động
                                         </button>
-                                        <button v-else class="btn btn-secondary w-100">
+                                        <button v-else v-on:click="doiTrangThai(value)" class="btn btn-secondary w-100">
                                             Tạm tắt
                                         </button>
                                     </td>
@@ -68,6 +58,12 @@
                                     </td>
                                 </tr>
                             </template>
+                            <tr v-if="list_nhan_vien.length == 0">
+                                <td colspan="7" class="text-center text-muted p-5">
+                                    <i class="bx bx-info-circle fs-1 d-block mb-2"></i>
+                                    Không tìm thấy nhân viên nào phù hợp.
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -105,25 +101,11 @@
                             <label class="form-label">Số Điện Thoại</label>
                             <input v-model="create_nhan_vien.so_dien_thoai" type="text" class="form-control" />
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label class="form-label">Trạng Thái</label>
                             <select v-model="create_nhan_vien.trang_thai" class="form-select">
                                 <option value="1">Hoạt động</option>
                                 <option value="0">Tạm tắt</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Mở?</label>
-                            <select v-model="create_nhan_vien.is_open" class="form-select">
-                                <option :value="1">Có</option>
-                                <option :value="0">Không</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Master?</label>
-                            <select v-model="create_nhan_vien.is_master" class="form-select">
-                                <option :value="1">Có</option>
-                                <option :value="0">Không</option>
                             </select>
                         </div>
                         <div class="col-md-12 mb-3">
@@ -174,22 +156,8 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
                             <select v-model="edit_nhan_vien.trang_thai" class="form-select">
-                                <option value="1">Hoạt động</option>
-                                <option value="0">Tạm tắt</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Mở?</label>
-                            <select v-model="edit_nhan_vien.is_open" class="form-select">
-                                <option :value="true">Có</option>
-                                <option :value="false">Không</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Master?</label>
-                            <select v-model="edit_nhan_vien.is_master" class="form-select">
-                                <option :value="true">Có</option>
-                                <option :value="false">Không</option>
+                                <option :value="1">Hoạt động</option>
+                                <option :value="0">Tạm tắt</option>
                             </select>
                         </div>
                         <div class="col-md-12 mb-3">
@@ -236,21 +204,22 @@
 <script>
 import axios from 'axios';
 
-const API = 'http://127.0.0.1:8000/api';
+const API = import.meta.env.VITE_API_URL;
 
 export default {
     data() {
         return {
             list_nhan_vien: [],
+            list_nhan_vien_goc: [],
             list_chuc_vu: [],
             tu_khoa: '',
             create_nhan_vien: {
                 ho_va_ten: "", email: "", password: "", re_password: "",
-                so_dien_thoai: "", id_chuc_vu: "", is_open: 1, is_master: 0, trang_thai: "1",
+                so_dien_thoai: "", id_chuc_vu: "", trang_thai: "1",
             },
             edit_nhan_vien: {
-                ho_va_ten: "", email: "", password: "", so_dien_thoai: "",
-                id_chuc_vu: "", is_open: "", is_master: "", trang_thai: "",
+                id: "", ho_va_ten: "", email: "", password: "", so_dien_thoai: "",
+                id_chuc_vu: "", trang_thai: "",
             },
             del_nhan_vien: {},
         };
@@ -273,7 +242,7 @@ export default {
                 this.list_nhan_vien = ds;
                 return;
             }
-            const kw = this.tu_khoa.toLowerCase();
+            const kw = this.tu_khoa.trim().toLowerCase();
             this.list_nhan_vien = ds.filter(v =>
                 (v.ho_va_ten && v.ho_va_ten.toLowerCase().includes(kw)) ||
                 (v.email && v.email.toLowerCase().includes(kw)) ||
@@ -283,8 +252,23 @@ export default {
         loadData() {
             axios.get(`${API}/admin/data`, { headers: this.headers() })
                 .then((res) => {
-                    this.list_nhan_vien = res.data.data || [];
-                    this.list_nhan_vien_goc = [...this.list_nhan_vien];
+                    if (res.data.status) {
+                        this.list_nhan_vien = res.data.data || [];
+                        this.list_nhan_vien_goc = [...this.list_nhan_vien];
+                        if (this.tu_khoa) this.timKiem();
+                    } else {
+                        this.$toast.error(res.data.message || "Lỗi không xác định từ máy chủ!");
+                        this.list_nhan_vien = [];
+                        this.list_nhan_vien_goc = [];
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi API Admin List:", error);
+                    if (error.response && error.response.status === 401) {
+                        this.$toast.error("Vui lòng đăng nhập lại!");
+                    } else {
+                        this.$toast.error("Không thể tải danh sách nhân viên!");
+                    }
                 });
         },
         loadChucVu() {
@@ -292,11 +276,15 @@ export default {
                 .then((res) => { this.list_chuc_vu = res.data.data || []; });
         },
         themNhanVien() {
+            if (this.create_nhan_vien.password !== this.create_nhan_vien.re_password) {
+                this.$toast.error("Mật khẩu xác nhận không khớp!");
+                return;
+            }
             axios.post(`${API}/admin/create`, this.create_nhan_vien, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);
-                        this.create_nhan_vien = { ho_va_ten: "", email: "", password: "", re_password: "", so_dien_thoai: "", id_chuc_vu: "", is_open: 1, is_master: 0, trang_thai: "1" };
+                        this.create_nhan_vien = { ho_va_ten: "", email: "", password: "", re_password: "", so_dien_thoai: "", id_chuc_vu: "", trang_thai: "1" };
                         this.loadData();
                     } else {
                         this.$toast.error(res.data.message);
@@ -324,6 +312,21 @@ export default {
         },
         xoaNhanVien() {
             axios.post(`${API}/admin/delete`, { id: this.del_nhan_vien.id }, { headers: this.headers() })
+                .then((res) => {
+                    if (res.data.status) {
+                        this.$toast.success(res.data.message);
+                        this.loadData();
+                    } else {
+                        this.$toast.error(res.data.message);
+                    }
+                })
+                .catch(res => {
+                    if (res.response && res.response.data && res.response.data.errors)
+                        Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0]));
+                });
+        },
+        doiTrangThai(value) {
+            axios.post(`${API}/admin/change-status`, value, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);

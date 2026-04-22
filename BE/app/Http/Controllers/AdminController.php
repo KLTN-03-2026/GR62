@@ -31,7 +31,8 @@ class AdminController extends Controller
         
         $data = Admin::all();
         return response()->json([
-            'data' => $data
+            'status' => true,
+            'data'   => $data
         ]);
     }
 
@@ -126,6 +127,37 @@ class AdminController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Xóa tài khoản admin thành công',
+        ]);
+    }
+
+    public function changeStatus(Request $request)
+    {
+        $id_chuc_nang = 3; 
+        $login = Auth::guard('sanctum')->user();
+        
+        if (!$login->is_master) {
+            $check_quyen = ChiTietPhanQuyen::where('id_chuc_vu', $login->id_chuc_vu)
+                ->where('id_chuc_nang', $id_chuc_nang)
+                ->first();
+            if (!$check_quyen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "bạn không có quyền thực hiện chức năng này!"
+                ]);
+            }
+        }
+        $data = Admin::where('id', $request->id)->first();
+        if ($data) {
+            $data->trang_thai = !$data->trang_thai;
+            $data->save();
+            return response()->json([
+                'status' => true,
+                'message' => 'Đã thay đổi trạng thái thành công'
+            ]);
+        }
+        return response()->json([
+            'status' => false,
+            'message' => 'Tài khoản không tồn tại'
         ]);
     }
 

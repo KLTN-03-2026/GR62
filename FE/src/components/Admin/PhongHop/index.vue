@@ -11,7 +11,7 @@
                 <div class="row m-2">
                     <div class="col-lg-12">
                         <div class="input-group">
-                            <input @keyup="timKiem()" v-model="tim_kiem.noi_dung_tim" type="text" class="form-control"
+                            <input @keyup="timKiem()" v-model="tu_khoa" type="text" class="form-control"
                                 placeholder="Tìm kiếm theo tên, mã phòng...">
                             <button v-on:click="timKiem()" class="btn btn-primary">Tìm Kiếm</button>
                         </div>
@@ -33,25 +33,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="text-nowrap" v-for="(value, index) in list_phong_hop" :key="index">
-                                <th class="align-middle text-center">{{ index + 1 }}</th>
-                                <td class="align-middle text-center">{{ value.ma_phong }}</td>
-                                <td class="align-middle">{{ value.ten_phong }}</td>
-                                <td class="align-middle text-center">{{ value.ten_chu_phong }}</td>
-                                <td class="align-middle text-center">{{ value.so_nguoi_toi_da }}</td>
-                                <td class="align-middle text-center">{{ value.thoi_gian_bat_dau }}</td>
-                                <td class="align-middle text-center">{{ value.thoi_gian_ket_thuc }}</td>
-                                <td class="align-middle text-center" v-on:click="changeStatus(value)">
-                                    <button v-if="value.trang_thai == 1" class="btn btn-info w-100"
-                                        style="color:white">Hoạt động</button>
-                                    <button v-else class="btn btn-secondary w-100">Tạm tắt</button>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <button v-on:click="edit_phong_hop = Object.assign(edit_phong_hop, value)"
-                                        class="btn btn-success me-2" data-bs-toggle="modal"
-                                        data-bs-target="#updateModal">Cập nhật</button>
-                                    <button v-on:click="del_phong_hop = value" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteModal">Xóa</button>
+                             <template v-for="(value, index) in list_phong_hop" :key="index">
+                                <tr class="text-nowrap">
+                                    <th class="align-middle text-center">{{ index + 1 }}</th>
+                                    <td class="align-middle text-center">{{ value.ma_phong }}</td>
+                                    <td class="align-middle">{{ value.ten_phong }}</td>
+                                    <td class="align-middle text-center">{{ value.chu_phong?.ho_va_ten || 'Hệ thống' }}</td>
+                                    <td class="align-middle text-center">{{ value.so_nguoi_toi_da }}</td>
+                                    <td class="align-middle text-center">{{ value.thoi_gian_bat_dau }}</td>
+                                    <td class="align-middle text-center">
+                                        {{ value.thoi_gian_ket_thuc || 'Đang diễn ra' }}
+                                    </td>
+                                    <td class="align-middle text-center" v-on:click="doiTrangThai(value)">
+                                        <button v-if="value.trang_thai == 1" class="btn btn-info w-100"
+                                            style="color:white">Hoạt động</button>
+                                        <button v-else class="btn btn-secondary w-100">Tạm tắt</button>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <button v-on:click="edit_phong_hop = Object.assign({}, value)"
+                                            class="btn btn-success me-2" data-bs-toggle="modal"
+                                            data-bs-target="#updateModal">Cập nhật</button>
+                                        <button v-on:click="del_phong_hop = value" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal">Xóa</button>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr v-if="list_phong_hop.length == 0">
+                                <td colspan="9" class="text-center text-muted p-5">
+                                    <i class="bx bx-info-circle fs-1 d-block mb-2"></i>
+                                    Không tìm thấy dữ liệu phòng họp nào phù hợp.
                                 </td>
                             </tr>
                         </tbody>
@@ -204,15 +214,17 @@
 
 <script>
 import axios from 'axios';
+const API = import.meta.env.VITE_API_URL;
 export default {
     data() {
         return {
             list_phong_hop: [],
+            list_phong_hop_goc: [],
             list_doi_tac: [],
             create_phong_hop: { ma_phong: "", ten_phong: "", so_nguoi_toi_da: "", thoi_gian_bat_dau: "", thoi_gian_ket_thuc: "", trang_thai: "1", id_doi_tac: "" },
             edit_phong_hop: { ma_phong: "", ten_phong: "", so_nguoi_toi_da: "", thoi_gian_bat_dau: "", thoi_gian_ket_thuc: "", trang_thai: "", id_doi_tac: "" },
             del_phong_hop: {},
-            tim_kiem: {},
+            tu_khoa: "",
         };
     },
     mounted() {
@@ -220,20 +232,36 @@ export default {
         this.loadDoiTac();
     },
     methods: {
+        headers() {
+            return { Authorization: 'Bearer ' + localStorage.getItem('token_admin') };
+        },
         loadDoiTac() {
-            axios.get('http://127.0.0.1:8000/api/doi-tac/data')
-                .then((res) => { this.list_doi_tac = res.data.data; });
+            axios.get(`${API}/doi-tac/data`, { headers: this.headers() })
+                .then((res) => { this.list_doi_tac = res.data.data || []; });
         },
         timKiem() {
-            axios.post("http://127.0.0.1:8000/api/phong-hop/tim-kiem", this.tim_kiem)
-                .then((res) => { this.list_phong_hop = res.data.data; });
+            const ds = this.list_phong_hop_goc || [];
+            if (!this.tu_khoa) {
+                this.list_phong_hop = [...ds];
+                return;
+            }
+            const kw = this.tu_khoa.trim().toLowerCase();
+            this.list_phong_hop = ds.filter(v =>
+                (v.ten_phong && v.ten_phong.toLowerCase().includes(kw)) ||
+                (v.ma_phong && v.ma_phong.toLowerCase().includes(kw)) ||
+                (v.ten_chu_phong && v.ten_chu_phong.toLowerCase().includes(kw))
+            );
         },
         loadData() {
-            axios.get('http://127.0.0.1:8000/api/phong-hop/data')
-                .then((res) => { this.list_phong_hop = res.data.data; });
+            axios.get(`${API}/phong-hop/data`, { headers: this.headers() })
+                .then((res) => {
+                    this.list_phong_hop = res.data.data || [];
+                    this.list_phong_hop_goc = [...this.list_phong_hop];
+                    if (this.tu_khoa) this.timKiem();
+                });
         },
         themPhongHop() {
-            axios.post('http://127.0.0.1:8000/api/phong-hop/create', this.create_phong_hop)
+            axios.post(`${API}/phong-hop/create`, this.create_phong_hop, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);
@@ -241,24 +269,33 @@ export default {
                         this.loadData();
                     }
                     else this.$toast.error(res.data.message);
-                }).catch(res => Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0])));
+                }).catch(res => {
+                    if (res.response?.data?.errors)
+                        Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0]));
+                });
         },
         capNhatPhongHop() {
-            axios.post('http://127.0.0.1:8000/api/phong-hop/update', this.edit_phong_hop)
+            axios.post(`${API}/phong-hop/update`, this.edit_phong_hop, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) { this.$toast.success(res.data.message); this.loadData(); }
                     else this.$toast.error(res.data.message);
-                }).catch(res => Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0])));
+                }).catch(res => {
+                    if (res.response?.data?.errors)
+                        Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0]));
+                });
         },
         xoaPhongHop() {
-            axios.post('http://127.0.0.1:8000/api/phong-hop/delete', this.del_phong_hop)
+            axios.post(`${API}/phong-hop/delete`, this.del_phong_hop, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) { this.$toast.success(res.data.message); this.loadData(); }
                     else this.$toast.error(res.data.message);
-                }).catch(res => Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0])));
+                }).catch(res => {
+                    if (res.response?.data?.errors)
+                        Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0]));
+                });
         },
-        changeStatus(value) {
-            axios.post("http://127.0.0.1:8000/api/phong-hop/change-status", value)
+        doiTrangThai(value) {
+            axios.post(`${API}/phong-hop/change-status`, value, { headers: this.headers() })
                 .then((res) => { if (res.data.status) { this.loadData(); this.$toast.success(res.data.message); } });
         },
     },

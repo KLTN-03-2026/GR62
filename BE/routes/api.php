@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/create', [AdminController::class, 'store']);
     Route::post('/admin/update', [AdminController::class, 'update']);
     Route::post('/admin/delete', [AdminController::class, 'destroy']);
+    Route::post('/admin/change-status', [AdminController::class, 'changeStatus']);
 
     Route::get('/admin/profile/data', [AdminController::class, 'getProfile']);
     Route::post('/admin/profile/update', [AdminController::class, 'updateProfile']);
@@ -73,6 +74,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/doi-tac/profile/update-avatar', [DoiTacController::class, 'updateAvatar']);
     Route::post('/doi-tac/profile/update-face-data', [DoiTacController::class, 'updateFaceData']);
     Route::post('/doi-tac/profile/change-password', [DoiTacController::class, 'changePassword']);
+    Route::get('/doi-tac/thong-ke', [DoiTacController::class, 'getStatistics']);
 });
 
 // 5. Người Dùng

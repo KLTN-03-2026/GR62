@@ -1,32 +1,33 @@
 <template>
     <div class="partner-dashboard-wrapper h-100">
         <div class="main-layout d-flex h-100">
-            <!-- Sidebar -->
+            <!-- Sidebar (AI-Meet Business Branding) -->
             <aside class="sidebar-business d-flex flex-column py-5 shadow-sm">
-                <!-- Logo Section -->
                 <div class="logo-section px-4 mb-5">
-                    <div class="d-flex align-items-center gap-3" @click="$router.push('/doi-tac/trang-chinh')"
-                        style="cursor: pointer;">
+                    <div class="d-flex align-items-center gap-3" @click="$router.push('/doi-tac/trang-chinh')" style="cursor: pointer;">
                         <div class="logo-icon-business">
                             <i class="bx bxs-component fs-3"></i>
                         </div>
                         <div>
                             <h5 class="mb-0 fw-800 text-dark tracking-tighter">AI-Meet Business</h5>
-                            <small class="text-muted fw-bold text-uppercase"
-                                style="font-size: 0.6rem; letter-spacing: 1.5px;">Đối tác cao cấp</small>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 1.5px;">Đối tác cao cấp</small>
                         </div>
                     </div>
                 </div>
 
-                <!-- Navigation -->
                 <div class="nav-links d-flex flex-column gap-3 px-3 flex-grow-1 mt-3">
                     <button @click="$router.push('/doi-tac/trang-chinh')" class="nav-business-item">
                         <i class="bx bxs-dashboard"></i>
                         <span>Tổng quan</span>
                     </button>
+                    
                     <button @click="$router.push('/doi-tac/phong-hop')" class="nav-business-item">
                         <i class="bx bxs-video"></i>
                         <span>Tham gia cuộc họp</span>
+                    </button>
+                    <button @click="$router.push('/doi-tac/quan-ly-phong-hop')" class="nav-business-item">
+                        <i class="bx bxs-megaphone"></i>
+                        <span>Quản lý phòng họp</span>
                     </button>
                     <button class="nav-business-item active">
                         <i class="bx bxs-bar-chart-alt-2"></i>
@@ -38,8 +39,11 @@
                     </button>
                 </div>
 
-                <!-- Bottom Sticky -->
                 <div class="px-3 mt-auto pt-5 border-top border-light">
+                    <button class="nav-business-item mb-2 border-0 bg-transparent w-100">
+                        <i class="bx bx-help-circle"></i>
+                        <span>Hỗ trợ</span>
+                    </button>
                     <button @click="logout" class="nav-business-item text-danger border-0 bg-transparent w-100">
                         <i class="bx bx-log-out-circle"></i>
                         <span>Đăng xuất</span>

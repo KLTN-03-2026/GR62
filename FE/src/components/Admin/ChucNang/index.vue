@@ -32,28 +32,36 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(value, index) in list_chuc_nang" :key="index" class="text-nowrap">
-                                <th class="align-middle text-center">{{ index + 1 }}</th>
-                                <td class="align-middle">{{ value.ten_chuc_nang }}</td>
-                                <td class="align-middle text-center">{{ value.ma_chuc_nang }}</td>
-                                <td class="align-middle">{{ value.ten_slug }}</td>
-                                <td class="align-middle small">{{ value.url }}</td>
-                                <td class="align-middle">{{ value.mo_ta }}</td>
-                                <td class="align-middle text-center" v-on:click="changeStatus(value)">
-                                    <button v-if="value.trang_thai == 1" class="btn btn-info w-100"
-                                        style="color:white">Hoạt động</button>
-                                    <button v-else class="btn btn-secondary w-100">Tạm tắt</button>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <button v-on:click="edit_chuc_nang = Object.assign({}, value)"
-                                        class="btn btn-success me-2" data-bs-toggle="modal"
-                                        data-bs-target="#updateChucNangModal">
-                                        Cập Nhật
-                                    </button>
-                                    <button v-on:click="del_chuc_nang = value" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteChucNangModal">
-                                        Xóa
-                                    </button>
+                             <template v-for="(value, index) in list_chuc_nang" :key="index">
+                                <tr class="text-nowrap">
+                                    <th class="align-middle text-center">{{ index + 1 }}</th>
+                                    <td class="align-middle">{{ value.ten_chuc_nang }}</td>
+                                    <td class="align-middle text-center">{{ value.ma_chuc_nang }}</td>
+                                    <td class="align-middle">{{ value.ten_slug }}</td>
+                                    <td class="align-middle small">{{ value.url }}</td>
+                                    <td class="align-middle">{{ value.mo_ta }}</td>
+                                    <td class="align-middle text-center" v-on:click="doiTrangThai(value)">
+                                        <button v-if="value.trang_thai == 1" class="btn btn-info w-100"
+                                            style="color:white">Hoạt động</button>
+                                        <button v-else class="btn btn-secondary w-100">Tạm tắt</button>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <button v-on:click="edit_chuc_nang = Object.assign({}, value)"
+                                            class="btn btn-success me-2" data-bs-toggle="modal"
+                                            data-bs-target="#updateChucNangModal">
+                                            Cập Nhật
+                                        </button>
+                                        <button v-on:click="del_chuc_nang = value" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteChucNangModal">
+                                            Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr v-if="list_chuc_nang.length == 0">
+                                <td colspan="8" class="text-center text-muted p-5">
+                                    <i class="bx bx-info-circle fs-1 d-block mb-2"></i>
+                                    Không tìm thấy dữ liệu chức năng nào phù hợp.
                                 </td>
                             </tr>
                         </tbody>
@@ -187,7 +195,7 @@
 <script>
 import axios from 'axios';
 
-const API = 'http://127.0.0.1:8000/api';
+const API = import.meta.env.VITE_API_URL;
 
 export default {
     data() {
@@ -222,12 +230,13 @@ export default {
             return { Authorization: 'Bearer ' + localStorage.getItem('token_admin') };
         },
         timKiem() {
+            const ds = this.list_chuc_nang_goc || [];
             if (!this.tu_khoa) {
-                this.list_chuc_nang = [...this.list_chuc_nang_goc];
+                this.list_chuc_nang = [...ds];
                 return;
             }
-            const kw = this.tu_khoa.toLowerCase();
-            this.list_chuc_nang = this.list_chuc_nang_goc.filter(v =>
+            const kw = this.tu_khoa.trim().toLowerCase();
+            this.list_chuc_nang = ds.filter(v =>
                 (v.ten_chuc_nang && v.ten_chuc_nang.toLowerCase().includes(kw)) ||
                 (v.ma_chuc_nang && v.ma_chuc_nang.toLowerCase().includes(kw)) ||
                 (v.ten_slug && v.ten_slug.toLowerCase().includes(kw))
@@ -285,7 +294,7 @@ export default {
                     }
                 });
         },
-        changeStatus(value) {
+        doiTrangThai(value) {
             axios.post(`${API}/chuc-nang/change-status`, { id: value.id }, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {

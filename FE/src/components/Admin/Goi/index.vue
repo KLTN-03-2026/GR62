@@ -11,7 +11,7 @@
                 <div class="row m-2">
                     <div class="col-lg-12">
                         <div class="input-group">
-                            <input @keyup="timKiem()" v-model="tim_kiem.noi_dung_tim" type="text"
+                            <input @keyup="timKiem()" v-model="tu_khoa" type="text"
                                 class="form-control" placeholder="Tìm kiếm theo tên gói...">
                             <button v-on:click="timKiem()" class="btn btn-primary">Tìm Kiếm</button>
                         </div>
@@ -27,15 +27,12 @@
                                 <th class="text-center">Số Người</th>
                                 <th class="text-center">Số Phòng</th>
                                 <th class="text-center">Thời Hạn</th>
-                                <th class="text-center">ND?</th>
-                                <th class="text-center">Mở?</th>
-                                <th class="text-center">Hiển thị?</th>
                                 <th class="text-center">Trạng Thái</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="(value, index) in list_goi" :key="index">
+                             <template v-for="(value, index) in list_goi" :key="index">
                                 <tr class="text-nowrap">
                                     <th class="align-middle text-center">{{ index + 1 }}</th>
                                     <td class="align-middle">{{ value.ten_goi }}</td>
@@ -43,30 +40,24 @@
                                     <td class="align-middle text-center">{{ value.so_nguoi_toi_da }}</td>
                                     <td class="align-middle text-center">{{ value.so_phong_toi_da }}</td>
                                     <td class="align-middle text-center">{{ value.thoi_han }} ngày</td>
-                                    <td class="align-middle text-center">
-                                        <i v-if="value.is_nguoi_dung" class="fa-solid fa-check-circle text-success"></i>
-                                        <i v-else class="fa-solid fa-times-circle text-danger"></i>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <i v-if="value.is_open" class="fa-solid fa-check-circle text-success"></i>
-                                        <i v-else class="fa-solid fa-times-circle text-danger"></i>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <i v-if="value.is_hien_thi" class="fa-solid fa-check-circle text-success"></i>
-                                        <i v-else class="fa-solid fa-times-circle text-danger"></i>
-                                    </td>
-                                    <td class="align-middle text-center" v-on:click="changeStatus(value)">
+                                    <td class="align-middle text-center" v-on:click="doiTrangThai(value)">
                                         <button v-if="value.trang_thai == 1" class="btn btn-info w-100" style="color:white">Hoạt động</button>
                                         <button v-else class="btn btn-secondary w-100">Tạm tắt</button>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <button v-on:click="edit_goi = Object.assign(edit_goi, value)"
+                                        <button v-on:click="edit_goi = Object.assign({}, value)"
                                             class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#updateModal">Cập nhật</button>
                                         <button v-on:click="del_goi = value" class="btn btn-danger"
                                             data-bs-toggle="modal" data-bs-target="#deleteModal">Xóa</button>
                                     </td>
                                 </tr>
                             </template>
+                            <tr v-if="list_goi.length == 0">
+                                <td colspan="8" class="text-center text-muted p-5">
+                                    <i class="bx bx-info-circle fs-1 d-block mb-2"></i>
+                                    Không tìm thấy dữ liệu gói nào phù hợp.
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -95,27 +86,6 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Giá Gói</label>
                             <input v-model="create_goi.gia_goi" type="number" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Dành Cho Người Dùng?</label>
-                            <select v-model="create_goi.is_nguoi_dung" class="form-select">
-                                <option :value="1">Có</option>
-                                <option :value="0">Không</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Mở?</label>
-                            <select v-model="create_goi.is_open" class="form-select">
-                                <option :value="1">Có</option>
-                                <option :value="0">Không</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Hiển Thị?</label>
-                            <select v-model="create_goi.is_hien_thi" class="form-select">
-                                <option :value="1">Có</option>
-                                <option :value="0">Không</option>
-                            </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
@@ -159,27 +129,6 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Giá Gói</label>
                             <input v-model="edit_goi.gia_goi" type="number" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Dành Cho Người Dùng?</label>
-                            <select v-model="edit_goi.is_nguoi_dung" class="form-select">
-                                <option :value="true">Có</option>
-                                <option :value="false">Không</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Mở?</label>
-                            <select v-model="edit_goi.is_open" class="form-select">
-                                <option :value="true">Có</option>
-                                <option :value="false">Không</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Hiển Thị?</label>
-                            <select v-model="edit_goi.is_hien_thi" class="form-select">
-                                <option :value="true">Có</option>
-                                <option :value="false">Không</option>
-                            </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
@@ -226,54 +175,84 @@
 
 <script>
 import axios from 'axios';
+const API = import.meta.env.VITE_API_URL;
 export default {
     data() {
         return {
             list_goi: [],
-            create_goi: { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", is_nguoi_dung: 1, is_open: 1, is_hien_thi: 1, trang_thai: "1" },
-            edit_goi: { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", is_nguoi_dung: "", is_open: "", is_hien_thi: "", trang_thai: "" },
+            list_goi_goc: [],
+            create_goi: { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "1" },
+            edit_goi: { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "" },
             del_goi: {},
-            tim_kiem: {},
+            tu_khoa: '',
         };
     },
     mounted() { this.loadData(); },
     methods: {
+        headers() {
+            return { Authorization: 'Bearer ' + localStorage.getItem('token_admin') };
+        },
         timKiem() {
-            axios.post("http://127.0.0.1:8000/api/goi/tim-kiem", this.tim_kiem)
-                .then((res) => { this.list_goi = res.data.data; });
+            const ds = this.list_goi_goc || [];
+            if (!this.tu_khoa) {
+                this.list_goi = [...ds];
+                return;
+            }
+            const kw = this.tu_khoa.trim().toLowerCase();
+            this.list_goi = ds.filter(v =>
+                v.ten_goi && v.ten_goi.toLowerCase().includes(kw)
+            );
         },
         loadData() {
-            axios.get('http://127.0.0.1:8000/api/goi/data')
-                .then((res) => { this.list_goi = res.data.data; });
+            axios.get(`${API}/goi/data`, { headers: this.headers() })
+                .then((res) => {
+                    this.list_goi = res.data.data || [];
+                    this.list_goi_goc = [...this.list_goi];
+                    if (this.tu_khoa) this.timKiem();
+                });
         },
         themGoi() {
-            axios.post('http://127.0.0.1:8000/api/goi/create', this.create_goi)
+            axios.post(`${API}/goi/create`, this.create_goi, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);
-                        this.create_goi = { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", is_nguoi_dung: 1, is_open: 1, is_hien_thi: 1, trang_thai: "1" };
+                        this.create_goi = { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "1" };
                         this.loadData();
                     }
                     else this.$toast.error(res.data.message);
-                }).catch(res => Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0])));
+                }).catch(res => {
+                    if (res.response?.data?.errors)
+                        Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0]));
+                });
         },
         capNhatGoi() {
-            axios.post('http://127.0.0.1:8000/api/goi/update', this.edit_goi)
+            axios.post(`${API}/goi/update`, this.edit_goi, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) { this.$toast.success(res.data.message); this.loadData(); }
                     else this.$toast.error(res.data.message);
-                }).catch(res => Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0])));
+                }).catch(res => {
+                    if (res.response?.data?.errors)
+                        Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0]));
+                });
         },
         xoaGoi() {
-            axios.post('http://127.0.0.1:8000/api/goi/delete', this.del_goi)
+            axios.post(`${API}/goi/delete`, this.del_goi, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) { this.$toast.success(res.data.message); this.loadData(); }
                     else this.$toast.error(res.data.message);
-                }).catch(res => Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0])));
+                }).catch(res => {
+                    if (res.response?.data?.errors)
+                        Object.values(res.response.data.errors).forEach(v => this.$toast.error(v[0]));
+                });
         },
-        changeStatus(value) {
-            axios.post("http://127.0.0.1:8000/api/goi/change-status", value)
-                .then((res) => { if (res.data.status) { this.loadData(); this.$toast.success(res.data.message); } });
+        doiTrangThai(value) {
+            axios.post(`${API}/goi/change-status`, value, { headers: this.headers() })
+                .then((res) => {
+                    if (res.data.status) {
+                        this.loadData();
+                        this.$toast.success(res.data.message);
+                    }
+                });
         },
     },
 };

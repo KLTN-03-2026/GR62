@@ -4,7 +4,7 @@
             <!-- Sidebar (AI-Meet Business Branding) -->
             <aside class="sidebar-business d-flex flex-column py-5 shadow-sm">
                 <div class="logo-section px-4 mb-5">
-                    <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3" @click="$router.push('/doi-tac/trang-chinh')" style="cursor: pointer;">
                         <div class="logo-icon-business">
                             <i class="bx bxs-component fs-3"></i>
                         </div>
@@ -24,11 +24,11 @@
                         <i class="bx bxs-video"></i>
                         <span>Tham gia cuộc họp</span>
                     </button>
-                                        <button @click="$router.push('/doi-tac/quan-ly-phong-hop')" class="nav-business-item">
+                    <button @click="$router.push('/doi-tac/quan-ly-phong-hop')" class="nav-business-item">
                         <i class="bx bxs-megaphone"></i>
                         <span>Quản lý phòng họp</span>
                     </button>
-                    <button class="nav-business-item">
+                    <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>
                     </button>
@@ -78,7 +78,7 @@
                                     </label>
                                 </div>
                                 <h4 class="fw-900 text-dark mb-1">{{ doi_tac.ho_va_ten }}</h4>
-                                <p class="text-orange fw-800 small text-uppercase mb-4">Quản trị viên Hệ thống</p>
+                                <p class="text-orange fw-800 small text-uppercase mb-4">{{ partnerPosition }}</p>
                                 
                                 <div class="d-flex justify-content-center gap-4 py-4 border-top border-light">
                                     <div class="text-center px-3">
@@ -228,6 +228,7 @@ export default {
                 new_password: '',
                 confirm_password: ''
             },
+            partnerPosition: '...',
             avatarPreview: 'https://i.pravatar.cc/300?u=partner_anhkim',
             isLoading: false,
             isPasswordLoading: false,
@@ -259,10 +260,12 @@ export default {
                 });
                 if (res.data.status) {
                     this.doi_tac = res.data.data;
+                    this.partnerPosition = res.data.data.chuc_vu?.ten_chuc_vu || (res.data.data.id_doi_tac == 1 ? "Quản trị viên Đối tác" : "Đối tác");
                     const hinh_anh = this.doi_tac.hinh_anh;
                     if (hinh_anh) {
                         const baseUrl = apiUrl.replace('/api', '');
-                        this.avatarPreview = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/uploads/avatars/${hinh_anh}`;
+                        const cleanPath = hinh_anh.includes('uploads/') ? hinh_anh : `uploads/avatars/${hinh_anh}`;
+                        this.avatarPreview = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/${cleanPath}`;
                     }
                 }
             } catch (e) {
@@ -287,9 +290,6 @@ export default {
                 return false;
             }
         },
-                return false;
-            }
-        },
 
         async toggleScanning() {
             if (this.isScanning) {
@@ -307,20 +307,15 @@ export default {
                     this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
                     this.$nextTick(() => {
                         const video = this.$refs.video;
-                        video.srcObject = this.stream;
-                        video.onplay = () => {
-                            this.startAnalysis(video);
-                        };
+                        if (video) {
+                            video.srcObject = this.stream;
+                            video.onplay = () => {
+                                this.startAnalysis(video);
+                            };
+                        }
                     });
                 } catch (e) {
                     this.$toast.error("Không thể truy cập camera.");
-                    this.isScanning = false;
-                }
-                        };
-                    });
-                } catch (e) {
-                    
-                    this.$toast.error("Không thể truy cập camera!");
                     this.isScanning = false;
                 }
             }

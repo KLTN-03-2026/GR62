@@ -218,7 +218,7 @@
 <script>
 import axios from 'axios';
 
-const API = 'http://127.0.0.1:8000/api';
+const API = import.meta.env.VITE_API_URL;
 
 export default {
     data() {
@@ -280,7 +280,16 @@ export default {
         },
         layDataPhanQuyen() {
             axios.get(`${API}/chi-tiet-phan-quyen/data`, { headers: this.headers() })
-                .then(res => { this.list_phan_quyen = res.data.data || []; });
+                .then(res => {
+                    if (res.data.status) {
+                        this.list_phan_quyen = res.data.data || [];
+                    } else {
+                        this.$toast.error(res.data.message || 'Không thể tải danh sách quyền');
+                    }
+                })
+                .catch(() => {
+                    this.$toast.error('Lỗi kết nối khi tải danh sách quyền');
+                });
         },
         themChucVu() {
             axios.post(`${API}/chuc-vu/create`, this.create_chuc_vu, { headers: this.headers() })

@@ -69,8 +69,8 @@
                         
                         <div class="profile-trigger-business d-flex align-items-center gap-3 cursor-pointer" @click="$router.push('/doi-tac/profile')">
                             <div class="text-end d-none d-md-block">
-                                <h6 class="mb-0 fw-800 text-dark" style="font-size: 0.9rem;">Admin Ánh Kim</h6>
-                                <small class="text-muted" style="font-size: 0.75rem;">Quản trị viên Hệ thống</small>
+                                <h6 class="mb-0 fw-800 text-dark" style="font-size: 0.9rem;">{{ partnerName }}</h6>
+                                <small class="text-muted" style="font-size: 0.75rem;">{{ partnerPosition }}</small>
                             </div>
                             <img :src="avatarUrl" alt="Avatar" class="header-avatar-business shadow-sm">
                         </div>
@@ -86,8 +86,8 @@
                                 <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-user-detail"></i></div>
                                 <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Nhân viên sử dụng</label>
                                 <div class="d-flex align-items-baseline gap-2">
-                                    <h2 class="fw-900 mb-0">1,284</h2>
-                                    <span class="text-success small fw-bold">+12%</span>
+                                    <h2 class="fw-900 mb-0">{{ stats[0].value }}</h2>
+                                    <span class="text-success small fw-bold">{{ stats[0].grow }}</span>
                                 </div>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                                 <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-time-five"></i></div>
                                 <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Tổng giờ họp tháng</label>
                                 <div class="d-flex align-items-baseline gap-2">
-                                    <h2 class="fw-900 mb-0">4,850h</h2>
+                                    <h2 class="fw-900 mb-0">{{ stats[1].value }}</h2>
                                     <span class="text-muted fw-bold">/ ∞</span>
                                 </div>
                             </div>
@@ -276,31 +276,26 @@ export default {
             },
             ma_phong_tham_gia: '',
             isJoining: false,
-            partnerName: 'Công ty Công nghệ Ánh Kim',
             avatarUrl: 'https://i.pravatar.cc/150?u=admin_anhkim',
             currentTime: '',
             currentDate: '',
             timer: null,
             stats: [
-                { label: 'Nhân viên sử dụng', value: '1,284', grow: '+12%', icon: 'bx bxs-user-detail' },
-                { label: 'Tổng giờ họp tháng', value: '4,850h', icon: 'bx bxs-time-five' },
-                { label: 'Chính xác Face ID', value: '99.9%', icon: 'bx bxs-face' },
-                { label: 'Lưu trữ đối tác', value: '1.4 TB', icon: 'bx bxs-cloud' }
+                { label: 'Nhân viên sử dụng', value: '0', grow: '+0%', icon: 'bx bxs-user-detail' },
+                { label: 'Tổng giờ họp tháng', value: '0h', icon: 'bx bxs-time-five' },
+                { label: 'Chính xác Face ID', value: '100%', icon: 'bx bxs-face' },
+                { label: 'Lưu trữ đối tác', value: '0 TB', icon: 'bx bxs-cloud' }
             ],
             weeklyData: [
-                { label: 'T2', value: 40 },
-                { label: 'T3', value: 65 },
-                { label: 'T4', value: 50 },
-                { label: 'T5', value: 85 },
-                { label: 'T6', value: 70 },
-                { label: 'T7', value: 20 },
-                { label: 'CN', value: 10 }
+                { label: 'T2', value: 0 },
+                { label: 'T3', value: 0 },
+                { label: 'T4', value: 0 },
+                { label: 'T5', value: 0 },
+                { label: 'T6', value: 0 },
+                { label: 'T7', value: 0 },
+                { label: 'CN', value: 0 }
             ],
-            departments: [
-                { name: 'Phòng Kỹ thuật', members: 42, code: 'KT', color: '#ea580c', status: 'active', statusLabel: 'Active' },
-                { name: 'Phòng Marketing', members: 28, code: 'MK', color: '#0ea5e9', status: 'active', statusLabel: 'Active' },
-                { name: 'Phòng Nhân sự', members: 15, code: 'NS', color: '#f59e0b', status: 'idle', statusLabel: 'Idle' }
-            ],
+            departments: [],
             exclusiveFeatures: [
                 { 
                     title: 'Quản trị tập trung', 
@@ -324,6 +319,7 @@ export default {
         this.updateTime();
         this.timer = setInterval(this.updateTime, 1000);
         this.fetchPartnerData();
+        this.fetchStatistics();
     },
     beforeUnmount() {
         if (this.timer) {
@@ -342,14 +338,34 @@ export default {
                     // Update dynamic info
                     this.partnerId = res.data.data.id;
                     this.partnerName = res.data.data.ho_va_ten;
+                    this.partnerPosition = res.data.data.chuc_vu?.ten_chuc_vu || (res.data.data.id_doi_tac == 1 ? "Quản trị viên Đối tác" : "Đối tác");
                     const hinh_anh = res.data.data.hinh_anh;
                     if(hinh_anh) {
                          const baseUrl = apiUrl.replace('/api', '');
-                         this.avatarUrl = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/uploads/avatars/${hinh_anh}`;
+                         const cleanPath = hinh_anh.includes('uploads/') ? hinh_anh : `uploads/avatars/${hinh_anh}`;
+                         this.avatarUrl = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/${cleanPath}`;
                     }
                 }
             } catch (e) {
                 console.error("Error fetching partner data");
+            }
+        },
+        async fetchStatistics() {
+            try {
+                const token = localStorage.getItem('token_doi_tac');
+                if(!token) return;
+                const res = await axios.get(`${apiUrl}/doi-tac/thong-ke`, {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+                if (res.data.status) {
+                    const data = res.data.data;
+                    this.stats[0].value = data.total_nhan_vien.toLocaleString();
+                    this.stats[1].value = data.total_hours + 'h';
+                    this.weeklyData = data.weekly_data;
+                    this.departments = data.departments;
+                }
+            } catch (e) {
+                console.error("Error fetching statistics");
             }
         },
         updateTime() {

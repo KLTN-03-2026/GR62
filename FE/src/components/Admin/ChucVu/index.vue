@@ -29,25 +29,33 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(value, index) in list_chuc_vu" :key="index" class="text-nowrap">
-                                <th class="align-middle text-center">{{ index + 1 }}</th>
-                                <td class="align-middle">{{ value.ten_chuc_vu }}</td>
-                                <td class="align-middle">{{ value.mo_ta }}</td>
-                                <td class="align-middle text-center" v-on:click="changeStatus(value)">
-                                    <button v-if="value.trang_thai == 1" class="btn btn-info w-100"
-                                        style="color:white">Hoạt động</button>
-                                    <button v-else class="btn btn-secondary w-100">Tạm tắt</button>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <button v-on:click="edit_chuc_vu = Object.assign({}, value)"
-                                        class="btn btn-success me-2" data-bs-toggle="modal"
-                                        data-bs-target="#updateChucVuModal">
-                                        Cập Nhật
-                                    </button>
-                                    <button v-on:click="del_chuc_vu = value" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteChucVuModal">
-                                        Xóa
-                                    </button>
+                             <template v-for="(value, index) in list_chuc_vu" :key="index">
+                                <tr class="text-nowrap">
+                                    <th class="align-middle text-center">{{ index + 1 }}</th>
+                                    <td class="align-middle">{{ value.ten_chuc_vu }}</td>
+                                    <td class="align-middle">{{ value.mo_ta || '(Chưa có mô tả)' }}</td>
+                                    <td class="align-middle text-center" v-on:click="doiTrangThai(value)">
+                                        <button v-if="value.trang_thai == 1" class="btn btn-info w-100"
+                                            style="color:white">Hoạt động</button>
+                                        <button v-else class="btn btn-secondary w-100">Tạm tắt</button>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <button v-on:click="edit_chuc_vu = Object.assign({}, value)"
+                                            class="btn btn-success me-2" data-bs-toggle="modal"
+                                            data-bs-target="#updateChucVuModal">
+                                            Cập Nhật
+                                        </button>
+                                        <button v-on:click="del_chuc_vu = value" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteChucVuModal">
+                                            Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr v-if="list_chuc_vu.length == 0">
+                                <td colspan="5" class="text-center text-muted p-5">
+                                    <i class="bx bx-info-circle fs-1 d-block mb-2"></i>
+                                    Không tìm thấy dữ liệu chức vụ nào phù hợp.
                                 </td>
                             </tr>
                         </tbody>
@@ -157,7 +165,7 @@
 <script>
 import axios from 'axios';
 
-const API = 'http://127.0.0.1:8000/api';
+const API = import.meta.env.VITE_API_URL;
 
 export default {
     data() {
@@ -186,12 +194,13 @@ export default {
             return { Authorization: 'Bearer ' + localStorage.getItem('token_admin') };
         },
         timKiem() {
+            const ds = this.list_chuc_vu_goc || [];
             if (!this.tu_khoa) {
-                this.list_chuc_vu = [...this.list_chuc_vu_goc];
+                this.list_chuc_vu = [...ds];
                 return;
             }
-            const kw = this.tu_khoa.toLowerCase();
-            this.list_chuc_vu = this.list_chuc_vu_goc.filter(v =>
+            const kw = this.tu_khoa.trim().toLowerCase();
+            this.list_chuc_vu = ds.filter(v =>
                 v.ten_chuc_vu && v.ten_chuc_vu.toLowerCase().includes(kw)
             );
         },
@@ -240,7 +249,7 @@ export default {
                     }
                 });
         },
-        changeStatus(value) {
+        doiTrangThai(value) {
             axios.post(`${API}/chuc-vu/change-status`, { id: value.id }, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {

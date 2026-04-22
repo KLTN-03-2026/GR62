@@ -24,4 +24,9 @@ class PhongHop extends Model
             'trang_thai' => 'boolean',
         ];
     }
+
+    public function chuPhong()
+    {
+        return $this->belongsTo(NguoiDung::class, 'id_chu_phong');
+    }
 }
