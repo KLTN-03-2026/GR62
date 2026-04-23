@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row" v-if="current_admin && current_admin.is_master == 1">
         <!-- Cột 1: Danh Sách Chức Vụ -->
         <div class="col-lg-4">
             <div class="card radius-10 border-top border-0 border-3 border-primary shadow-sm">
@@ -131,6 +131,18 @@
         </div>
     </div>
 
+    <!-- Access Denied View -->
+    <div class="row mt-5" v-else-if="current_admin && current_admin.is_master == 0">
+        <div class="col-12 mt-5">
+            <div class="alert alert-danger text-center p-5 shadow-sm rounded">
+                <i class="fa-solid fa-triangle-exclamation text-danger mb-3" style="font-size: 5rem;"></i>
+                <h3 class="fw-bold">TỪ CHỐI TRUY CẬP</h3>
+                <p class="fs-5 mt-3 mb-0">Chức năng Phân Quyền thuộc dạng dữ liệu cốt lõi của hệ thống.</p>
+                <p class="fs-5 text-muted">Chỉ đặc quyền của <strong class="text-danger">Super Admin (is_master)</strong> mới có thể truy cập nội dung này.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Thêm Chức Vụ -->
     <div class="modal fade" id="themMoiModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -210,6 +222,7 @@
             </div>
         </div>
     </div>
+    <!-- End Modals -->
 </template>
 
 <script>
@@ -253,7 +266,7 @@ export default {
             return { Authorization: 'Bearer ' + localStorage.getItem('token_admin') };
         },
         layAdminHienTai() {
-            axios.get(`${API}/admin/me`, { headers: this.headers() })
+            axios.get(`${API}/admin/profile/data`, { headers: this.headers() })
                 .then(res => {
                     if (res.data.status) {
                         this.current_admin = res.data.data;

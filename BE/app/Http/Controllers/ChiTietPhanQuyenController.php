@@ -23,6 +23,10 @@ class ChiTietPhanQuyenController extends Controller
 
     public function store(ChiTietPhanQuyenCreateRequest $request)
     {
+        $login = Auth::guard('sanctum')->user();
+        if (!$login || !$login->is_master) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền thực hiện thao tác này!']);
+        }
         $data = ChiTietPhanQuyen::create($request->all());
         return response()->json([
             'status' => true,
@@ -33,6 +37,10 @@ class ChiTietPhanQuyenController extends Controller
 
     public function update(ChiTietPhanQuyenUpdateRequest $request)
     {
+        $login = Auth::guard('sanctum')->user();
+        if (!$login || !$login->is_master) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền thực hiện thao tác này!']);
+        }
         $data = ChiTietPhanQuyen::where('id', $request->id)->first();
         if ($data) {
             $data->update($request->all());
@@ -50,6 +58,10 @@ class ChiTietPhanQuyenController extends Controller
 
     public function destroy(ChiTietPhanQuyenDeleteRequest $request)
     {
+        $login = Auth::guard('sanctum')->user();
+        if (!$login || !$login->is_master) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền thực hiện thao tác này!']);
+        }
         $data = ChiTietPhanQuyen::where('id', $request->id)->first();
         if ($data) {
             $data->delete();

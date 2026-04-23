@@ -27,7 +27,6 @@ class UpdateNguoiDungRequest extends FormRequest
             'so_dien_thoai' => 'required|string|max:15',
             'email'         => 'required|email|unique:nguoi_dungs,email,' . $this->id,
             'id_chuc_vu'    => 'nullable|exists:chuc_vus,id',
-            'id_doi_tac'    => 'nullable|exists:doi_tacs,id',
         ];
     }
 
@@ -42,7 +41,6 @@ class UpdateNguoiDungRequest extends FormRequest
             'email.email'            => 'Email không đúng định dạng',
             'email.unique'           => 'Email đã tồn tại trong hệ thống',
             'id_chuc_vu.exists'      => 'Chức vụ không tồn tại',
-            'id_doi_tac.exists'      => 'Đối tác không tồn tại',
         ];
     }
 }

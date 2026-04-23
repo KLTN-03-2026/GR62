@@ -25,6 +25,10 @@ class ChucVuController extends Controller
 
     public function store(ChucVuStoreRequest $request)
     {
+        $login = Auth::guard('sanctum')->user();
+        if (!$login || !$login->is_master) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền thực hiện thao tác này!']);
+        }
         $data = ChucVu::create($request->validated());
         return response()->json([
             'status' => true,
@@ -35,6 +39,10 @@ class ChucVuController extends Controller
 
     public function update(ChucVuUpdateRequest $request)
     {
+        $login = Auth::guard('sanctum')->user();
+        if (!$login || !$login->is_master) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền thực hiện thao tác này!']);
+        }
         $data = ChucVu::where('id', $request->id)->first();
         if ($data) {
             $data->update($request->validated());

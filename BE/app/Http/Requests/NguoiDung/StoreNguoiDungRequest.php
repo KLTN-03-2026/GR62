@@ -27,7 +27,6 @@ class StoreNguoiDungRequest extends FormRequest
             'email'         => 'required|email|unique:nguoi_dungs,email',
             'password'      => 'required|string|min:8',
             'id_chuc_vu'    => 'nullable|exists:chuc_vus,id',
-            'id_doi_tac'    => 'nullable|exists:doi_tacs,id',
         ];
     }
 
@@ -42,7 +41,6 @@ class StoreNguoiDungRequest extends FormRequest
             'password.required'      => 'Mật khẩu không được để trống',
             'password.min'           => 'Mật khẩu phải từ 8 ký tự',
             'id_chuc_vu.exists'      => 'Chức vụ không tồn tại',
-            'id_doi_tac.exists'      => 'Đối tác không tồn tại',
         ];
     }
 }

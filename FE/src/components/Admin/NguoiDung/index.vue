@@ -102,6 +102,10 @@
                             <input v-model="create_nguoi_dung.re_password" type="password" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label class="form-label">Số Điện Thoại</label>
+                            <input v-model="create_nguoi_dung.so_dien_thoai" type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Chức Vụ</label>
                             <select v-model="create_nguoi_dung.id_chuc_vu" class="form-select">
                                 <option value="">Chọn chức vụ</option>
@@ -148,6 +152,14 @@
                             <input v-model="edit_nguoi_dung.email" type="email" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label class="form-label">Mật Khẩu Mới</label>
+                            <input v-model="edit_nguoi_dung.password" type="password" class="form-control" placeholder="Để trống nếu không đổi" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Xác Nhận Mật Khẩu Mới</label>
+                            <input v-model="edit_nguoi_dung.re_password" type="password" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Chức Vụ</label>
                             <select v-model="edit_nguoi_dung.id_chuc_vu" class="form-select">
                                 <option value="">Chọn chức vụ</option>
@@ -155,6 +167,10 @@
                                     <option :value="v.id">{{ v.ten_chuc_vu }}</option>
                                 </template>
                             </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Số Điện Thoại</label>
+                            <input v-model="edit_nguoi_dung.so_dien_thoai" type="text" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
@@ -225,6 +241,8 @@ export default {
                 ho_va_ten: "",
                 email: "",
                 avatar: "",
+                password: "",
+                re_password: "",
                 so_dien_thoai: "",
                 id_chuc_vu: "",
                 trang_thai: "",
@@ -296,6 +314,10 @@ export default {
                 });
         },
         capNhatNguoiDung() {
+            if (this.edit_nguoi_dung.password && this.edit_nguoi_dung.password !== this.edit_nguoi_dung.re_password) {
+                this.$toast.error("Mật khẩu xác nhận không khớp!");
+                return;
+            }
             axios.post(`${API}/nguoi-dung/update`, this.edit_nguoi_dung, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {

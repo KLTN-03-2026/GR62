@@ -285,66 +285,50 @@
                                 <!-- Upcoming Meetings -->
                                 <div class="col-lg-12">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
-                                        <h4 class="fw-bolder mb-0 text-dark" style="font-size: 1.25rem;">Cuộc họp sắp
-                                            tới</h4>
-                                        <a href="#" class="fw-bolder text-decoration-none small"
-                                            style="color: #ea580c;">Xem lịch</a>
+                                        <h4 class="fw-bolder mb-0 text-dark" style="font-size: 1.25rem;">Danh sách phòng họp đang diễn ra</h4>
+                                        <button @click="getDanhSachPhongHop" class="btn btn-sm btn-light fw-bold text-muted"><i class='bx bx-refresh'></i> Làm mới</button>
                                     </div>
 
-                                    <div class="row g-4">
-                                        <div class="col-md-6">
-                                            <div class="card border-0 shadow-sm p-3" style="border-radius: 12px;">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="rounded-3 d-flex flex-column justify-content-center align-items-center px-3 py-2 me-4"
-                                                        style="background-color: #f8fafc; min-width: 65px; border: 1px solid #f1f5f9;">
-                                                        <span class="fw-bolder"
-                                                            style="color: #ea580c; font-size: 1.15rem;">24</span>
-                                                        <span class="small fw-bolder text-muted"
-                                                            style="font-size: 0.65rem;">OCT</span>
-                                                    </div>
-                                                    <div class="flex-grow-1 pe-3">
-                                                        <h6 class="fw-bolder mb-1 text-dark"
-                                                            style="font-size: 0.95rem;">Đồng bộ sản phẩm: Đánh giá thiết
-                                                            kế</h6>
-                                                        <div class="d-flex align-items-center fw-medium mt-1"
-                                                            style="color: #94a3b8; font-size: 0.8rem;">
-                                                            <span>11:00 AM - 12:00 PM</span>
-                                                            <span class="mx-2">•</span>
-                                                            <span>ID: 882-192-331</span>
-                                                        </div>
-                                                    </div>
-                                                    <button class="btn text-white fw-bold px-4 py-2"
-                                                        style="background-color: #ea580c; border-radius: 8px; font-size: 0.9rem;">Join</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="card border-0 shadow-sm p-3 bg-white"
-                                                style="border-radius: 12px; border: 1px solid #f1f5f9 !important;">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="rounded-3 d-flex flex-column justify-content-center align-items-center px-3 py-2 me-4"
-                                                        style="background-color: #f8fafc; min-width: 65px; opacity: 0.7;">
-                                                        <span class="fw-bolder"
-                                                            style="color: #94a3b8; font-size: 1.15rem;">25</span>
-                                                        <span class="small fw-bolder text-muted"
-                                                            style="font-size: 0.65rem;">OCT</span>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="fw-bolder mb-1 text-dark"
-                                                            style="font-size: 0.95rem;">Cập nhật hàng tháng cho nhà đầu
-                                                            tư</h6>
-                                                        <div class="d-flex align-items-center fw-medium mt-1"
-                                                            style="color: #94a3b8; font-size: 0.8rem;">
-                                                            <span>09:30 AM - 10:30 AM</span>
-                                                            <span class="mx-2">•</span>
-                                                            <span>ID: 110-349-882</span>
-                                                        </div>
-                                                    </div>
-                                                    <button class="btn fw-semibold px-4 py-2 bg-white"
-                                                        style="border-radius: 8px; border: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">Chi
-                                                        tiết</button>
-                                                </div>
-                                            </div>
+                                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle mb-0 border-0">
+                                                <thead style="background-color: #f8fafc;">
+                                                    <tr>
+                                                        <th class="px-4 py-3 text-muted fw-bold border-bottom-0" style="font-size: 0.85rem;">PHÒNG HỌP</th>
+                                                        <th class="px-4 py-3 text-muted fw-bold border-bottom-0" style="font-size: 0.85rem;">CHỦ PHÒNG</th>
+                                                        <th class="px-4 py-3 text-muted fw-bold border-bottom-0" style="font-size: 0.85rem;">BẮT ĐẦU LÚC</th>
+                                                        <th class="px-4 py-3 text-muted fw-bold border-bottom-0 text-end" style="font-size: 0.85rem;">THAO TÁC</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(v, k) in danh_sach_phong_hop" :key="k">
+                                                        <td class="px-4 py-3 border-light">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background-color: #fff7ed; color: #ea580c;">
+                                                                    <i class='bx bx-party fs-5'></i>
+                                                                </div>
+                                                                <div>
+                                                                    <h6 class="mb-0 fw-bold text-dark">{{ v.ten_phong }}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-4 py-3 fw-medium text-dark border-light">{{ v.chu_phong ? v.chu_phong.ho_va_ten : 'N/A' }}</td>
+                                                        <td class="px-4 py-3 text-muted border-light">
+                                                            {{ v.thoi_gian_bat_dau ? new Date(v.thoi_gian_bat_dau).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '00:00' }}
+                                                        </td>
+                                                        <td class="px-4 py-3 text-end border-light">
+                                                            <button @click="moModalNhapMaPhong()" class="btn text-white fw-bold px-4 py-2 shadow-sm animate__animated animate__pulse animate__infinite"
+                                                                style="background-color: #ea580c; border-radius: 8px; font-size: 0.85rem;">Join</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr v-if="danh_sach_phong_hop.length === 0">
+                                                        <td colspan="4" class="text-center py-5 text-muted border-light">
+                                                            <div class="mb-3"><i class='bx bx-coffee fs-1' style="color: #cbd5e1;"></i></div>
+                                                            Hiện không có cuộc họp nào đang diễn ra
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -783,6 +767,39 @@
             </button>
         </div>
     </div>
+
+    <!-- Modal Nhập mã phòng để Join -->
+    <div v-if="showJoinInputModal"
+        class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3"
+        style="background-color: rgba(15, 23, 42, 0.85); backdrop-filter: blur(5px);">
+        <div class="card border-0 shadow-lg p-4 text-center animate__animated animate__zoomIn"
+            style="border-radius: 20px; width: 400px; background-color: #ffffff;">
+            <div class="mx-auto mb-3 d-flex justify-content-center align-items-center rounded-circle"
+                style="width: 80px; height: 80px; background-color: #fff7ed;">
+                <i class='bx bxs-keyboard' style="font-size: 3rem; color: #ea580c;"></i>
+            </div>
+            <h4 class="fw-bolder mb-2 text-dark">Tham gia cuộc họp</h4>
+            <p class="text-muted small mb-4">Vui lòng nhập mã phòng để tham gia cuộc họp này.</p>
+
+            <div class="mb-4">
+                <input type="text" v-model="roomCodeToJoin" class="form-control form-control-lg text-center fw-bold"
+                    placeholder="Nhập mã phòng..."
+                    style="border-radius: 12px; border: 2px solid #ea580c; color: #0f172a; letter-spacing: 2px;"
+                    @keyup.enter="xacNhanJoin">
+            </div>
+
+            <div class="d-flex gap-2">
+                <button @click="showJoinInputModal = false" class="btn btn-light w-100 fw-bold py-2"
+                    style="border-radius: 10px;">
+                    Hủy
+                </button>
+                <button @click="xacNhanJoin" class="btn text-white w-100 fw-bold py-2"
+                    style="background-color: #ea580c; border-radius: 10px;">
+                    Tham gia
+                </button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -843,8 +860,11 @@ export default {
             isMatched: false, // biến này để tránh quét trúng nhiều lần
             list_goi: [],
             chi_tiet_phong_hop: [],
+            danh_sach_phong_hop: [],
             showRoomModal: false,
             createdRoomCode: '',
+            showJoinInputModal: false,
+            roomCodeToJoin: '',
         }
     },
     mounted() {
@@ -859,6 +879,7 @@ export default {
         });
         this.getGoi();
         this.getChiTietPhongHop();
+        this.getDanhSachPhongHop();
     },
     computed: {
         id_nguoi_dung() {
@@ -899,6 +920,19 @@ export default {
         }
     },
     methods: {
+        moModalNhapMaPhong() {
+            this.roomCodeToJoin = '';
+            this.showJoinInputModal = true;
+        },
+        xacNhanJoin() {
+            if (!this.roomCodeToJoin.trim()) {
+                if(this.$toast) this.$toast.warning("Vui lòng nhập mã phòng!");
+                return;
+            }
+            this.ma_phong_tham_gia = this.roomCodeToJoin;
+            this.showJoinInputModal = false;
+            this.kiemTraTruocKhiJoin();
+        },
         copyRoomCode() {
             navigator.clipboard.writeText(this.createdRoomCode).then(() => {
                 if (this.$toast) this.$toast.success("Đã copy mã phòng!");
@@ -940,6 +974,22 @@ export default {
                         this.$toast.info(res.data.message)
                     }
                 })
+        },
+        getDanhSachPhongHop() {
+            axios
+                .get(`${apiUrl}/phong-hop/data`)
+                .then((res) => {
+                    if (res.data.status) {
+                        // Lọc chỉ lấy những phòng có trạng thái 1 (đang hoạt động)
+                        this.danh_sach_phong_hop = res.data.data.filter(phong => phong.trang_thai == 1);
+                    }
+                    else {
+                        this.$toast.info(res.data.message)
+                    }
+                })
+                .catch((err) => {
+                    console.error("Lỗi lấy danh sách phòng họp:", err);
+                });
         },
         dang_xuat() {
             localStorage.removeItem('token_nguoi_dung');

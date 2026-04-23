@@ -88,6 +88,14 @@
                             <input v-model="create_goi.gia_goi" type="number" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label class="form-label">Số Phòng Tối Đa</label>
+                            <input v-model="create_goi.so_phong_toi_da" type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Thời Hạn (Ngày)</label>
+                            <input v-model="create_goi.thoi_han" type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
                             <select v-model="create_goi.trang_thai" class="form-select">
                                 <option value="1">Hoạt động</option>
@@ -129,6 +137,14 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Giá Gói</label>
                             <input v-model="edit_goi.gia_goi" type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Số Phòng Tối Đa</label>
+                            <input v-model="edit_goi.so_phong_toi_da" type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Thời Hạn (Ngày)</label>
+                            <input v-model="edit_goi.thoi_han" type="number" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>

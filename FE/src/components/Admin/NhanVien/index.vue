@@ -97,17 +97,6 @@
                             <label class="form-label">Xác Nhận Mật Khẩu</label>
                             <input v-model="create_nhan_vien.re_password" type="password" class="form-control" />
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Số Điện Thoại</label>
-                            <input v-model="create_nhan_vien.so_dien_thoai" type="text" class="form-control" />
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Trạng Thái</label>
-                            <select v-model="create_nhan_vien.trang_thai" class="form-select">
-                                <option value="1">Hoạt động</option>
-                                <option value="0">Tạm tắt</option>
-                            </select>
-                        </div>
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Chức Vụ</label>
                             <select v-model="create_nhan_vien.id_chuc_vu" class="form-select">
@@ -117,6 +106,18 @@
                                 </template>
                             </select>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Số Điện Thoại</label>
+                            <input v-model="create_nhan_vien.so_dien_thoai" type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Trạng Thái</label>
+                            <select v-model="create_nhan_vien.trang_thai" class="form-select">
+                                <option value="1">Hoạt động</option>
+                                <option value="0">Tạm tắt</option>
+                            </select>
+                        </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -150,15 +151,8 @@
                             <input v-model="edit_nhan_vien.password" type="password" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Số Điện Thoại</label>
-                            <input v-model="edit_nhan_vien.so_dien_thoai" type="text" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Trạng Thái</label>
-                            <select v-model="edit_nhan_vien.trang_thai" class="form-select">
-                                <option :value="1">Hoạt động</option>
-                                <option :value="0">Tạm tắt</option>
-                            </select>
+                            <label class="form-label">Xác Nhận Mật Khẩu Mới</label>
+                            <input v-model="edit_nhan_vien.re_password" type="password" class="form-control" />
                         </div>
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Chức Vụ</label>
@@ -167,6 +161,17 @@
                                 <template v-for="(cv, i) in list_chuc_vu" :key="i">
                                     <option :value="cv.id">{{ cv.ten_chuc_vu }}</option>
                                 </template>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Số Điện Thoại</label>
+                            <input v-model="edit_nhan_vien.so_dien_thoai" type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Trạng Thái</label>
+                            <select v-model="edit_nhan_vien.trang_thai" class="form-select">
+                                <option :value="1">Hoạt động</option>
+                                <option :value="0">Tạm tắt</option>
                             </select>
                         </div>
                     </div>
@@ -218,7 +223,7 @@ export default {
                 so_dien_thoai: "", id_chuc_vu: "", trang_thai: "1",
             },
             edit_nhan_vien: {
-                id: "", ho_va_ten: "", email: "", password: "", so_dien_thoai: "",
+                id: "", ho_va_ten: "", email: "", password: "", re_password: "", so_dien_thoai: "",
                 id_chuc_vu: "", trang_thai: "",
             },
             del_nhan_vien: {},
@@ -296,6 +301,10 @@ export default {
                 });
         },
         capNhatNhanVien() {
+            if (this.edit_nhan_vien.password && this.edit_nhan_vien.password !== this.edit_nhan_vien.re_password) {
+                this.$toast.error("Mật khẩu xác nhận không khớp!");
+                return;
+            }
             axios.post(`${API}/admin/update`, this.edit_nhan_vien, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {

@@ -144,6 +144,14 @@
                             <input v-model="edit_doi_tac.email" type="email" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label class="form-label">Mật Khẩu Mới</label>
+                            <input v-model="edit_doi_tac.password" type="password" class="form-control" placeholder="Để trống nếu không đổi" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Xác Nhận Mật Khẩu Mới</label>
+                            <input v-model="edit_doi_tac.re_password" type="password" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Số Điện Thoại</label>
                             <input v-model="edit_doi_tac.so_dien_thoai" type="text" class="form-control" />
                         </div>
@@ -206,7 +214,7 @@ export default {
                 so_dien_thoai: "", dia_chi: "", trang_thai: "1",
             },
             edit_doi_tac: {
-                ho_va_ten: "", email: "", so_dien_thoai: "", dia_chi: "", trang_thai: "",
+                ho_va_ten: "", email: "", password: "", re_password: "", so_dien_thoai: "", dia_chi: "", trang_thai: "",
             },
             del_doi_tac: {},
             tu_khoa: "",
@@ -261,6 +269,10 @@ export default {
                 });
         },
         capNhatDoiTac() {
+            if (this.edit_doi_tac.password && this.edit_doi_tac.password !== this.edit_doi_tac.re_password) {
+                this.$toast.error("Mật khẩu xác nhận không khớp!");
+                return;
+            }
             axios.post(`${API}/doi-tac/update`, this.edit_doi_tac, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {

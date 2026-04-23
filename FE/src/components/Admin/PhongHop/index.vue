@@ -33,12 +33,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                             <template v-for="(value, index) in list_phong_hop" :key="index">
+                            <template v-for="(value, index) in list_phong_hop" :key="index">
                                 <tr class="text-nowrap">
                                     <th class="align-middle text-center">{{ index + 1 }}</th>
                                     <td class="align-middle text-center">{{ value.ma_phong }}</td>
                                     <td class="align-middle">{{ value.ten_phong }}</td>
-                                    <td class="align-middle text-center">{{ value.chu_phong?.ho_va_ten || 'Hệ thống' }}</td>
+                                    <td class="align-middle text-center">{{ value.chu_phong?.ho_va_ten || 'Hệ thống' }}
+                                    </td>
                                     <td class="align-middle text-center">{{ value.so_nguoi_toi_da }}</td>
                                     <td class="align-middle text-center">{{ value.thoi_gian_bat_dau }}</td>
                                     <td class="align-middle text-center">
@@ -81,19 +82,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Mã Phòng</label>
-                            <input v-model="create_phong_hop.ma_phong" type="text" class="form-control" />
-                        </div>
+
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Tên Phòng</label>
                             <input v-model="create_phong_hop.ten_phong" type="text" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Người Tạo (Đối Tác)</label>
-                            <select v-model="create_phong_hop.id_doi_tac" class="form-select">
-                                <option value="" disabled>-- Chọn Đối Tác --</option>
-                                <option v-for="(dt, idx) in list_doi_tac" :key="idx" :value="dt.id">{{ dt.ho_va_ten }}
+                            <label class="form-label">Người Tạo (Chủ Phòng)</label>
+                            <select v-model="create_phong_hop.id_chu_phong" class="form-select">
+                                <option value="" disabled>-- Chọn Người Tạo --</option>
+                                <option v-for="(nd, idx) in list_nguoi_dung" :key="idx" :value="nd.id">{{ nd.ho_va_ten
+                                }}
                                 </option>
                             </select>
                         </div>
@@ -149,10 +148,11 @@
                             <input v-model="edit_phong_hop.ten_phong" type="text" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Người Tạo (Đối Tác)</label>
-                            <select v-model="edit_phong_hop.id_doi_tac" class="form-select">
-                                <option value="" disabled>-- Chọn Đối Tác --</option>
-                                <option v-for="(dt, idx) in list_doi_tac" :key="idx" :value="dt.id">{{ dt.ho_va_ten }}
+                            <label class="form-label">Người Tạo (Chủ Phòng)</label>
+                            <select v-model="edit_phong_hop.id_chu_phong" class="form-select">
+                                <option value="" disabled>-- Chọn Người Tạo --</option>
+                                <option v-for="(nd, idx) in list_nguoi_dung" :key="idx" :value="nd.id">{{ nd.ho_va_ten
+                                }}
                                 </option>
                             </select>
                         </div>
@@ -220,24 +220,24 @@ export default {
         return {
             list_phong_hop: [],
             list_phong_hop_goc: [],
-            list_doi_tac: [],
-            create_phong_hop: { ma_phong: "", ten_phong: "", so_nguoi_toi_da: "", thoi_gian_bat_dau: "", thoi_gian_ket_thuc: "", trang_thai: "1", id_doi_tac: "" },
-            edit_phong_hop: { ma_phong: "", ten_phong: "", so_nguoi_toi_da: "", thoi_gian_bat_dau: "", thoi_gian_ket_thuc: "", trang_thai: "", id_doi_tac: "" },
+            list_nguoi_dung: [],
+            create_phong_hop: { ten_phong: "", so_nguoi_toi_da: "", thoi_gian_bat_dau: "", thoi_gian_ket_thuc: "", trang_thai: "1", id_chu_phong: "" },
+            edit_phong_hop: { ten_phong: "", so_nguoi_toi_da: "", thoi_gian_bat_dau: "", thoi_gian_ket_thuc: "", trang_thai: "", id_chu_phong: "" },
             del_phong_hop: {},
             tu_khoa: "",
         };
     },
     mounted() {
         this.loadData();
-        this.loadDoiTac();
+        this.loadNguoiDung();
     },
     methods: {
         headers() {
             return { Authorization: 'Bearer ' + localStorage.getItem('token_admin') };
         },
-        loadDoiTac() {
-            axios.get(`${API}/doi-tac/data`, { headers: this.headers() })
-                .then((res) => { this.list_doi_tac = res.data.data || []; });
+        loadNguoiDung() {
+            axios.get(`${API}/nguoi-dung/data`, { headers: this.headers() })
+                .then((res) => { this.list_nguoi_dung = res.data.data || []; });
         },
         timKiem() {
             const ds = this.list_phong_hop_goc || [];
@@ -265,7 +265,7 @@ export default {
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);
-                        this.create_phong_hop = { ma_phong: "", ten_phong: "", so_nguoi_toi_da: "", thoi_gian_bat_dau: "", thoi_gian_ket_thuc: "", trang_thai: "1", id_doi_tac: "" };
+                        this.create_phong_hop = { ma_phong: "", ten_phong: "", so_nguoi_toi_da: "", thoi_gian_bat_dau: "", thoi_gian_ket_thuc: "", trang_thai: "1", id_chu_phong: "" };
                         this.loadData();
                     }
                     else this.$toast.error(res.data.message);

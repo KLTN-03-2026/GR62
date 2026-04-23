@@ -291,141 +291,63 @@
                 </div>
 
                 <div class="row g-4 align-items-stretch mb-5">
-                    <!-- Gói Cơ bản -->
-                    <div class="col-lg-4">
-                        <div class="card h-100 border-0 p-5 rounded-4 shadow-sm" style="background-color: #fdf5f3;">
-                            <h5 class="fw-bold mb-3" style="color: #1a1e29; font-size: 1.1rem;">Gói Cơ bản</h5>
-                            <div class="d-flex align-items-baseline mb-4">
-                                <h1 class="display-5 fw-bold mb-0" style="color: #1a1e29;">0đ</h1>
-                                <span class="text-muted ms-1" style="font-size: 0.9rem;">/tháng</span>
+                    <template v-for="(value, index) in list_goi" :key="index">
+                        <div v-if="value.is_hien_thi" :class="index == 1 ? 'col-lg-4 position-relative' : 'col-lg-4'">
+                            <!-- Popular Badge -->
+                            <div v-if="index == 1"
+                                class="position-absolute start-50 translate-middle d-inline-block rounded-pill text-white fw-bold px-3 py-1 shadow-sm"
+                                style="background-color: #ea580c; top: 0; font-size: 0.75rem; letter-spacing: 0.5px; z-index: 10;">
+                                PHỔ BIẾN NHẤT
                             </div>
-                            <ul class="list-unstyled mb-5 mt-2 flex-grow-1">
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm"
-                                        style="width: 24px; height: 24px; min-width: 24px;">
-                                        <i class="bx bx-check" style="color: #c2410c; font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">40 phút/phiên
-                                        họp</span>
-                                </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm"
-                                        style="width: 24px; height: 24px; min-width: 24px;">
-                                        <i class="bx bx-check" style="color: #c2410c; font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">Tối đa 100 người tham
-                                        gia</span>
-                                </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm"
-                                        style="width: 24px; height: 24px; min-width: 24px;">
-                                        <i class="bx bx-check" style="color: #c2410c; font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">Nhận diện khuôn mặt cơ
-                                        bản</span>
-                                </li>
-                            </ul>
-                            <button class="btn border-0 fw-bold py-3 text-dark rounded-3 w-100 mt-auto"
-                                style="background-color: #fce7df; font-size: 0.9rem;">Bắt đầu miễn phí</button>
-                        </div>
-                    </div>
 
-                    <!-- Gói Chuyên nghiệp -->
-                    <div class="col-lg-4 position-relative">
-                        <div class="position-absolute start-50 translate-middle d-inline-block rounded-pill text-white fw-bold px-3 py-1 shadow-sm"
-                            style="background-color: #ea580c; top: 0; font-size: 0.75rem; letter-spacing: 0.5px; z-index: 10;">
-                            PHỔ BIẾN NHẤT</div>
-                        <div class="card h-100 border-0 p-5 rounded-4 bg-white pricing-pro"
-                            style="box-shadow: 0 10px 40px rgba(0,0,0,0.06);">
-                            <h5 class="fw-bold mb-3" style="color: #1a1e29; font-size: 1.1rem;">Gói Đối Tác</h5>
-                            <div class="d-flex align-items-baseline mb-4">
-                                <h1 class="display-5 fw-bold mb-0" style="color: #ea580c;">199.000đ</h1>
-                                <span class="text-muted ms-1" style="font-size: 0.9rem;">/tháng</span>
-                            </div>
-                            <ul class="list-unstyled mb-5 mt-2 flex-grow-1">
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                                        style="width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;">
-                                        <i class="bx bx-check text-white" style="font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">Không giới hạn thời
-                                        gian</span>
-                                </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                                        style="width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;">
-                                        <i class="bx bx-check text-white" style="font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">Tối đa 500 người tham
-                                        gia</span>
-                                </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                                        style="width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;">
-                                        <i class="bx bx-check text-white" style="font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">AI Face ID & Điểm danh
-                                        tự động</span>
-                                </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                                        style="width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;">
-                                        <i class="bx bx-check text-white" style="font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">Lưu trữ Cloud
-                                        100GB</span>
-                                </li>
-                            </ul>
-                            <button class="btn border-0 text-white fw-bold py-3 rounded-3 w-100 mt-auto"
-                                style="background-color: #ea580c; font-size: 0.9rem;">Nâng cấp ngay</button>
-                        </div>
-                    </div>
+                            <div :class="['card h-100 border-0 p-5 rounded-4 shadow-sm', index == 1 ? 'bg-white pricing-pro' : '']"
+                                :style="index != 1 ? 'background-color: #fdf5f3;' : 'box-shadow: 0 10px 40px rgba(0,0,0,0.06);'">
+                                <h5 class="fw-bold mb-3" style="color: #1a1e29; font-size: 1.1rem;">{{ value.ten_goi }}</h5>
+                                <div class="d-flex align-items-baseline mb-4">
+                                    <h1 class="display-5 fw-bold mb-0" :style="index == 1 ? 'color: #ea580c;' : 'color: #1a1e29;'">
+                                        {{ value.gia_goi > 0 ? formatVND(value.gia_goi) : (value.gia_goi == 0 ? '0đ' : 'Liên hệ') }}
+                                    </h1>
+                                    <span v-if="value.gia_goi >= 0" class="text-muted ms-1" style="font-size: 0.9rem;">/tháng</span>
+                                </div>
 
-                    <!-- Gói Doanh nghiệp -->
-                    <div class="col-lg-4">
-                        <div class="card h-100 border-0 p-5 rounded-4 shadow-sm" style="background-color: #fdf5f3;">
-                            <h5 class="fw-bold mb-3" style="color: #1a1e29; font-size: 1.1rem;">Gói Doanh nghiệp</h5>
-                            <div class="d-flex align-items-baseline mb-4">
-                                <h1 class="display-5 fw-bold mb-0" style="color: #1a1e29;">Liên hệ</h1>
+                                <ul class="list-unstyled mb-5 mt-2 flex-grow-1">
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
+                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;' : 'width: 24px; height: 24px; min-width: 24px;'">
+                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #c2410c; font-size: 18px;'"></i>
+                                        </div>
+                                        <span class="text-dark fw-medium" style="font-size: 0.9rem;">Tối đa {{ value.so_nguoi_toi_da }} người tham gia</span>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
+                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;' : 'width: 24px; height: 24px; min-width: 24px;'">
+                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #c2410c; font-size: 18px;'"></i>
+                                        </div>
+                                        <span class="text-dark fw-medium" style="font-size: 0.9rem;">Tối đa {{ value.so_phong_toi_da }} phòng họp</span>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
+                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;' : 'width: 24px; height: 24px; min-width: 24px;'">
+                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #c2410c; font-size: 18px;'"></i>
+                                        </div>
+                                        <span class="text-dark fw-medium" style="font-size: 0.9rem;">Thời hạn: {{ value.thoi_han }} ngày</span>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
+                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;' : 'width: 24px; height: 24px; min-width: 24px;'">
+                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #c2410c; font-size: 18px;'"></i>
+                                        </div>
+                                        <span class="text-dark fw-medium" style="font-size: 0.9rem;">{{ value.mo_ta }}</span>
+                                    </li>
+                                </ul>
+
+                                <button :class="['btn border-0 fw-bold py-3 rounded-3 w-100 mt-auto', index == 1 ? 'text-white' : 'text-dark']"
+                                    :style="index == 1 ? 'background-color: #ea580c; font-size: 0.9rem;' : 'background-color: #fce7df; font-size: 0.9rem;'">
+                                    {{ value.gia_goi == 0 ? 'Bắt đầu miễn phí' : (value.gia_goi > 0 ? 'Nâng cấp ngay' : 'Liên hệ đội ngũ Sales') }}
+                                </button>
                             </div>
-                            <ul class="list-unstyled mb-5 mt-2 flex-grow-1">
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm"
-                                        style="width: 24px; height: 24px; min-width: 24px;">
-                                        <i class="bx bx-check" style="color: #c2410c; font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">Mọi tính năng
-                                        Professional</span>
-                                </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm"
-                                        style="width: 24px; height: 24px; min-width: 24px;">
-                                        <i class="bx bx-check" style="color: #c2410c; font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">Quản lý tập trung
-                                        SSO/AD</span>
-                                </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm"
-                                        style="width: 24px; height: 24px; min-width: 24px;">
-                                        <i class="bx bx-check" style="color: #c2410c; font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">Hỗ trợ 24/7 ưu
-                                        tiên</span>
-                                </li>
-                                <li class="mb-3 d-flex align-items-center">
-                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm"
-                                        style="width: 24px; height: 24px; min-width: 24px;">
-                                        <i class="bx bx-check" style="color: #c2410c; font-size: 18px;"></i>
-                                    </div>
-                                    <span class="text-dark fw-medium" style="font-size: 0.9rem;">Tùy chỉnh quy mô không
-                                        giới hạn</span>
-                                </li>
-                            </ul>
-                            <button class="btn border-0 text-white fw-bold py-3 rounded-3 w-100 mt-auto"
-                                style="background-color: #292524; font-size: 0.9rem;">Liên hệ đội ngũ Sales</button>
                         </div>
-                    </div>
+                    </template>
                 </div>
 
                 <!-- So sánh tính năng chi tiết -->
@@ -520,8 +442,35 @@
 </template>
 
 <script>
+import axios from 'axios';
+const API = import.meta.env.VITE_API_URL;
+
 export default {
-    name: "TrangChu"
+    name: "TrangChu",
+    data() {
+        return {
+            list_goi: [],
+        }
+    },
+    mounted() {
+        this.loadDataGoi();
+    },
+    methods: {
+        loadDataGoi() {
+            axios
+                .get(API + '/goi/data')
+                .then((res) => {
+                    this.list_goi = res.data.data;
+                });
+        },
+
+        formatVND(number) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+            }).format(number);
+        },
+    }
 }
 </script>
 
