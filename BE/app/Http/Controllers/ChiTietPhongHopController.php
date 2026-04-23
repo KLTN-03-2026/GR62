@@ -13,12 +13,8 @@ class ChiTietPhongHopController extends Controller
     {
         $query = ChiTietPhongHop::join('phong_hops', 'chi_tiet_phong_hops.id_phong_hop', '=', 'phong_hops.id')
             ->join('nguoi_dungs', 'chi_tiet_phong_hops.id_nguoi_dung', '=', 'nguoi_dungs.id')
-<<<<<<< HEAD
-            ->select('chi_tiet_phong_hops.*', 'phong_hops.ten_phong', 'phong_hops.ma_phong', 'phong_hops.thoi_gian_bat_dau', 'nguoi_dungs.ho_va_ten');
-=======
             ->select('chi_tiet_phong_hops.*', 'phong_hops.ten_phong', 'phong_hops.ma_phong', 'phong_hops.thoi_gian_bat_dau', 'phong_hops.trang_thai as trang_thai_phong', 'nguoi_dungs.ho_va_ten')
             ->orderBy('chi_tiet_phong_hops.created_at', 'desc');
->>>>>>> 40d85330233c69d41292ebd18eb0049e0234f82c
             
         if ($request->has('id_nguoi_dung') && $request->id_nguoi_dung) {
             $query->where('chi_tiet_phong_hops.id_nguoi_dung', $request->id_nguoi_dung);

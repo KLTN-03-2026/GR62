@@ -301,8 +301,7 @@
                                         <button @click="getDanhSachPhongHop" class="btn btn-sm btn-light fw-bold text-muted"><i class='bx bx-refresh'></i> Làm mới</button>
                                     </div>
 
-<<<<<<< HEAD
-                                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                                         <div class="table-responsive">
                                             <table class="table table-hover align-middle mb-0 border-0">
                                                 <thead style="background-color: #f8fafc;">
@@ -342,7 +341,9 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-=======
+                                        </div>
+                                    </div>
+                                    <h4 class="fw-bolder mb-3 mt-5 text-dark" style="font-size: 1.25rem;">Lịch họp sắp tới</h4>
                                     <div class="row g-4" v-if="chi_tiet_phong_hop.length > 0">
                                         <div class="col-md-6" v-for="phong in chi_tiet_phong_hop" :key="phong.id">
                                             <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 12px;" :class="{'bg-white': phong.trang_thai_phong == 0}" :style="phong.trang_thai_phong == 0 ? 'border: 1px solid #f1f5f9 !important;' : ''">
@@ -377,7 +378,6 @@
                                     <div v-else class="text-center py-5">
                                         <div class="mb-3">
                                             <i class="bx bx-calendar-x fs-1 text-muted opacity-50"></i>
->>>>>>> 40d85330233c69d41292ebd18eb0049e0234f82c
                                         </div>
                                         <p class="text-muted fw-medium">Bạn chưa có lịch họp nào sắp tới.</p>
                                     </div>
@@ -943,13 +943,10 @@ export default {
             danh_sach_phong_hop: [],
             showRoomModal: false,
             createdRoomCode: '',
-<<<<<<< HEAD
             showJoinInputModal: false,
             roomCodeToJoin: '',
-=======
             searchResults: [],
             searchTimeout: null,
->>>>>>> 40d85330233c69d41292ebd18eb0049e0234f82c
         }
     },
     mounted() {
@@ -1005,7 +1002,6 @@ export default {
         }
     },
     methods: {
-<<<<<<< HEAD
         moModalNhapMaPhong() {
             this.roomCodeToJoin = '';
             this.showJoinInputModal = true;
@@ -1018,7 +1014,7 @@ export default {
             this.ma_phong_tham_gia = this.roomCodeToJoin;
             this.showJoinInputModal = false;
             this.kiemTraTruocKhiJoin();
-=======
+        },
         async handleEmailInput() {
             const emails = this.formTaoPhong.email_khach_moi.split(',');
             const lastPart = emails[emails.length - 1].trim();
@@ -1054,7 +1050,6 @@ export default {
 
             this.formTaoPhong.email_khach_moi = cleanedEmails.join(', ') + ', ';
             this.searchResults = [];
->>>>>>> 40d85330233c69d41292ebd18eb0049e0234f82c
         },
         copyRoomCode() {
             navigator.clipboard.writeText(this.createdRoomCode).then(() => {

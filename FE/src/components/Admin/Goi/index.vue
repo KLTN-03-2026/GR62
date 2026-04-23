@@ -66,48 +66,6 @@
     </div>
 
     <!-- Modal Thêm Mới -->
-<<<<<<< HEAD
-    <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Thêm Gói Mới</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Tên Gói</label>
-                            <input v-model="create_goi.ten_goi" type="text" class="form-control"  />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Số Người Tối Đa</label>
-                            <input v-model="create_goi.so_nguoi_toi_da" type="number" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Giá Gói</label>
-                            <input v-model="create_goi.gia_goi" type="number" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Số Phòng Tối Đa</label>
-                            <input v-model="create_goi.so_phong_toi_da" type="number" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Thời Hạn (Ngày)</label>
-                            <input v-model="create_goi.thoi_han" type="number" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Trạng Thái</label>
-                            <select v-model="create_goi.trang_thai" class="form-select">
-                                <option value="1">Hoạt động</option>
-                                <option value="0">Tạm tắt</option>
-                            </select>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Mô Tả</label>
-                            <textarea v-model="create_goi.mo_ta" class="form-control" rows="3"></textarea>
-                        </div>
-=======
 <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -153,7 +111,6 @@
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Mô Tả</label>
                         <textarea v-model="create_goi.mo_ta" class="form-control" rows="3"></textarea>
->>>>>>> 40d85330233c69d41292ebd18eb0049e0234f82c
                     </div>
                 </div>
             </div>
