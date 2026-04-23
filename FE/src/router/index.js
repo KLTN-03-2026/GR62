@@ -23,7 +23,7 @@ const checkUserMeeting = (to, from, next) => {
 
     if (!thong_tin) {
         toaster.warning('Vui lòng đăng nhập để sử dụng tính năng này!');
-        next('/nguoi-dung/dang-nhap');
+        next('/dang-nhap');
     } else if (!livekitToken) {
         toaster.error('Lỗi bảo mật: Bạn chưa được cấp quyền truy cập phòng họp này!');
         next('/nguoi-dung/trang-chinh'); // Đuổi về trang chủ để quét Face ID lại
@@ -111,12 +111,14 @@ const routes = [
         beforeEnter: checkAdmin
     },
 
-    //Nguoi Dung
+    // Auth Chung
     {
-        path: '/nguoi-dung/dang-nhap',
-        component: () => import('../components/NguoiDung/DangNhap/index.vue'),
+        path: '/dang-nhap',
+        component: () => import('../components/DangNhap/index.vue'),
         meta: { layout: 'black' }
     },
+
+    //Nguoi Dung
     {
         path: '/nguoi-dung/quen-mat-khau',
         component: () => import('../components/NguoiDung/QuenMatKhau/index.vue'),
@@ -161,18 +163,8 @@ const routes = [
 
     //Doi Tac
     {
-        path: '/doi-tac/dang-nhap',
-        component: () => import('../components/DoiTac/DangNhap/index.vue'),
-        meta: { layout: 'black' }
-    },
-    {
         path: '/doi-tac/quen-mat-khau',
         component: () => import('../components/DoiTac/QuenMatKhau/index.vue'),
-        meta: { layout: 'black' }
-    },
-    {
-        path: '/doi-tac/dang-ky',
-        component: () => import('../components/DoiTac/DangKy/index.vue'),
         meta: { layout: 'black' }
     },
     {

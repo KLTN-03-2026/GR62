@@ -46,9 +46,38 @@ class PhongHopController extends Controller
             'thoi_gian_ket_thuc' => $request->thoi_gian_ket_thuc,
             'trang_thai'         => 1, // 1: Đang hoạt động
         ]);
+        // 4. Xử lý mời người (nếu có email_khach_moi)
+        $emailsNotFound = [];
+        if ($request->has('email_khach_moi') && !empty($request->email_khach_moi)) {
+            $emailString = $request->email_khach_moi;
+            // Tách các email bằng dấu phẩy
+            $emailArray = array_filter(array_map('trim', explode(',', $emailString)));
+            
+            foreach ($emailArray as $email) {
+                // Tìm người dùng theo email
+                $user = NguoiDung::where('email', $email)->first();
+                if ($user) {
+                    // Thêm vào bảng chi tiết phòng họp
+                    ChiTietPhongHop::create([
+                        'id_nguoi_dung' => $user->id,
+                        'id_phong_hop' => $phongHop->id,
+                        'xac_thuc_khuon_mat' => false,
+                        'is_vi_pham' => false,
+                        'is_nguoi_dung' => true,
+                        'is_active' => false, // Chưa join phòng
+                        'trang_thai' => true, // Đã được mời
+                    ]);
+                } else {
+                    $emailsNotFound[] = $email;
+                }
+            }
+        }
+
         return response()->json([
             'status'  => true,
-            'message' => 'Tạo phòng họp thành công!',
+            'message' => empty($emailsNotFound) 
+                            ? 'Tạo phòng họp thành công!' 
+                            : 'Tạo phòng thành công, nhưng không tìm thấy một số email: ' . implode(', ', $emailsNotFound),
             'data'    => $phongHop
         ]);
     }

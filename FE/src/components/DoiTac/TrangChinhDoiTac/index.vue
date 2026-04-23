@@ -376,7 +376,8 @@ export default {
         },
         logout() {
             localStorage.removeItem('token_doi_tac');
-            this.$router.push('/nguoi-dung/dang-nhap');
+            this.$router.push('/');
+            this.$toast && this.$toast.success("Đăng xuất thành công!"); 
         },
         async taoPhongHop() {
             if (!this.formTaoPhong.ten_phong.trim()) {

@@ -86,7 +86,7 @@
                         </button>
                     </form>
 
-                    <p class="switch-auth">Đã có tài khoản? <router-link to="/nguoi-dung/dang-nhap">Đăng nhập</router-link></p>
+                    <p class="switch-auth">Đã có tài khoản? <router-link to="/dang-nhap">Đăng nhập</router-link></p>
                 </div>
 
                 <!-- Footer -->
@@ -137,7 +137,7 @@ export default {
                     if (this.$toast) {
                         this.$toast.success(res.data.message);
                     }
-                    this.$router.push('/nguoi-dung/dang-nhap');
+                    this.$router.push('/dang-nhap');
                 } else {
                     if (this.$toast) {
                         this.$toast.error(res.data.message || 'Gặp sự cố khi đăng ký.');

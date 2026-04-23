@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GoiChangeStatusRequest;
+use App\Http\Requests\GoiCreateRequest;
+use App\Http\Requests\GoiSearchRequest;
+use App\Http\Requests\GoiUpdateRequest;
 use App\Models\Goi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +37,7 @@ class GoiController extends Controller
         ], 404);
     }
 
-    public function store(Request $request)
+    public function store(GoiCreateRequest $request)
     {
         $data = Goi::create($request->all());
         return response()->json([
@@ -43,7 +47,7 @@ class GoiController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(GoiUpdateRequest $request)
     {
         $data = Goi::where('id', $request->id)->first();
         if ($data) {
@@ -76,7 +80,7 @@ class GoiController extends Controller
         ]);
     }
 
-    public function search(Request $request)
+    public function search(GoiSearchRequest $request)
     {
         $query = Goi::query();
         if ($request->has('keyword') && $request->keyword != '') {
@@ -92,7 +96,7 @@ class GoiController extends Controller
         ]);
     }
 
-    public function changeStatus(Request $request)
+    public function changeStatus(GoiChangeStatusRequest $request)
     {
         $data = Goi::where('id', $request->id)->first();
         if ($data) {

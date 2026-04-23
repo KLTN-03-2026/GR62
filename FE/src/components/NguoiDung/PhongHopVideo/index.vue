@@ -13,8 +13,8 @@
             </div>
         </header>
 
-        <main class="flex-grow-1 position-relative p-2 p-md-4 mt-5 d-flex align-items-center justify-content-center">
-            <div id="video-grid" class="video-grid w-100 h-100" :style="{ paddingRight: isChatOpen ? '350px' : '0', transition: 'padding 0.3s ease' }">
+        <main class="flex-grow-1 position-relative p-2 p-md-4 mt-5 d-flex flex-column">
+            <div id="video-grid" class="video-grid w-100 flex-grow-1" :style="{ paddingRight: isChatOpen ? '350px' : '0', transition: 'padding 0.3s ease' }">
                 <div id="local-video-wrapper" class="video-wrapper shadow-lg">
                     <div class="w-100 h-100 bg-secondary position-relative">
                         <div v-if="!cameraReady" class="position-absolute top-50 start-50 translate-middle z-3">
@@ -198,8 +198,18 @@ export default {
 
             this.room.on(RoomEvent.TrackUnsubscribed, (track, publication, participant) => {
                 track.detach();
-                const videoEl = document.getElementById(track.source === Track.Source.ScreenShare ? `screen-${participant.sid}` : `video-${participant.sid}`);
+                const isScreenShare = track.source === Track.Source.ScreenShare;
+                const videoEl = document.getElementById(isScreenShare ? `screen-${participant.sid}` : `video-${participant.sid}`);
                 if (videoEl) videoEl.remove();
+
+                if (isScreenShare) {
+                    const videoGrid = document.getElementById('video-grid');
+                    if (videoGrid && !videoGrid.querySelector('.screen-share-element')) {
+                        videoGrid.classList.remove('has-screen-share');
+                    }
+                    const ownerVideo = document.getElementById(`video-${participant.sid}`);
+                    if (ownerVideo) ownerVideo.classList.remove('is-sharing-person');
+                }
             });
 
             // Lắng nghe tin nhắn chat từ DataChannel
@@ -281,6 +291,18 @@ export default {
             // Cấp ID riêng biệt để phân biệt mặt người và màn hình họ chia sẻ
             wrapper.id = isScreenShare ? `screen-${participant.sid}` : `video-${participant.sid}`;
             wrapper.className = 'video-container position-relative rounded-4 overflow-hidden shadow bg-secondary';
+
+            if (isScreenShare) {
+                wrapper.classList.add('screen-share-element');
+                videoGrid.classList.add('has-screen-share');
+                const ownerVideo = document.getElementById(`video-${participant.sid}`);
+                if (ownerVideo) ownerVideo.classList.add('is-sharing-person');
+            } else {
+                if (videoGrid.classList.contains('has-screen-share')) {
+                    const screenElement = document.getElementById(`screen-${participant.sid}`);
+                    if (screenElement) wrapper.classList.add('is-sharing-person');
+                }
+            }
 
             const labelWrapper = document.createElement('div');
             labelWrapper.className = 'position-absolute bottom-0 start-0 p-2 z-3 d-flex align-items-center gap-2';
@@ -431,10 +453,11 @@ export default {
     gap: 16px;
     align-content: center;
     justify-content: center;
+    position: relative;
 }
 
 .video-wrapper,
-.video-container {
+:deep(.video-container) {
     position: relative;
     width: 100%;
     height: 100%;
@@ -449,7 +472,7 @@ export default {
 }
 
 /* HIỆU ỨNG PHÁT SÁNG KHI CÓ NGƯỜI NÓI (Cực kỳ quan trọng cho UX) */
-.speaking-border {
+:deep(.speaking-border) {
     border-color: #22c55e !important;
     box-shadow: 0 0 20px rgba(34, 197, 94, 0.6) !important;
     transform: scale(1.02);
@@ -502,5 +525,77 @@ export default {
     height: 100vh;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(5px);
+}
+</style>
+
+<style>
+/* CSS toàn cục cho các phần tử được thêm bằng Javascript */
+.video-grid.has-screen-share {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    align-content: flex-end;
+    justify-content: flex-end;
+    gap: 16px;
+    padding-bottom: 90px; /* Nhường chỗ cho thanh công cụ */
+    padding-right: 24px;
+    padding-left: 24px;
+    z-index: 1;
+}
+
+.video-grid.has-screen-share .screen-share-element {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    z-index: 1;
+    border-radius: 8px; /* Bo góc nhẹ hơn cho màn hình share */
+    background-color: #000 !important; /* Đè màu xám của bg-secondary */
+}
+
+/* Đảm bảo video bên trong lấp đầy và không bị xám */
+.video-grid.has-screen-share .screen-share-element video {
+    background-color: #000 !important;
+}
+
+.video-grid.has-screen-share .video-wrapper,
+.video-grid.has-screen-share .video-container:not(.screen-share-element) {
+    position: relative !important;
+    z-index: 2 !important;
+    width: 240px !important;
+    height: 135px !important;
+    max-height: none !important;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.video-grid.has-screen-share .video-wrapper:hover,
+.video-grid.has-screen-share .video-container:not(.screen-share-element):hover {
+    transform: scale(1.05);
+    z-index: 3 !important;
+}
+
+.video-grid.has-screen-share .is-sharing-person {
+    border: 2px solid #3b82f6 !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5) !important;
+}
+
+.video-grid.has-screen-share .user-label {
+    font-size: 0.75rem !important;
+    padding: 4px 10px !important;
+    bottom: 8px !important;
+    left: 8px !important;
+}
+
+.video-grid.has-screen-share .badge {
+    font-size: 0.75rem !important;
 }
 </style>
