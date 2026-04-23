@@ -14,6 +14,8 @@ use App\Models\PhanQuyen;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MoiThamGiaMail;
 use Illuminate\Support\Str;
 use LiveKit\RoomServiceClient;
 
@@ -46,38 +48,54 @@ class PhongHopController extends Controller
             'thoi_gian_ket_thuc' => $request->thoi_gian_ket_thuc,
             'trang_thai'         => 1, // 1: Đang hoạt động
         ]);
-        // 4. Xử lý mời người (nếu có email_khach_moi)
+        // 4. Xử lý mời người (nếu có email_khach_moi) + Gửi email thông báo
         $emailsNotFound = [];
         if ($request->has('email_khach_moi') && !empty($request->email_khach_moi)) {
             $emailString = $request->email_khach_moi;
-            // Tách các email bằng dấu phẩy
             $emailArray = array_filter(array_map('trim', explode(',', $emailString)));
-            
+
+            // Lấy tên người tổ chức để ghi vào email
+            $chuPhong = NguoiDung::find($request->id_chu_phong);
+            $tenNguoiMoi = $chuPhong ? $chuPhong->ho_va_ten : 'Đối tác';
+
             foreach ($emailArray as $email) {
-                // Tìm người dùng theo email
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) continue;
+
                 $user = NguoiDung::where('email', $email)->first();
+
                 if ($user) {
-                    // Thêm vào bảng chi tiết phòng họp
-                    ChiTietPhongHop::create([
-                        'id_nguoi_dung' => $user->id,
-                        'id_phong_hop' => $phongHop->id,
-                        'xac_thuc_khuon_mat' => false,
-                        'is_vi_pham' => false,
-                        'is_nguoi_dung' => true,
-                        'is_active' => false, // Chưa join phòng
-                        'trang_thai' => true, // Đã được mời
-                    ]);
-                } else {
-                    $emailsNotFound[] = $email;
+                    // Email có trong hệ thống → thêm vào ChiTietPhongHop
+                    ChiTietPhongHop::firstOrCreate(
+                        ['id_nguoi_dung' => $user->id, 'id_phong_hop' => $phongHop->id],
+                        [
+                            'xac_thuc_khuon_mat' => false,
+                            'is_vi_pham'         => false,
+                            'is_nguoi_dung'      => true,
+                            'is_active'          => false,
+                            'trang_thai'         => true,
+                        ]
+                    );
+                }
+                // Dù có hay không có trong hệ thống → đều gửi email mời
+                try {
+                    Mail::to($email)->send(new MoiThamGiaMail(
+                        $phongHop->ten_phong,
+                        $phongHop->ma_phong,
+                        $tenNguoiMoi,
+                        $user ? $user->ho_va_ten : $email
+                    ));
+                } catch (\Exception $mailEx) {
+                    Log::warning('Không gửi được email mời cho ' . $email . ': ' . $mailEx->getMessage());
+                    $emailsNotFound[] = $email . ' (lỗi gửi mail)';
                 }
             }
         }
 
         return response()->json([
             'status'  => true,
-            'message' => empty($emailsNotFound) 
-                            ? 'Tạo phòng họp thành công!' 
-                            : 'Tạo phòng thành công, nhưng không tìm thấy một số email: ' . implode(', ', $emailsNotFound),
+            'message' => empty($emailsNotFound)
+                            ? 'Tạo phòng họp thành công!'
+                            : 'Tạo phòng thành công, lỗi gửi email: ' . implode(', ', $emailsNotFound),
             'data'    => $phongHop
         ]);
     }
@@ -338,6 +356,78 @@ class PhongHopController extends Controller
         }
         // Trả về 200
         return response()->json(['status' => true]);
+    }
 
+    /**
+     * API Báo cáo chi tiết cho Đối tác: thời lượng thực tế + số người thực từ ChiTietPhongHop
+     */
+    public function getThongKeBaoCao(Request $request)
+    {
+        $request->validate(['id_chu_phong' => 'required|integer']);
+        $id_chu_phong = $request->id_chu_phong;
+
+        $phong_list = PhongHop::where('id_chu_phong', $id_chu_phong)
+            ->orderBy('thoi_gian_bat_dau', 'desc')
+            ->get();
+
+        $logs = $phong_list->map(function ($phong) {
+            // Số người tham gia thực tế từ ChiTietPhongHop
+            $so_nguoi = ChiTietPhongHop::where('id_phong_hop', $phong->id)->count();
+
+            // Tính thời lượng thực tế
+            $thoi_luong_phut = 0;
+            $thoi_luong_str  = 'Đang diễn ra';
+            if ($phong->thoi_gian_bat_dau && $phong->thoi_gian_ket_thuc) {
+                $bat_dau     = Carbon::parse($phong->thoi_gian_bat_dau);
+                $ket_thuc    = Carbon::parse($phong->thoi_gian_ket_thuc);
+                $thoi_luong_phut = $bat_dau->diffInMinutes($ket_thuc);
+                $gio  = intdiv($thoi_luong_phut, 60);
+                $phut = $thoi_luong_phut % 60;
+                $thoi_luong_str = $gio > 0 ? "{$gio}g {$phut}p" : "{$phut} phút";
+            }
+
+            return [
+                'id'             => $phong->id,
+                'ten_phong'      => $phong->ten_phong,
+                'ma_phong'       => $phong->ma_phong,
+                'trang_thai'     => $phong->trang_thai,
+                'bat_dau'        => $phong->thoi_gian_bat_dau,
+                'ket_thuc'       => $phong->thoi_gian_ket_thuc,
+                'thoi_luong'     => $thoi_luong_str,
+                'thoi_luong_phut'=> $thoi_luong_phut,
+                'so_nguoi'       => $so_nguoi,
+            ];
+        });
+
+        // Tổng hợp metrics
+        $tong_cuoc_hop   = $phong_list->count();
+        $tong_phut       = $logs->sum('thoi_luong_phut');
+        $tong_gio        = round($tong_phut / 60, 1);
+        $tong_nguoi      = $logs->sum('so_nguoi');
+        $tb_phut         = $tong_cuoc_hop > 0 ? round($tong_phut / $tong_cuoc_hop) : 0;
+
+        // Dữ liệu biểu đồ 7 ngày gần nhất
+        $chart_data = [];
+        $chart_labels = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $ngay = Carbon::now()->subDays($i);
+            $chart_labels[] = $ngay->format('d/m');
+            $chart_data[] = PhongHop::where('id_chu_phong', $id_chu_phong)
+                ->whereDate('thoi_gian_bat_dau', $ngay->toDateString())
+                ->count();
+        }
+
+        return response()->json([
+            'status' => true,
+            'data'   => [
+                'tong_cuoc_hop'  => $tong_cuoc_hop,
+                'tong_gio'       => $tong_gio,
+                'tong_nguoi'     => $tong_nguoi,
+                'tb_phut'        => $tb_phut,
+                'logs'           => $logs,
+                'chart_labels'   => $chart_labels,
+                'chart_data'     => $chart_data,
+            ]
+        ]);
     }
 }

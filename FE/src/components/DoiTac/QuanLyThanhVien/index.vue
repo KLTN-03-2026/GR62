@@ -29,6 +29,9 @@
           <button @click="$router.push('/doi-tac/hoa-don')" class="nav-business-item">
             <i class="bx bxs-receipt"></i><span>Hóa đơn</span>
           </button>
+          <button @click="$router.push('/nguoi-dung/danh-sach-goi')" class="nav-business-item">
+            <i class="bx bxs-package"></i><span>Mua gói</span>
+          </button>
           <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
             <i class="bx bxs-bar-chart-alt-2"></i><span>Báo cáo</span>
           </button>
@@ -144,6 +147,9 @@
                       <span class="fw-700 text-muted small">{{ formatDate(tv.ngay_tham_gia) }}</span>
                     </td>
                     <td class="text-end pe-3">
+                      <button @click="openEdit(tv)" class="btn btn-action-pro edit me-2" title="Chỉnh sửa">
+                        <i class="bx bx-edit"></i>
+                      </button>
                       <button @click="confirmRevoke(tv)" class="btn btn-action-pro danger" title="Thu hồi quyền">
                         <i class="bx bx-user-minus"></i>
                       </button>
@@ -192,6 +198,38 @@
       </div>
     </div>
 
+    <!-- Modal Chỉnh sửa Thành Viên -->
+    <div v-if="showEditModal" class="modal-overlay" @click.self="showEditModal = false">
+      <div class="modal-business animate__animated animate__fadeInUp">
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <div class="feature-icon-bg-mini"><i class="bx bx-edit"></i></div>
+          <h4 class="fw-900 text-dark mb-0">Chỉnh sửa thành viên</h4>
+          <button @click="showEditModal = false" class="btn-close ms-auto shadow-none"></button>
+        </div>
+        <p class="text-muted small fw-500 mb-4">Cập nhật họ tên và số điện thoại của thành viên.</p>
+
+        <label class="fw-800 small text-muted mb-2">Họ và tên <span class="text-danger">*</span></label>
+        <div class="input-premium-group mb-3">
+          <i class="bx bx-user"></i>
+          <input v-model="editForm.ho_va_ten" type="text" placeholder="Nguyễn Văn A">
+        </div>
+
+        <label class="fw-800 small text-muted mb-2 mt-1">Số điện thoại</label>
+        <div class="input-premium-group mb-4">
+          <i class="bx bx-phone"></i>
+          <input v-model="editForm.so_dien_thoai" type="text" placeholder="0901234567">
+        </div>
+
+        <div class="d-flex gap-3">
+          <button @click="showEditModal = false" class="btn btn-light-orange-pro flex-grow-1 py-3 fw-800 rounded-4 border-0">Hủy</button>
+          <button @click="saveEdit" :disabled="isSaving" class="btn btn-orange-pro flex-grow-1 py-3 fw-800 rounded-4 border-0 text-white shadow-orange">
+            <span v-if="isSaving" class="spinner-border spinner-border-sm me-2"></span>
+            {{ isSaving ? 'Đang lưu...' : 'Lưu thay đổi' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Confirm Revoke Modal -->
     <div v-if="showRevokeConfirm" class="modal-overlay" @click.self="showRevokeConfirm = false">
       <div class="modal-business animate__animated animate__fadeInUp" style="max-width: 420px;">
@@ -229,6 +267,9 @@ export default {
       showModal: false,
       emailCapQuyen: '',
       isCapQuyen: false,
+      showEditModal: false,
+      editForm: { id_nguoi_dung: null, ho_va_ten: '', so_dien_thoai: '' },
+      isSaving: false,
       showRevokeConfirm: false,
       selectedMember: null,
       isRevoking: false,
@@ -299,6 +340,33 @@ export default {
     confirmRevoke(member) {
       this.selectedMember = member;
       this.showRevokeConfirm = true;
+    },
+    openEdit(member) {
+      this.editForm = {
+        id_nguoi_dung: member.id,
+        ho_va_ten: member.ho_va_ten,
+        so_dien_thoai: member.so_dien_thoai || '',
+      };
+      this.showEditModal = true;
+    },
+    async saveEdit() {
+      if (!this.editForm.ho_va_ten.trim()) { this.$toast?.warning('Vui lòng nhập họ tên!'); return; }
+      this.isSaving = true;
+      try {
+        const token = localStorage.getItem('token_doi_tac');
+        const res = await axios.post(`${apiUrl}/doi-tac/thanh-vien/cap-nhat`, this.editForm, {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (res.data.status) {
+          this.$toast?.success('Cập nhật thành công!');
+          this.showEditModal = false;
+          await this.loadThanhVien();
+        }
+      } catch (e) {
+        this.$toast?.error(e.response?.data?.message || 'Lỗi khi cập nhật!');
+      } finally {
+        this.isSaving = false;
+      }
     },
     async thuHoiQuyen() {
       if (!this.selectedMember) return;
@@ -377,6 +445,8 @@ export default {
 .btn-action-pro { width: 36px; height: 36px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; transition: 0.2s; }
 .btn-action-pro.danger { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
 .btn-action-pro.danger:hover { background: #ef4444; color: white; }
+.btn-action-pro.edit { background: #eff6ff; color: #3b82f6; border: 1px solid #bfdbfe; }
+.btn-action-pro.edit:hover { background: #3b82f6; color: white; }
 
 .feature-icon-bg-mini { width: 44px; height: 44px; background: #fff; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; color: #ea580c; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 

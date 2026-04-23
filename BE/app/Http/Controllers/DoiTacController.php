@@ -644,4 +644,49 @@ class DoiTacController extends Controller
             'data'   => $hoa_don
         ]);
     }
+
+    /**
+     * Cập nhật thông tin thành viên thuộc tổ chức (họ tên, số điện thoại)
+     */
+    public function capNhatThanhVien(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'id_nguoi_dung' => 'required|integer',
+            'ho_va_ten'     => 'required|string|max:255',
+            'so_dien_thoai' => 'nullable|string|max:20',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+        }
+
+        $nguoi_dung = NguoiDung::find($request->id_nguoi_dung);
+
+        if (!$nguoi_dung) {
+            return response()->json(['status' => false, 'message' => 'Không tìm thấy người dùng!'], 404);
+        }
+
+        // Chỉ cho phép cập nhật thành viên thuộc tổ chức của đối tác này
+        $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
+        if ($current_id_doi_tac !== $user->id) {
+            return response()->json(['status' => false, 'message' => 'Người dùng này không thuộc tổ chức của bạn!'], 403);
+        }
+
+        \Illuminate\Support\Facades\DB::table('nguoi_dungs')
+            ->where('id', $nguoi_dung->id)
+            ->update([
+                'ho_va_ten'     => $request->ho_va_ten,
+                'so_dien_thoai' => $request->so_dien_thoai,
+            ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Đã cập nhật thông tin thành viên thành công!',
+        ]);
+    }
 }

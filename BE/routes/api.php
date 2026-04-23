@@ -80,6 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/doi-tac/thanh-vien', [DoiTacController::class, 'getDanhSachThanhVien']);
     Route::post('/doi-tac/thanh-vien/cap-quyen', [DoiTacController::class, 'capQuyenThanhVien']);
     Route::post('/doi-tac/thanh-vien/thu-hoi', [DoiTacController::class, 'thuHoiQuyenThanhVien']);
+    Route::post('/doi-tac/thanh-vien/cap-nhat', [DoiTacController::class, 'capNhatThanhVien']);
     // Lịch sử hóa đơn tổ chức
     Route::get('/doi-tac/lich-su-hoa-don', [DoiTacController::class, 'getLichSuHoaDon']);
 });
@@ -135,6 +136,7 @@ Route::post('/phong-hop/kiem-tra-phong-hop', [PhongHopController::class, 'kiemTr
 Route::get('/phong-hop/data-by-chu-phong', [PhongHopController::class, 'getDataByChuPhong']);
 Route::post('/phong-hop/roi-phong', [PhongHopController::class, 'roiPhongHop']); // Bắt sự kiện người dùng rời phòng họp thủ công
 Route::post('/webhook/livekit', [PhongHopController::class, 'livekitWebhook']); // Bắt sự kiện người dùng rời phòng họp từ LiveKit
+Route::get('/phong-hop/thong-ke-bao-cao', [PhongHopController::class, 'getThongKeBaoCao']);
 
 // 9. Chi Tiết Phòng Họp
 Route::get('/chi-tiet-phong-hop/data', [ChiTietPhongHopController::class, 'index']);

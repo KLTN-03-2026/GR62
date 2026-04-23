@@ -10,7 +10,8 @@
                         </div>
                         <div>
                             <h5 class="mb-0 fw-800 text-dark tracking-tighter">AI-Meet Business</h5>
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 1.5px;">Đối tác cao cấp</small>
+                            <small class="text-muted fw-bold text-uppercase"
+                                style="font-size: 0.6rem; letter-spacing: 1.5px;">Đối tác cao cấp</small>
                         </div>
                     </div>
                 </div>
@@ -20,7 +21,7 @@
                         <i class="bx bxs-dashboard"></i>
                         <span>Tổng quan</span>
                     </button>
-                    
+
                     <button @click="$router.push('/doi-tac/phong-hop')" class="nav-business-item">
                         <i class="bx bxs-video"></i>
                         <span>Tham gia cuộc họp</span>
@@ -36,6 +37,10 @@
                     <button @click="$router.push('/doi-tac/hoa-don')" class="nav-business-item">
                         <i class="bx bxs-receipt"></i>
                         <span>Hóa đơn</span>
+                    </button>
+                    <button @click="$router.push('/nguoi-dung/danh-sach-goi')" class="nav-business-item">
+                        <i class="bx bxs-package"></i>
+                        <span>Mua gói</span>
                     </button>
                     <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
                         <i class="bx bxs-bar-chart-alt-2"></i>
@@ -67,15 +72,17 @@
                         <i class="bx bx-search text-muted fs-5"></i>
                         <input type="text" placeholder="Tìm kiếm dữ liệu, nhân viên...">
                     </div>
-                    
+
                     <div class="header-right d-flex align-items-center gap-4">
                         <div class="header-icon-btns d-flex gap-3">
-                            <div class="icon-btn-plain"><i class="bx bxs-bell fs-4"></i><span class="dot-badge"></span></div>
+                            <div class="icon-btn-plain"><i class="bx bxs-bell fs-4"></i><span class="dot-badge"></span>
+                            </div>
                             <div class="icon-btn-plain"><i class="bx bxs-calendar fs-4"></i></div>
                             <div class="icon-btn-plain"><i class="bx bxs-message-square-detail fs-4"></i></div>
                         </div>
-                        
-                        <div class="profile-trigger-business d-flex align-items-center gap-3 cursor-pointer" @click="$router.push('/doi-tac/profile')">
+
+                        <div class="profile-trigger-business d-flex align-items-center gap-3 cursor-pointer"
+                            @click="$router.push('/doi-tac/profile')">
                             <div class="text-end d-none d-md-block">
                                 <h6 class="mb-0 fw-800 text-dark" style="font-size: 0.9rem;">{{ partnerName }}</h6>
                                 <small class="text-muted" style="font-size: 0.75rem;">{{ partnerPosition }}</small>
@@ -91,8 +98,10 @@
                     <div class="row g-4 mb-5">
                         <div class="col-md-3">
                             <div class="metric-card-business p-4 rounded-5 border-0 h-100">
-                                <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-user-detail"></i></div>
-                                <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Nhân viên sử dụng</label>
+                                <div class="metric-icon bg-soft-orange text-orange mb-4"><i
+                                        class="bx bxs-user-detail"></i></div>
+                                <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Nhân viên sử
+                                    dụng</label>
                                 <div class="d-flex align-items-baseline gap-2">
                                     <h2 class="fw-900 mb-0">{{ stats[0].value }}</h2>
                                     <span class="text-success small fw-bold">{{ stats[0].grow }}</span>
@@ -101,28 +110,32 @@
                         </div>
                         <div class="col-md-3">
                             <div class="metric-card-business p-4 rounded-5 border-0 h-100">
-                                <div class="metric-icon bg-soft-orange text-orange mb-4"><i class="bx bxs-time-five"></i></div>
-                                <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Tổng giờ họp tháng</label>
+                                <div class="metric-icon bg-soft-orange text-orange mb-4"><i
+                                        class="bx bxs-time-five"></i></div>
+                                <label class="text-muted small fw-800 text-uppercase mb-2 d-block">Tổng giờ họp
+                                    tháng</label>
                                 <div class="d-flex align-items-baseline gap-2">
                                     <h2 class="fw-900 mb-0">{{ stats[1].value }}</h2>
                                     <span class="text-muted fw-bold">/ ∞</span>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- NEW: Quick Join Meeting Card for Partners -->
                         <div class="col-md-6">
-                            <div class="metric-card-business p-4 rounded-5 border-0 h-100 shadow-sm" style="background: white; border: 1px solid #fee7d1 !important;">
+                            <div class="metric-card-business p-4 rounded-5 border-0 h-100 shadow-sm"
+                                style="background: white; border: 1px solid #fee7d1 !important;">
                                 <div class="d-flex align-items-center gap-3 mb-4">
-                                    <div class="metric-icon bg-soft-orange text-orange"><i class="bx bxs-keyboard"></i></div>
+                                    <div class="metric-icon bg-soft-orange text-orange"><i class="bx bxs-keyboard"></i>
+                                    </div>
                                     <h5 class="fw-800 text-dark mb-0">Tham gia cuộc họp nhanh</h5>
                                 </div>
-                                <p class="text-muted small fw-500 mb-4">Kết nối ngay lập tức với các phòng ban bằng mã định danh.</p>
+                                <p class="text-muted small fw-500 mb-4">Kết nối ngay lập tức với các phòng ban bằng mã
+                                    định danh.</p>
                                 <div class="d-flex gap-3">
-                                    <input type="text" v-model="ma_phong_tham_gia" 
-                                        class="form-control bg-light border-0 py-3 px-4 rounded-4 fw-800" 
-                                        placeholder="Nhập mã phòng..."
-                                        @keyup.enter="kiemTraTruocKhiJoin">
+                                    <input type="text" v-model="ma_phong_tham_gia"
+                                        class="form-control bg-light border-0 py-3 px-4 rounded-4 fw-800"
+                                        placeholder="Nhập mã phòng..." @keyup.enter="kiemTraTruocKhiJoin">
                                     <button @click="kiemTraTruocKhiJoin" :disabled="isJoining"
                                         class="btn btn-orange-pro px-4 rounded-4 fw-800 shadow-orange border-0 text-white">
                                         {{ isJoining ? '...' : 'Tham Gia' }}
@@ -146,11 +159,14 @@
                                 </div>
 
                                 <div class="activity-visualizer-premium">
-                                    <div class="chart-labels-y d-flex flex-column justify-content-between text-muted small fw-bold">
+                                    <div
+                                        class="chart-labels-y d-flex flex-column justify-content-between text-muted small fw-bold">
                                         <span>100</span><span>75</span><span>50</span><span>25</span><span>0</span>
                                     </div>
-                                    <div class="chart-bars-area d-flex align-items-end justify-content-around flex-grow-1">
-                                        <div v-for="day in weeklyData" :key="day.label" class="chart-bar-col d-flex flex-column align-items-center">
+                                    <div
+                                        class="chart-bars-area d-flex align-items-end justify-content-around flex-grow-1">
+                                        <div v-for="day in weeklyData" :key="day.label"
+                                            class="chart-bar-col d-flex flex-column align-items-center">
                                             <div class="bar-business" :style="{ height: day.value + '%' }">
                                                 <div class="bar-glow"></div>
                                             </div>
@@ -170,8 +186,10 @@
                                 </div>
 
                                 <div class="dept-list-business mt-4">
-                                    <div v-for="dept in departments" :key="dept.name" class="dept-item-business d-flex align-items-center mb-4">
-                                        <div class="dept-icon-mini me-3" :style="{ backgroundColor: dept.color + '15', color: dept.color }">
+                                    <div v-for="dept in departments" :key="dept.name"
+                                        class="dept-item-business d-flex align-items-center mb-4">
+                                        <div class="dept-icon-mini me-3"
+                                            :style="{ backgroundColor: dept.color + '15', color: dept.color }">
                                             {{ dept.code }}
                                         </div>
                                         <div class="flex-grow-1">
@@ -197,7 +215,7 @@
                             <h4 class="fw-800 text-dark mb-0">Tính năng độc quyền Đối tác</h4>
                             <div class="premium-badge-pill">PREMIUM ACCESS</div>
                         </div>
-                        
+
                         <div class="row g-4">
                             <div v-for="feature in exclusiveFeatures" :key="feature.title" class="col-md-4">
                                 <div class="feature-card-business p-5 rounded-5 border-0">
@@ -205,7 +223,8 @@
                                         <i :class="feature.icon"></i>
                                     </div>
                                     <h5 class="fw-900 text-dark mb-3">{{ feature.title }}</h5>
-                                    <p class="text-muted fw-500 mb-0" style="line-height: 1.6;">{{ feature.description }}</p>
+                                    <p class="text-muted fw-500 mb-0" style="line-height: 1.6;">{{ feature.description
+                                    }}</p>
                                 </div>
                             </div>
                         </div>
@@ -215,7 +234,7 @@
         </div>
 
         <!-- Modal Tạo Cuộc Họp AI for Partner -->
-        <div v-if="showCreateMeetingModal" 
+        <div v-if="showCreateMeetingModal"
             class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3"
             style="background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);">
             <div class="card border-0 shadow-lg p-5 animate__animated animate__fadeInUp"
@@ -224,33 +243,31 @@
                     <h3 class="fw-900 text-dark mb-0">Tạo cuộc họp AI mới</h3>
                     <button @click="showCreateMeetingModal = false" class="btn-close shadow-none"></button>
                 </div>
-                
+
                 <form @submit.prevent="taoPhongHop">
                     <div class="mb-4">
                         <label class="form-label fw-800 text-muted small text-uppercase mb-2">Tiêu đề cuộc họp</label>
                         <input type="text" v-model="formTaoPhong.ten_phong" required
                             class="form-control form-control-lg bg-light border-0 shadow-none px-4 py-3 rounded-4"
-                            placeholder="Ví dụ: Họp chiến lược quý 2"
-                            style="font-weight: 600;">
+                            placeholder="Ví dụ: Họp chiến lược quý 2" style="font-weight: 600;">
                     </div>
                     <div class="mb-4">
                         <label class="form-label fw-800 text-muted small text-uppercase mb-2">Mô tả chi tiết</label>
                         <textarea v-model="formTaoPhong.mo_ta"
                             class="form-control form-control-lg bg-light border-0 shadow-none px-4 py-3 rounded-4"
-                            rows="4"
-                            placeholder="Nội dung cuộc họp..."
+                            rows="4" placeholder="Nội dung cuộc họp..."
                             style="font-weight: 600; resize: none;"></textarea>
                     </div>
                     <div class="mb-5">
-                        <label class="form-label fw-800 text-muted small text-uppercase mb-2">Mời qua Email (tùy chọn)</label>
+                        <label class="form-label fw-800 text-muted small text-uppercase mb-2">Mời qua Email (tùy
+                            chọn)</label>
                         <input type="text" v-model="formTaoPhong.email_khach_moi"
                             class="form-control form-control-lg bg-light border-0 shadow-none px-4 py-3 rounded-4"
-                            placeholder="email1@company.com, email2@company.com"
-                            style="font-weight: 600;">
+                            placeholder="email1@company.com, email2@company.com" style="font-weight: 600;">
                     </div>
-                    
+
                     <div class="d-flex gap-3">
-                        <button type="button" @click="showCreateMeetingModal = false" 
+                        <button type="button" @click="showCreateMeetingModal = false"
                             class="btn btn-light-orange-pro flex-grow-1 py-3 fw-800 rounded-4 border-0">
                             Hủy bỏ
                         </button>
@@ -305,20 +322,20 @@ export default {
             ],
             departments: [],
             exclusiveFeatures: [
-                { 
-                    title: 'Quản trị tập trung', 
-                    icon: 'bx bx-scan', 
-                    description: 'Điều hành toàn bộ hệ thống phòng họp và tài khoản nhân viên từ một bảng điều khiển duy nhất dành riêng cho đối tác.' 
+                {
+                    title: 'Quản trị tập trung',
+                    icon: 'bx bx-scan',
+                    description: 'Điều hành toàn bộ hệ thống phòng họp và tài khoản nhân viên từ một bảng điều khiển duy nhất dành riêng cho đối tác.'
                 },
-                { 
-                    title: 'Bảo mật đa lớp AI', 
-                    icon: 'bx bx-shield-quarter', 
-                    description: 'Mã hóa đầu cuối kết hợp nhận diện sinh trắc học AI đảm bảo dữ liệu doanh nghiệp tuyệt mật ở cấp độ cao nhất.' 
+                {
+                    title: 'Bảo mật đa lớp AI',
+                    icon: 'bx bx-shield-quarter',
+                    description: 'Mã hóa đầu cuối kết hợp nhận diện sinh trắc học AI đảm bảo dữ liệu doanh nghiệp tuyệt mật ở cấp độ cao nhất.'
                 },
-                { 
-                    title: 'Báo cáo chuyên sâu', 
-                    icon: 'bx bxs-bar-chart-square', 
-                    description: 'Phân tích hành vi, hiệu suất làm việc và mức độ tương tác thông qua dữ liệu cuộc họp AI không giới hạn lưu trữ.' 
+                {
+                    title: 'Báo cáo chuyên sâu',
+                    icon: 'bx bxs-bar-chart-square',
+                    description: 'Phân tích hành vi, hiệu suất làm việc và mức độ tương tác thông qua dữ liệu cuộc họp AI không giới hạn lưu trữ.'
                 }
             ]
         }
@@ -338,7 +355,7 @@ export default {
         async fetchPartnerData() {
             try {
                 const token = localStorage.getItem('token_doi_tac');
-                if(!token) return;
+                if (!token) return;
                 const res = await axios.get(`${apiUrl}/doi-tac/me`, {
                     headers: { Authorization: 'Bearer ' + token }
                 });
@@ -348,10 +365,10 @@ export default {
                     this.partnerName = res.data.data.ho_va_ten;
                     this.partnerPosition = res.data.data.chuc_vu?.ten_chuc_vu || (res.data.data.id_doi_tac == 1 ? "Quản trị viên Đối tác" : "Đối tác");
                     const hinh_anh = res.data.data.hinh_anh;
-                    if(hinh_anh) {
-                         const baseUrl = apiUrl.replace('/api', '');
-                         const cleanPath = hinh_anh.includes('uploads/') ? hinh_anh : `uploads/avatars/${hinh_anh}`;
-                         this.avatarUrl = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/${cleanPath}`;
+                    if (hinh_anh) {
+                        const baseUrl = apiUrl.replace('/api', '');
+                        const cleanPath = hinh_anh.includes('uploads/') ? hinh_anh : `uploads/avatars/${hinh_anh}`;
+                        this.avatarUrl = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/${cleanPath}`;
                     }
                 }
             } catch (e) {
@@ -361,7 +378,7 @@ export default {
         async fetchStatistics() {
             try {
                 const token = localStorage.getItem('token_doi_tac');
-                if(!token) return;
+                if (!token) return;
                 const res = await axios.get(`${apiUrl}/doi-tac/thong-ke`, {
                     headers: { Authorization: 'Bearer ' + token }
                 });
@@ -385,7 +402,7 @@ export default {
         logout() {
             localStorage.removeItem('token_doi_tac');
             this.$router.push('/');
-            this.$toast && this.$toast.success("Đăng xuất thành công!"); 
+            this.$toast && this.$toast.success("Đăng xuất thành công!");
         },
         async taoPhongHop() {
             if (!this.formTaoPhong.ten_phong.trim()) {
@@ -485,21 +502,34 @@ export default {
     text-align: left;
 }
 
-.nav-business-item i { font-size: 1.5rem; color: #7a7a7a; }
-.nav-business-item:hover { background: rgba(234, 88, 12, 0.05); color: #ea580c; }
-.nav-business-item:hover i { color: #ea580c; }
+.nav-business-item i {
+    font-size: 1.5rem;
+    color: #7a7a7a;
+}
+
+.nav-business-item:hover {
+    background: rgba(234, 88, 12, 0.05);
+    color: #ea580c;
+}
+
+.nav-business-item:hover i {
+    color: #ea580c;
+}
 
 .nav-business-item.active {
     background: #fff;
     color: #ea580c;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
 }
-.nav-business-item.active i { color: #ea580c; }
+
+.nav-business-item.active i {
+    color: #ea580c;
+}
 
 /* Header & Search */
 .content-header {
     background: white;
-    border-bottom: 1px solid rgba(0,0,0,0.02);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.02);
 }
 
 .search-business {
@@ -549,7 +579,10 @@ export default {
     transition: 0.2s;
 }
 
-.icon-btn-plain:hover { background: #fbf9f6; color: #1a1e29; }
+.icon-btn-plain:hover {
+    background: #fbf9f6;
+    color: #1a1e29;
+}
 
 .dot-badge {
     position: absolute;
@@ -572,7 +605,7 @@ export default {
 
 .metric-card-business:hover {
     background: white;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.06);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
     transform: translateY(-8px);
     border-color: #fee7d1 !important;
 }
@@ -587,8 +620,13 @@ export default {
     font-size: 1.6rem;
 }
 
-.bg-soft-orange { background: #fee7d1; }
-.text-orange { color: #ea580c; }
+.bg-soft-orange {
+    background: #fee7d1;
+}
+
+.text-orange {
+    color: #ea580c;
+}
 
 .verified-badge-business {
     width: 26px;
@@ -646,7 +684,8 @@ export default {
 }
 
 .chart-labels-y {
-    padding-bottom: 55px; /* Adjust for bar labels height */
+    padding-bottom: 55px;
+    /* Adjust for bar labels height */
 }
 
 .chart-bars-area {
@@ -667,7 +706,8 @@ export default {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 10px; /* Base height */
+    height: 10px;
+    /* Base height */
     background: #ea580c;
     border-radius: 11px;
     transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1);
@@ -691,7 +731,11 @@ export default {
     border-radius: 18px;
     transition: 0.3s;
 }
-.dept-item-business:hover { background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.02); }
+
+.dept-item-business:hover {
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+}
 
 .dept-icon-mini {
     width: 48px;
@@ -715,9 +759,22 @@ export default {
     letter-spacing: 0.3px;
 }
 
-.status-pill-business.active { background: #dcfce7; color: #166534; }
-.status-pill-business.idle { background: #fef3c7; color: #92400e; }
-.status-pill-business .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.status-pill-business.active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-pill-business.idle {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-pill-business .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
 
 .btn-manage-dept {
     background: #f1ede8;
@@ -725,7 +782,10 @@ export default {
     transition: 0.3s;
 }
 
-.btn-manage-dept:hover { background: #e9e5e0; transform: translateY(-2px); }
+.btn-manage-dept:hover {
+    background: #e9e5e0;
+    transform: translateY(-2px);
+}
 
 /* Feature Cards */
 .feature-card-business {
@@ -736,7 +796,7 @@ export default {
 
 .feature-card-business:hover {
     background: white;
-    box-shadow: 0 30px 70px rgba(0,0,0,0.07);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.07);
     transform: translateY(-10px);
 }
 
@@ -750,7 +810,7 @@ export default {
     align-items: center;
     font-size: 2rem;
     color: #ea580c;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.03);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.03);
 }
 
 .premium-badge-pill {
@@ -764,26 +824,76 @@ export default {
 }
 
 /* Side Info section */
-.greeting-section h2 { font-size: 2.2rem; }
+.greeting-section h2 {
+    font-size: 2.2rem;
+}
 
 /* Buttons pro */
-.btn-orange-pro { background: #ea580c; color: #fff !important; }
-.btn-light-orange-pro { background: #fbf9f6; color: #ea580c; border: 1.5px solid #f0ece6 !important; }
-.shadow-orange { box-shadow: 0 12px 30px rgba(234, 88, 12, 0.25); }
-.btn-text-orange { border: none; background: transparent; color: #ea580c; padding: 0; transition: 0.2s;}
-.btn-text-orange:hover { filter: brightness(1.2); text-decoration: underline; }
+.btn-orange-pro {
+    background: #ea580c;
+    color: #fff !important;
+}
+
+.btn-light-orange-pro {
+    background: #fbf9f6;
+    color: #ea580c;
+    border: 1.5px solid #f0ece6 !important;
+}
+
+.shadow-orange {
+    box-shadow: 0 12px 30px rgba(234, 88, 12, 0.25);
+}
+
+.btn-text-orange {
+    border: none;
+    background: transparent;
+    color: #ea580c;
+    padding: 0;
+    transition: 0.2s;
+}
+
+.btn-text-orange:hover {
+    filter: brightness(1.2);
+    text-decoration: underline;
+}
 
 /* Animations */
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.metric-card-business { animation: fadeIn 0.8s ease; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.metric-card-business {
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
 
 /* Utilities */
-.fw-900 { font-weight: 900; }
-.fw-800 { font-weight: 800; }
-.tracking-tighter { letter-spacing: -1.2px; }
+.fw-900 {
+    font-weight: 900;
+}
+
+.fw-800 {
+    font-weight: 800;
+}
+
+.tracking-tighter {
+    letter-spacing: -1.2px;
+}
 </style>

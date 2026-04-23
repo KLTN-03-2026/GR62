@@ -41,6 +41,10 @@
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>
                     </button>
+                    <button @click="$router.push('/nguoi-dung/danh-sach-goi')" class="nav-business-item">
+                        <i class="bx bxs-package"></i>
+                        <span>Mua gói</span>
+                    </button>
                     <button @click="$router.push('/doi-tac/profile')" class="nav-business-item">
                         <i class="bx bxs-cog"></i>
                         <span>Cài đặt</span>
@@ -221,15 +225,11 @@ export default {
                 { label: 'Tổng cuộc họp', value: '0', change: '+0%', trend: 'up' },
                 { label: 'Tổng giờ họp', value: '0h', change: '+0%', trend: 'up' },
                 { label: 'Người tham gia', value: '0', change: '+0%', trend: 'up' },
-                { label: 'TG Trung bình', value: '0m', change: '+0%', trend: 'up' }
+                { label: 'TG Trung bình', value: '0 phút', change: '+0%', trend: 'up' }
             ],
             meetingLogs: [],
 
-            // Activity Chart Config
-            activitySeries: [{
-                name: 'Cuộc họp',
-                data: [0, 0, 0, 0, 2, 5, 3] // Still mock for chart, but table will be real
-            }],
+            activitySeries: [{ name: 'Cuộc họp', data: [0, 0, 0, 0, 0, 0, 0] }],
             activityChartOptions: {
                 chart: { type: 'area', toolbar: { show: false }, zoom: { enabled: false }, fontFamily: 'Plus Jakarta Sans' },
                 dataLabels: { enabled: false },
@@ -249,21 +249,15 @@ export default {
                 tooltip: { theme: 'light', x: { show: true }, marker: { show: false } }
             },
 
-            // Dept Chart Config
-            deptSeries: [{
-                name: 'Hiệu suất',
-                data: [10, 5, 2]
-            }],
+            deptSeries: [{ name: 'Số người', data: [0, 0, 0] }],
             deptChartOptions: {
                 chart: { type: 'bar', toolbar: { show: false }, fontFamily: 'Plus Jakarta Sans' },
-                plotOptions: {
-                    bar: { borderRadius: 10, columnWidth: '45%', distributed: true }
-                },
+                plotOptions: { bar: { borderRadius: 10, columnWidth: '45%', distributed: true } },
                 dataLabels: { enabled: false },
                 colors: ['#ea580c', '#0ea5e9', '#f59e0b'],
                 legend: { show: false },
                 xaxis: {
-                    categories: ['KT', 'MK', 'NS'],
+                    categories: ['—', '—', '—'],
                     axisBorder: { show: false },
                     axisTicks: { show: false },
                 },
@@ -278,7 +272,7 @@ export default {
         async fetchPartnerData() {
             try {
                 const token = localStorage.getItem('token_doi_tac');
-                if(!token) return;
+                if (!token) return;
                 const res = await axios.get(`${apiUrl}/doi-tac/me`, {
                     headers: { Authorization: 'Bearer ' + token }
                 });
@@ -286,54 +280,76 @@ export default {
                     this.partnerId = res.data.data.id;
                     this.partnerName = res.data.data.ho_va_ten;
                     const hinh_anh = res.data.data.hinh_anh;
-                    if(hinh_anh) {
-                         const baseUrl = apiUrl.replace('/api', '');
-                         this.avatarUrl = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/uploads/avatars/${hinh_anh}`;
+                    if (hinh_anh) {
+                        const baseUrl = apiUrl.replace('/api', '');
+                        this.avatarUrl = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/uploads/avatars/${hinh_anh}`;
                     }
-                    
-                    // After getting partnerId, fetch logs
-                    this.fetchMeetingLogs();
+                    await this.fetchThongKeBaoCao();
                 }
             } catch (e) {
                 console.error("Error fetching partner data");
             }
         },
 
-        async fetchMeetingLogs() {
+        async fetchThongKeBaoCao() {
             if (!this.partnerId) return;
             try {
-                const res = await axios.get(`${apiUrl}/phong-hop/data-by-chu-phong`, {
+                const res = await axios.get(`${apiUrl}/phong-hop/thong-ke-bao-cao`, {
                     params: { id_chu_phong: this.partnerId }
                 });
 
                 if (res.data.status) {
-                    const dbData = res.data.data;
-                    
-                    // Transform DB data to Table Format
-                    this.meetingLogs = dbData.map(room => {
-                        return {
-                            title: room.ten_phong,
-                            host: this.partnerName,
-                            roomId: room.ma_phong,
-                            duration: 'N/A', // Not recorded in basic room table
-                            attendees: Math.floor(Math.random() * 20) + 1, // Mock for now
-                            status: room.trang_thai ? 'live' : 'ended'
-                        };
-                    });
+                    const d = res.data.data;
 
-                    // Update Metrics
-                    this.metrics[0].value = dbData.length.toString();
-                    this.metrics[1].value = (dbData.length * 1.5).toFixed(1) + 'h';
-                    this.metrics[2].value = (dbData.length * 8).toString();
+                    // Cập nhật metrics từ dữ liệu thực
+                    this.metrics[0].value = d.tong_cuoc_hop.toString();
+                    this.metrics[1].value = d.tong_gio + 'h';
+                    this.metrics[2].value = d.tong_nguoi.toString();
+                    this.metrics[3].value = d.tb_phut + ' phút';
+
+                    // Cập nhật bảng nhật ký từ dữ liệu thực
+                    this.meetingLogs = d.logs.map(log => ({
+                        title: log.ten_phong,
+                        host: this.partnerName,
+                        roomId: log.ma_phong,
+                        duration: log.thoi_luong,
+                        attendees: log.so_nguoi,
+                        status: log.trang_thai ? 'live' : 'ended'
+                    }));
+
+                    // Cập nhật biểu đồ area từ dữ liệu 7 ngày thực
+                    this.activitySeries = [{ name: 'Cuộc họp', data: d.chart_data }];
+                    this.activityChartOptions = {
+                        ...this.activityChartOptions,
+                        xaxis: {
+                            ...this.activityChartOptions.xaxis,
+                            categories: d.chart_labels
+                        }
+                    };
+
+                    // Biểu đồ bar: top 3 phòng nhiều người nhất
+                    const topRooms = [...d.logs]
+                        .sort((a, b) => b.so_nguoi - a.so_nguoi)
+                        .slice(0, 3);
+                    if (topRooms.length > 0) {
+                        this.deptSeries = [{ name: 'Số người', data: topRooms.map(r => r.so_nguoi) }];
+                        this.deptChartOptions = {
+                            ...this.deptChartOptions,
+                            xaxis: {
+                                ...this.deptChartOptions.xaxis,
+                                categories: topRooms.map(r => r.ten_phong.substring(0, 10))
+                            }
+                        };
+                    }
                 }
             } catch (error) {
-                console.error("Error fetching meeting logs:", error);
+                console.error("Error fetching báo cáo:", error);
             }
         },
 
         logout() {
             localStorage.removeItem('token_doi_tac');
-            this.$router.push('/doi-tac/dang-nhap');
+            this.$router.push('/dang-nhap');
         }
     }
 }

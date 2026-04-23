@@ -40,6 +40,10 @@
             <i class="bx bxs-receipt"></i>
             <span>Hóa đơn</span>
           </button>
+          <button @click="$router.push('/nguoi-dung/danh-sach-goi')" class="nav-business-item">
+            <i class="bx bxs-package"></i>
+            <span>Mua gói</span>
+          </button>
           <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
             <i class="bx bxs-bar-chart-alt-2"></i>
             <span>Báo cáo</span>
@@ -96,7 +100,8 @@
               <p class="text-muted fw-500 mb-0 ms-5 ps-2">Thiết lập, điều hành và giám sát chất lượng cuộc họp AI.</p>
             </div>
             <div class="header-actions-business d-flex gap-3">
-              <button data-bs-toggle="modal" data-bs-target="#modalJoinNhanh" class="btn btn-light-orange-pro px-4 py-3 fw-800 rounded-4 border-0">
+              <button data-bs-toggle="modal" data-bs-target="#modalJoinNhanh"
+                class="btn btn-light-orange-pro px-4 py-3 fw-800 rounded-4 border-0">
                 <i class="bx bx-key me-2"></i> Tham gia bằng mã
               </button>
               <button data-bs-toggle="modal" data-bs-target="#modalTaoPhong"
@@ -216,8 +221,8 @@
                       </div>
                     </td>
                     <td class="text-end pe-3">
-                      <button @click="vàoPhong(v.ma_phong)"
-                        class="btn btn-action-pro primary me-2" v-if="v.trang_thai == 1" title="Vào phòng">
+                      <button @click="vàoPhong(v.ma_phong)" class="btn btn-action-pro primary me-2"
+                        v-if="v.trang_thai == 1" title="Vào phòng">
                         <i class='bx bx-play'></i>
                       </button>
                       <button class="btn btn-action-pro secondary me-2" v-else title="Xem báo cáo">
@@ -281,6 +286,18 @@
                   <input v-model="formTaoPhong.thoi_gian_bat_dau" type="datetime-local" style="padding-left: 20px;">
                 </div>
               </div>
+              <div class="col-12">
+                <label class="fw-800 small text-muted mb-2">Gửi lời mời qua Email <span class="text-muted fw-500">(tùy
+                    chọn)</span></label>
+                <div class="input-premium-group">
+                  <i class='bx bx-envelope'></i>
+                  <input v-model="formTaoPhong.email_khach_moi" type="text"
+                    placeholder="email1@domain.com, email2@domain.com (cách nhau bằng dấu phẩy)">
+                </div>
+                <small class="text-muted fw-600 ms-2 mt-1 d-block" style="font-size: 0.72rem;"><i
+                    class="bx bx-info-circle me-1"></i>Hệ thống sẽ tự động gửi email thông báo kèm mã phòng đến những
+                  địa chỉ này.</small>
+              </div>
             </div>
           </div>
           <div class="modal-footer border-0 px-5 pb-5 pt-0">
@@ -294,7 +311,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Quick Join Modal -->
     <div class="modal fade" id="modalJoinNhanh" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
@@ -312,8 +329,7 @@
               <label class="fw-800 small text-muted mb-2">Mã phòng họp <span class="text-danger">*</span></label>
               <div class="input-premium-group">
                 <i class='bx bx-hash'></i>
-                <input v-model="ma_phong_join_nhanh" type="text"
-                  placeholder="Nhập mã phòng (VD: u2c-c1t5-etj)...">
+                <input v-model="ma_phong_join_nhanh" type="text" placeholder="Nhập mã phòng (VD: u2c-c1t5-etj)...">
               </div>
             </div>
           </div>
@@ -344,7 +360,7 @@ export default {
       partnerPosition: "Đối tác",
       avatarUrl: "https://i.pravatar.cc/150?u=admin_anhkim",
       ds_phong: [],
-      formTaoPhong: { ten_phong: '', so_nguoi_toi_da: null, thoi_gian_bat_dau: '' },
+      formTaoPhong: { ten_phong: '', so_nguoi_toi_da: null, thoi_gian_bat_dau: '', email_khach_moi: '' },
       ma_phong_join_nhanh: '',
       hasFaceId: false
     };
@@ -410,7 +426,7 @@ export default {
         this.$toast.warning("Vui lòng nhập mã phòng!");
         return;
       }
-      
+
       this.vàoPhong(this.ma_phong_join_nhanh.trim());
     },
     async taoPhong() {
@@ -430,7 +446,7 @@ export default {
         if (res.data.status) {
           this.$toast.success("Tạo phòng thành công!");
           document.getElementById('closeModalTaoPhong').click();
-          this.formTaoPhong = { ten_phong: '', so_nguoi_toi_da: null, thoi_gian_bat_dau: '' };
+          this.formTaoPhong = { ten_phong: '', so_nguoi_toi_da: null, thoi_gian_bat_dau: '', email_khach_moi: '' };
           this.loadPhong();
         }
       } catch (error) {
@@ -451,7 +467,7 @@ export default {
     },
     async dongPhong(item) {
       const isClosing = item.trang_thai == 1;
-      const message = isClosing 
+      const message = isClosing
         ? "Bạn có chắc chắn muốn ĐỐNG phòng họp này? Người tham gia sẽ không thể tiếp tục truy cập."
         : "Bạn có chắc chắn muốn MỞ LẠI phòng họp này?";
 

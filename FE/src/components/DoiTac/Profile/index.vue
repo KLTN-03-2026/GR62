@@ -40,6 +40,10 @@
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>
                     </button>
+                    <button @click="$router.push('/nguoi-dung/danh-sach-goi')" class="nav-business-item">
+                        <i class="bx bxs-package"></i>
+                        <span>Mua gói</span>
+                    </button>
                     <button class="nav-business-item active">
                         <i class="bx bxs-cog"></i>
                         <span>Cài đặt</span>
@@ -165,11 +169,12 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="fw-800 small text-muted mb-2">Email Doanh nghiệp (Cố định)</label>
-                                        <div class="input-premium-group bg-light-faint">
+                                        <label class="fw-800 small text-muted mb-2">Email Doanh nghiệp</label>
+                                        <div class="input-premium-group">
                                             <i class="bx bx-envelope"></i>
-                                            <input v-model="doi_tac.email" type="email" readonly class="text-muted">
+                                            <input v-model="doi_tac.email" type="email" placeholder="email@domain.com">
                                         </div>
+                                        <small class="text-muted fw-600 ms-2 mt-1 d-block" style="font-size: 0.72rem;"><i class="bx bx-info-circle me-1"></i>Thay đổi email sẽ ảnh hưởng đến việc đăng nhập lần sau.</small>
                                     </div>
                                     <div class="col-12 mt-5">
                                         <button @click="updateProfile" class="btn btn-orange-pro py-3 px-5 rounded-4 fw-800 text-white shadow-orange" :disabled="isLoading">
