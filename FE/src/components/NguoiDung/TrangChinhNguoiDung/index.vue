@@ -313,7 +313,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-for="(v, k) in danh_sach_phong_hop" :key="k">
+                                                    <tr v-for="(v, k) in danh_sach_phong_hop.filter(p => p.thoi_gian_ket_thuc === null)" :key="k">
                                                         <td class="px-4 py-3 border-light">
                                                             <div class="d-flex align-items-center">
                                                                 <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background-color: #fff7ed; color: #ea580c;">
@@ -333,7 +333,7 @@
                                                                 style="background-color: #ea580c; border-radius: 8px; font-size: 0.85rem;">Join</button>
                                                         </td>
                                                     </tr>
-                                                    <tr v-if="danh_sach_phong_hop.length === 0">
+                                                    <tr v-if="danh_sach_phong_hop.filter(p => p.thoi_gian_ket_thuc === null).length === 0">
                                                         <td colspan="4" class="text-center py-5 text-muted border-light">
                                                             <div class="mb-3"><i class='bx bx-coffee fs-1' style="color: #cbd5e1;"></i></div>
                                                             Hiện không có cuộc họp nào đang diễn ra

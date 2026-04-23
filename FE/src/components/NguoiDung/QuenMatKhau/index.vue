@@ -19,7 +19,8 @@
                     </div>
                 </div>
                 <h2 class="card-title">Quên mật khẩu?</h2>
-                <p class="card-desc">Đừng lo lắng, chuyện này thường xuyên xảy ra. Nhập email của bạn và chúng tôi sẽ gửi liên kết khôi phục.</p>
+                <p class="card-desc">Đừng lo lắng, chuyện này thường xuyên xảy ra. Nhập email của bạn và chúng tôi sẽ
+                    gửi liên kết khôi phục.</p>
 
                 <form @submit.prevent="sendResetCode">
                     <div class="field-group">
@@ -36,7 +37,7 @@
                     </button>
                 </form>
 
-                <router-link to="/nguoi-dung/dang-nhap" class="back-link">
+                <router-link to="/dang-nhap" class="back-link">
                     <i class="bx bx-left-arrow-alt"></i> Quay lại trang Đăng nhập
                 </router-link>
             </div>
@@ -44,14 +45,16 @@
             <!-- ── STEP 2: Enter OTP + New Password ── -->
             <div v-if="step === 2" class="card step-fade">
                 <h2 class="card-title">Đặt lại mật khẩu</h2>
-                <p class="card-desc">Vui lòng nhập mã OTP đã gửi tới <strong>{{ email }}</strong> và đặt mật khẩu mới cho tài khoản AI-Meet.</p>
+                <p class="card-desc">Vui lòng nhập mã OTP đã gửi tới <strong>{{ email }}</strong> và đặt mật khẩu mới
+                    cho tài khoản AI-Meet.</p>
 
                 <form @submit.prevent="resetPassword">
                     <div class="field-group">
                         <label class="field-label">MÃ OTP (6 CHỮ SỐ)</label>
                         <div class="input-wrap">
                             <span class="input-icon-left"><i class="bx bx-hash"></i></span>
-                            <input v-model="resetData.ma_quen_mat_khau" type="text" placeholder="######" required maxlength="6" />
+                            <input v-model="resetData.ma_quen_mat_khau" type="text" placeholder="######" required
+                                maxlength="6" />
                         </div>
                     </div>
 
@@ -59,7 +62,8 @@
                         <label class="field-label">MẬT KHẨU MỚI</label>
                         <div class="input-wrap">
                             <span class="input-icon-left"><i class="bx bx-lock-alt"></i></span>
-                            <input v-model="resetData.password" :type="showPass ? 'text' : 'password'" placeholder="••••••••" required />
+                            <input v-model="resetData.password" :type="showPass ? 'text' : 'password'"
+                                placeholder="••••••••" required />
                             <span class="input-icon-right clickable" @click="showPass = !showPass">
                                 <i :class="showPass ? 'bx bx-show' : 'bx bx-hide'"></i>
                             </span>
@@ -71,7 +75,8 @@
                         <label class="field-label">XÁC NHẬN MẬT KHẨU</label>
                         <div class="input-wrap">
                             <span class="input-icon-left"><i class="bx bx-shield-check"></i></span>
-                            <input v-model="resetData.confirm_password" :type="showConfirm ? 'text' : 'password'" placeholder="••••••••" required />
+                            <input v-model="resetData.confirm_password" :type="showConfirm ? 'text' : 'password'"
+                                placeholder="••••••••" required />
                             <span class="input-icon-right clickable" @click="showConfirm = !showConfirm">
                                 <i :class="showConfirm ? 'bx bx-show' : 'bx bx-hide'"></i>
                             </span>
@@ -84,7 +89,8 @@
                     </button>
                 </form>
 
-                <button @click="step = 1" class="back-link" type="button" style="background:none;border:none;cursor:pointer;">
+                <button @click="step = 1" class="back-link" type="button"
+                    style="background:none;border:none;cursor:pointer;">
                     <i class="bx bx-left-arrow-alt"></i> Quay lại trang đăng nhập
                 </button>
             </div>
@@ -166,7 +172,11 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 .auth-page {
     min-height: 100vh;
@@ -186,15 +196,21 @@ export default {
     pointer-events: none;
     z-index: 0;
 }
+
 .blob-1 {
-    width: 500px; height: 500px;
+    width: 500px;
+    height: 500px;
     background: radial-gradient(circle, rgba(200, 75, 17, 0.18) 0%, transparent 70%);
-    top: -100px; left: -100px;
+    top: -100px;
+    left: -100px;
 }
+
 .blob-2 {
-    width: 400px; height: 400px;
+    width: 400px;
+    height: 400px;
     background: radial-gradient(circle, rgba(200, 75, 17, 0.1) 0%, transparent 70%);
-    bottom: 0; right: 0;
+    bottom: 0;
+    right: 0;
 }
 
 /* ── Header ── */
@@ -206,20 +222,25 @@ export default {
     align-items: center;
     padding: 20px 40px;
 }
+
 .auth-logo {
     font-size: 20px;
     font-weight: 800;
     color: #C84B11;
 }
+
 .help-btn {
-    width: 36px; height: 36px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: #1a1a1a;
     border: none;
     color: white;
     font-size: 18px;
     cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* ── Page Body ── */
@@ -240,7 +261,7 @@ export default {
     padding: 48px 52px;
     width: 100%;
     max-width: 500px;
-    box-shadow: 0 20px 60px rgba(200, 75, 17, 0.1), 0 4px 20px rgba(0,0,0,0.06);
+    box-shadow: 0 20px 60px rgba(200, 75, 17, 0.1), 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .card-icon-wrap {
@@ -248,11 +269,15 @@ export default {
     justify-content: center;
     margin-bottom: 24px;
 }
+
 .card-icon {
-    width: 64px; height: 64px;
+    width: 64px;
+    height: 64px;
     background: #FDF0EA;
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 28px;
     color: #C84B11;
     border: 2px solid rgba(200, 75, 17, 0.15);
@@ -266,6 +291,7 @@ export default {
     letter-spacing: -0.5px;
     margin-bottom: 12px;
 }
+
 .card-desc {
     font-size: 14px;
     color: #6B7280;
@@ -275,7 +301,10 @@ export default {
 }
 
 /* ── Fields ── */
-.field-group { margin-bottom: 18px; }
+.field-group {
+    margin-bottom: 18px;
+}
+
 .field-label {
     display: block;
     font-size: 12px;
@@ -284,6 +313,7 @@ export default {
     letter-spacing: 0.5px;
     margin-bottom: 8px;
 }
+
 .field-hint {
     display: flex;
     align-items: center;
@@ -292,11 +322,13 @@ export default {
     color: #9CA3AF;
     margin-top: 6px;
 }
+
 .input-wrap {
     position: relative;
     display: flex;
     align-items: center;
 }
+
 .input-wrap input {
     width: 100%;
     background: #FDF6F2;
@@ -309,29 +341,43 @@ export default {
     transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
 }
-.input-wrap input::placeholder { color: #BBAA9A; }
+
+.input-wrap input::placeholder {
+    color: #BBAA9A;
+}
+
 .input-wrap input:focus {
     border-color: #C84B11;
     box-shadow: 0 0 0 3px rgba(200, 75, 17, 0.1);
     background: #FFFAF8;
 }
+
 .input-icon-left {
     position: absolute;
     left: 14px;
     color: #BBAA9A;
     font-size: 18px;
-    display: flex; align-items: center;
+    display: flex;
+    align-items: center;
     z-index: 1;
 }
+
 .input-icon-right {
     position: absolute;
     right: 14px;
     color: #BBAA9A;
     font-size: 18px;
-    display: flex; align-items: center;
+    display: flex;
+    align-items: center;
 }
-.clickable { cursor: pointer; }
-.clickable:hover { color: #C84B11; }
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover {
+    color: #C84B11;
+}
 
 /* ── Button ── */
 .btn-primary {
@@ -353,14 +399,21 @@ export default {
     margin-top: 8px;
     margin-bottom: 20px;
 }
+
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(200, 75, 17, 0.35);
 }
-.btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
 .btn-loader {
-    width: 20px; height: 20px;
-    border: 3px solid rgba(255,255,255,0.3);
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
     border-top-color: white;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -379,13 +432,26 @@ export default {
     font-family: 'Inter', sans-serif;
     transition: color 0.2s;
 }
-.back-link:hover { color: #C84B11; }
+
+.back-link:hover {
+    color: #C84B11;
+}
 
 /* ── Step animation ── */
-.step-fade { animation: fadeUp 0.4s ease-out; }
+.step-fade {
+    animation: fadeUp 0.4s ease-out;
+}
+
 @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ── Footer ── */
@@ -400,14 +466,39 @@ export default {
     color: #9CA3AF;
     letter-spacing: 0.5px;
 }
-.footer-links { display: flex; gap: 20px; }
-.footer-links a { color: #9CA3AF; text-decoration: none; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
-.footer-links a:hover { color: #C84B11; }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: #9CA3AF;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.footer-links a:hover {
+    color: #C84B11;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 @media (max-width: 600px) {
-    .card { padding: 36px 24px; }
-    .auth-footer { flex-direction: column; gap: 10px; text-align: center; }
+    .card {
+        padding: 36px 24px;
+    }
+
+    .auth-footer {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
 }
 </style>

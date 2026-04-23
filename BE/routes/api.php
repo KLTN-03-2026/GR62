@@ -76,6 +76,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/doi-tac/profile/update-face-data', [DoiTacController::class, 'updateFaceData']);
     Route::post('/doi-tac/profile/change-password', [DoiTacController::class, 'changePassword']);
     Route::get('/doi-tac/thong-ke', [DoiTacController::class, 'getStatistics']);
+    // Quản lý thành viên tổ chức
+    Route::get('/doi-tac/thanh-vien', [DoiTacController::class, 'getDanhSachThanhVien']);
+    Route::post('/doi-tac/thanh-vien/cap-quyen', [DoiTacController::class, 'capQuyenThanhVien']);
+    Route::post('/doi-tac/thanh-vien/thu-hoi', [DoiTacController::class, 'thuHoiQuyenThanhVien']);
+    // Lịch sử hóa đơn tổ chức
+    Route::get('/doi-tac/lich-su-hoa-don', [DoiTacController::class, 'getLichSuHoaDon']);
 });
 
 // 5. Người Dùng

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DoiTac;
 use App\Models\NguoiDung;
+use App\Models\HoaDon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -470,6 +471,177 @@ class DoiTacController extends Controller
                 'weekly_data'     => $weekly_data,
                 'departments'     => $rooms
             ]
+        ]);
+    }
+
+    /**
+     * Lấy danh sách thành viên thuộc tổ chức của đối tác hiện tại
+     */
+    public function getDanhSachThanhVien(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
+        }
+
+        // id_doi_tac trong bảng nguoi_dungs lưu id của đối tác (kiểu integer thực tế)
+        // Cast boolean trong model gây nhầm lẫn, dùng raw query để lấy đúng
+        $id_doi_tac = $user->id;
+
+        $danh_sach = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$id_doi_tac])
+            ->select('id', 'ho_va_ten', 'email', 'so_dien_thoai', 'avatar', 'trang_thai', 'created_at', 'id_doi_tac')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($nd) {
+                $baseUrl = url('');
+                return [
+                    'id'            => $nd->id,
+                    'ho_va_ten'     => $nd->ho_va_ten,
+                    'email'         => $nd->email,
+                    'so_dien_thoai' => $nd->so_dien_thoai,
+                    'avatar'        => $nd->avatar ? $baseUrl . '/' . $nd->avatar : null,
+                    'trang_thai'    => $nd->trang_thai,
+                    'la_thanh_vien' => true,
+                    'ngay_tham_gia' => $nd->created_at,
+                ];
+            });
+
+        return response()->json([
+            'status' => true,
+            'data'   => $danh_sach
+        ]);
+    }
+
+    /**
+     * Cấp quyền thành viên tổ chức cho NguoiDung (theo email)
+     */
+    public function capQuyenThanhVien(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+        }
+
+        $nguoi_dung = NguoiDung::where('email', $request->email)->first();
+
+        if (!$nguoi_dung) {
+            return response()->json(['status' => false, 'message' => 'Không tìm thấy người dùng với email này!'], 404);
+        }
+
+        // Kiểm tra đã là thành viên của tổ chức khác chưa
+        $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
+        if ($current_id_doi_tac > 0 && $current_id_doi_tac !== $user->id) {
+            return response()->json(['status' => false, 'message' => 'Người dùng này đã thuộc một tổ chức đối tác khác!'], 409);
+        }
+
+        if ($current_id_doi_tac === $user->id) {
+            return response()->json(['status' => false, 'message' => 'Người dùng này đã là thành viên của tổ chức bạn!'], 409);
+        }
+
+        // Cập nhật trực tiếp qua DB để bypass cast boolean
+        \Illuminate\Support\Facades\DB::table('nguoi_dungs')
+            ->where('id', $nguoi_dung->id)
+            ->update(['id_doi_tac' => $user->id]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Đã cấp quyền thành viên tổ chức thành công!',
+            'data'    => [
+                'id'        => $nguoi_dung->id,
+                'ho_va_ten' => $nguoi_dung->ho_va_ten,
+                'email'     => $nguoi_dung->email,
+            ]
+        ]);
+    }
+
+    /**
+     * Thu hồi quyền thành viên tổ chức của NguoiDung
+     */
+    public function thuHoiQuyenThanhVien(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'id_nguoi_dung' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+        }
+
+        $nguoi_dung = NguoiDung::find($request->id_nguoi_dung);
+
+        if (!$nguoi_dung) {
+            return response()->json(['status' => false, 'message' => 'Không tìm thấy người dùng!'], 404);
+        }
+
+        // Kiểm tra người dùng này có thuộc tổ chức của đối tác không
+        $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
+        if ($current_id_doi_tac !== $user->id) {
+            return response()->json(['status' => false, 'message' => 'Người dùng này không thuộc tổ chức của bạn!'], 403);
+        }
+
+        // Thu hồi quyền (đặt id_doi_tac về 0)
+        \Illuminate\Support\Facades\DB::table('nguoi_dungs')
+            ->where('id', $nguoi_dung->id)
+            ->update(['id_doi_tac' => 0]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Đã thu hồi quyền thành viên thành công!'
+        ]);
+    }
+
+    /**
+     * Lịch sử hóa đơn của các thành viên trong tổ chức đối tác
+     */
+    public function getLichSuHoaDon(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
+        }
+
+        $id_doi_tac = $user->id;
+
+        // Lấy id các thành viên thuộc tổ chức
+        $member_ids = \Illuminate\Support\Facades\DB::table('nguoi_dungs')
+            ->whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$id_doi_tac])
+            ->pluck('id');
+
+        // Lấy hóa đơn của tất cả thành viên
+        $hoa_don = HoaDon::with(['goi', 'nguoiDung'])
+            ->whereIn('id_nguoi_dung', $member_ids)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($hd) {
+                return [
+                    'id'                     => $hd->id,
+                    'ma_giao_dich'           => $hd->ma_giao_dich,
+                    'so_tien'                => $hd->so_tien,
+                    'phuong_thuc_thanh_toan' => $hd->phuong_thuc_thanh_toan,
+                    'trang_thai_thanh_toan'  => $hd->trang_thai_thanh_toan,
+                    'ngay_tao'               => $hd->created_at,
+                    'ten_goi'                => $hd->goi?->ten_goi ?? 'N/A',
+                    'ten_nguoi_dung'         => $hd->nguoiDung?->ho_va_ten ?? 'N/A',
+                    'email_nguoi_dung'       => $hd->nguoiDung?->email ?? 'N/A',
+                ];
+            });
+
+        return response()->json([
+            'status' => true,
+            'data'   => $hoa_don
         ]);
     }
 }

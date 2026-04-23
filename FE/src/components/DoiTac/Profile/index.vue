@@ -28,6 +28,14 @@
                         <i class="bx bxs-megaphone"></i>
                         <span>Quản lý phòng họp</span>
                     </button>
+                    <button @click="$router.push('/doi-tac/quan-ly-thanh-vien')" class="nav-business-item">
+                        <i class="bx bxs-group"></i>
+                        <span>Thành viên</span>
+                    </button>
+                    <button @click="$router.push('/doi-tac/hoa-don')" class="nav-business-item">
+                        <i class="bx bxs-receipt"></i>
+                        <span>Hóa đơn</span>
+                    </button>
                     <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>

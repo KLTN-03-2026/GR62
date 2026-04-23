@@ -197,6 +197,16 @@ const routes = [
     component: () => import('../components/DoiTac/QuanLyPhongHop/index.vue'),
     meta: { layout: 'black' }
     },
+    {
+    path: '/doi-tac/quan-ly-thanh-vien',
+    component: () => import('../components/DoiTac/QuanLyThanhVien/index.vue'),
+    meta: { layout: 'black' }
+    },
+    {
+    path: '/doi-tac/hoa-don',
+    component: () => import('../components/DoiTac/HoaDon/index.vue'),
+    meta: { layout: 'black' }
+    },
 
 
 ]
