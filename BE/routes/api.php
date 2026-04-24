@@ -134,6 +134,7 @@ Route::get('/phong-hop/ma-phong', [PhongHopController::class, 'getByMaPhong']);
 Route::post('/phong-hop/tao-token', [PhongHopController::class, 'taoToken']);
 Route::post('/phong-hop/kiem-tra-phong-hop', [PhongHopController::class, 'kiemTraPhongHop']);
 Route::get('/phong-hop/data-by-chu-phong', [PhongHopController::class, 'getDataByChuPhong']);
+Route::get('/phong-hop/lich-su-tham-gia', [PhongHopController::class, 'getLichSuThamGia']);
 Route::post('/phong-hop/roi-phong', [PhongHopController::class, 'roiPhongHop']); // Bắt sự kiện người dùng rời phòng họp thủ công
 Route::post('/webhook/livekit', [PhongHopController::class, 'livekitWebhook']); // Bắt sự kiện người dùng rời phòng họp từ LiveKit
 Route::get('/phong-hop/thong-ke-bao-cao', [PhongHopController::class, 'getThongKeBaoCao']);

@@ -38,12 +38,15 @@ class PhongHopController extends Controller
             $ma_phong = strtolower(Str::random(3) . '-' . Str::random(4) . '-' . Str::random(3));
         } while (PhongHop::where('ma_phong', $ma_phong)->exists());
 
+        $chuPhong = NguoiDung::find($request->id_chu_phong);
+        $isBasic = empty($chuPhong->id_doi_tac);
+
         // 3. Lưu vào Database
         $phongHop = PhongHop::create([
             'id_chu_phong'       => $request->id_chu_phong,
             'ma_phong'           => $ma_phong,
             'ten_phong'          => $request->ten_phong,
-            'so_nguoi_toi_da'    => $request->so_nguoi_toi_da ?? 100, // Mặc định 100 người nếu không nhập
+            'so_nguoi_toi_da'    => $isBasic ? min(5, (int)($request->so_nguoi_toi_da ?? 5)) : ($request->so_nguoi_toi_da ?? 100),
             'thoi_gian_bat_dau'  => $request->thoi_gian_bat_dau ?? now(),
             'thoi_gian_ket_thuc' => $request->thoi_gian_ket_thuc,
             'trang_thai'         => 1, // 1: Đang hoạt động
@@ -204,6 +207,19 @@ class PhongHopController extends Controller
 
         // 1. Lấy thông tin chủ phòng để kiểm tra gói dịch vụ
         $chu_phong = NguoiDung::find($phong->id_chu_phong);
+        $isBasic = empty($chu_phong->id_doi_tac);
+
+        // Kiểm tra số lượng người tham gia nếu là gói Basic
+        $soNguoiHienTai = ChiTietPhongHop::where('id_phong_hop', $phong->id)
+                                         ->where('is_active', true)
+                                         ->count();
+        if ($isBasic && $soNguoiHienTai >= 5) {
+             return response()->json([
+                'status' => false,
+                'message' => 'Phòng họp đã đạt giới hạn 5 người của gói Basic!'
+             ], 403);
+        }
+
         // 2. Lấy thông tin bảo mật từ file .env
         $apiKey = env('LIVEKIT_API_KEY');
         $apiSecret = env('LIVEKIT_API_SECRET');
@@ -215,12 +231,15 @@ class PhongHopController extends Controller
             ], 500);
         }
 
+        // Gói Basic giới hạn 1 giờ, Pro 2 tiếng (hoặc hơn)
+        $thoi_gian_hop = $isBasic ? (60 * 60) : (60 * 60 * 24);
+
         // 3. Chuẩn bị "Hành trang" (Payload) cho cái vé vào cửa theo chuẩn LiveKit
         $payload = [
             'iss' => $apiKey,                   // Ai phát hành vé? (Là bạn)
             'sub' => $request->user_name,       // Vé này cấp cho ai? (ID hoặc Tên)
             'nbf' => time(),                    // Có hiệu lực từ lúc nào? (Ngay bây giờ)
-            'exp' => time() + (60 * 60 * 2),    // Hết hạn khi nào? (Cho phép họp tối đa 2 tiếng)
+            'exp' => time() + $thoi_gian_hop,   // Hết hạn theo gói dịch vụ
             'video' => [
                 'roomJoin' => true,             // Quyền: Được phép vào phòng
                 'room' => $request->ma_phong,   // Cụ thể là phòng nào?
@@ -276,6 +295,51 @@ class PhongHopController extends Controller
         return response()->json([
             'status' => true,
             'data'   => $data
+        ]);
+    }
+
+    public function getLichSuThamGia(Request $request)
+    {
+        $request->validate(['id_nguoi_dung' => 'required|integer']);
+        $id_nguoi_dung = $request->id_nguoi_dung;
+
+        $logs = ChiTietPhongHop::with(['phongHop.chuPhong'])
+            ->where('id_nguoi_dung', $id_nguoi_dung)
+            ->whereHas('phongHop')
+            ->orderBy('id', 'desc')
+            ->get()
+            ->map(function ($chiTiet) {
+                $phong = $chiTiet->phongHop;
+                
+                $thoi_luong_str = 'Đang diễn ra';
+                if ($phong->thoi_gian_bat_dau && $phong->thoi_gian_ket_thuc) {
+                    $bat_dau = \Carbon\Carbon::parse($phong->thoi_gian_bat_dau);
+                    $ket_thuc = \Carbon\Carbon::parse($phong->thoi_gian_ket_thuc);
+                    $thoi_luong_phut = $bat_dau->diffInMinutes($ket_thuc);
+                    $gio = intdiv($thoi_luong_phut, 60);
+                    $phut = $thoi_luong_phut % 60;
+                    $thoi_luong_str = $gio > 0 ? "{$gio}g {$phut}p" : "{$phut} phút";
+                }
+
+                return [
+                    'id' => $phong->id,
+                    'ten_phong' => $phong->ten_phong,
+                    'ma_phong' => $phong->ma_phong,
+                    'chu_phong' => $phong->chuPhong ? $phong->chuPhong->ho_va_ten : 'N/A',
+                    'thoi_gian_bat_dau' => $phong->thoi_gian_bat_dau,
+                    'thoi_gian_ket_thuc' => $phong->thoi_gian_ket_thuc,
+                    'thoi_luong' => $thoi_luong_str,
+                    'trang_thai' => $phong->trang_thai,
+                    'vai_tro' => ($phong->id_chu_phong == $chiTiet->id_nguoi_dung) ? 'Chủ phòng' : 'Thành viên'
+                ];
+            });
+
+        // Loại bỏ trùng lặp nếu tham gia nhiều lần
+        $uniqueLogs = collect($logs)->unique('id')->values();
+
+        return response()->json([
+            'status' => true,
+            'data' => $uniqueLogs
         ]);
     }
 

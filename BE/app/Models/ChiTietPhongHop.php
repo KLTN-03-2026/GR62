@@ -25,4 +25,14 @@ class ChiTietPhongHop extends Model
             'trang_thai' => 'boolean',
         ];
     }
+
+    public function phongHop()
+    {
+        return $this->belongsTo(PhongHop::class, 'id_phong_hop');
+    }
+
+    public function nguoiDung()
+    {
+        return $this->belongsTo(NguoiDung::class, 'id_nguoi_dung');
+    }
 }

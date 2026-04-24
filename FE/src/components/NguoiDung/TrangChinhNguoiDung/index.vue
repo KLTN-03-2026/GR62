@@ -511,6 +511,48 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Lịch sử cuộc họp -->
+                                <div class="col-12 mt-5">
+                                    <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
+                                        <div class="d-flex align-items-center mb-4">
+                                            <div class="d-flex justify-content-center align-items-center rounded me-3 shadow-sm"
+                                                style="background-color: #f0fdf4; width: 44px; height: 44px;">
+                                                <i class="bx bx-history fs-4" style="color: #16a34a;"></i>
+                                            </div>
+                                            <h4 class="fw-bolder mb-0 text-dark" style="font-size: 1.35rem;">Lịch sử tham gia</h4>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle mb-0 border-0">
+                                                <thead style="background-color: #f8fafc;">
+                                                    <tr>
+                                                        <th class="px-4 py-3 text-muted fw-bold border-bottom-0">PHÒNG HỌP</th>
+                                                        <th class="px-4 py-3 text-muted fw-bold border-bottom-0">CHỦ PHÒNG</th>
+                                                        <th class="px-4 py-3 text-muted fw-bold border-bottom-0">BẮT ĐẦU</th>
+                                                        <th class="px-4 py-3 text-muted fw-bold border-bottom-0">THỜI LƯỢNG</th>
+                                                        <th class="px-4 py-3 text-muted fw-bold border-bottom-0">VAI TRÒ</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="log in lich_su_tham_gia" :key="log.id">
+                                                        <td class="px-4 py-3 border-light fw-bold text-dark">{{ log.ten_phong }}</td>
+                                                        <td class="px-4 py-3 border-light text-muted">{{ log.chu_phong }}</td>
+                                                        <td class="px-4 py-3 border-light text-muted">{{ formatTime(log.thoi_gian_bat_dau) }} - {{ formatDay(log.thoi_gian_bat_dau) }} {{ formatMonth(log.thoi_gian_bat_dau) }}</td>
+                                                        <td class="px-4 py-3 border-light fw-medium">{{ log.thoi_luong }}</td>
+                                                        <td class="px-4 py-3 border-light">
+                                                            <span :class="{'badge bg-success bg-opacity-10 text-success': log.vai_tro === 'Chủ phòng', 'badge bg-primary bg-opacity-10 text-primary': log.vai_tro !== 'Chủ phòng'}">
+                                                                {{ log.vai_tro }}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr v-if="lich_su_tham_gia.length === 0">
+                                                        <td colspan="5" class="text-center py-5 text-muted">Không có dữ liệu lịch sử</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -941,6 +983,7 @@ export default {
             list_goi: [],
             chi_tiet_phong_hop: [],
             danh_sach_phong_hop: [],
+            lich_su_tham_gia: [],
             showRoomModal: false,
             createdRoomCode: '',
             showJoinInputModal: false,
@@ -962,6 +1005,7 @@ export default {
         this.getGoi();
         this.getChiTietPhongHop();
         this.getDanhSachPhongHop();
+        this.getLichSuThamGia();
     },
     computed: {
         id_nguoi_dung() {
@@ -1080,6 +1124,20 @@ export default {
                     console.error("Lỗi lấy chi tiết phòng họp:", err);
                     this.$toast.error("Không thể tải chi tiết phòng họp.");
                 });
+        },
+        getLichSuThamGia() {
+            const user = JSON.parse(localStorage.getItem('thong_tin_user'));
+            if (!user) return;
+
+            axios.get(`${apiUrl}/phong-hop/lich-su-tham-gia`, {
+                params: { id_nguoi_dung: user.id }
+            }).then(res => {
+                if (res.data.status) {
+                    this.lich_su_tham_gia = res.data.data;
+                }
+            }).catch(err => {
+                console.error("Lỗi lấy lịch sử:", err);
+            });
         },
         formatDay(dateStr) {
             if (!dateStr) return '--';
