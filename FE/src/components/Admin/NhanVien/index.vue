@@ -238,7 +238,7 @@ export default {
             return { Authorization: 'Bearer ' + localStorage.getItem('token_admin') };
         },
         tenChucVu(id) {
-            const cv = this.list_chuc_vu.find(x => x.id == id);
+            const cv = this.list_chuc_vu.find(x => x.id == id+1);
             return cv ? cv.ten_chuc_vu : '';
         },
         timKiem() {

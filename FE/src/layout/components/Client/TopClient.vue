@@ -14,8 +14,15 @@
                 <a href="#" class="nav-link-item">Liên hệ</a>
             </nav>
             <div class="auth-buttons d-flex gap-2 align-items-center">
-                <router-link to="/dang-nhap" class="btn-text">Đăng nhập</router-link>
-                <router-link to="/nguoi-dung/dang-ky" class="btn-orange rounded-pill px-4">Đăng ký</router-link>
+                <template v-if="!isLoggedIn">
+                    <router-link to="/dang-nhap" class="btn-text">Đăng nhập</router-link>
+                    <router-link to="/nguoi-dung/dang-ky" class="btn-orange rounded-pill px-4">Đăng ký</router-link>
+                </template>
+                <template v-else>
+                    <router-link v-if="isDoiTac == 0" to="/nguoi-dung/trang-chinh" class="btn-text">Trang của tôi</router-link>
+                    <router-link v-else-if="isDoiTac == 1" to="/doi-tac/trang-chinh" class="btn-text">Trang đối tác</router-link>
+                    <a href="#" @click.prevent="logout" class="btn-orange rounded-pill px-4">Đăng xuất</a>
+                </template>
             </div>
         </div>
     </header>
@@ -24,6 +31,37 @@
 <script>
 export default {
     name: "TopClient",
+    data() {
+        return {
+            isLoggedIn: false,
+            isDoiTac: 0,
+        };
+    },
+    mounted() {
+        this.checkLoginStatus();
+    },
+    methods: {
+        checkLoginStatus() {
+            const userStr = localStorage.getItem('thong_tin_user');
+            if (userStr) {
+                this.isLoggedIn = true;
+                try {
+                    const user = JSON.parse(userStr);
+                    this.isDoiTac = user.is_doi_tac == 1 ? 1 : 0;
+                } catch (e) {
+                    this.isDoiTac = 0;
+                }
+            } else {
+                this.isLoggedIn = false;
+            }
+        },
+        logout() {
+            localStorage.removeItem('token_nguoi_dung');
+            localStorage.removeItem('token_doi_tac');
+            this.isLoggedIn = false;
+            this.$router.push('/');
+        }
+    }
 }
 </script>
 

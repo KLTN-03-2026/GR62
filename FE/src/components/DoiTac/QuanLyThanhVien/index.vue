@@ -394,8 +394,11 @@ export default {
       return new Date(dateStr).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
     },
     logout() {
-      localStorage.removeItem('token_doi_tac');
-      this.$router.push('/dang-nhap');
+        localStorage.removeItem('token_nguoi_dung');
+        localStorage.removeItem('thong_tin_user');
+        localStorage.removeItem('token_doi_tac');
+        this.$toast && this.$toast.success("Đăng xuất thành công!");
+        this.$router.push('/');
     }
   }
 };

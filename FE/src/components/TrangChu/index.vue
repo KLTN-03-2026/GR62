@@ -21,9 +21,12 @@
                             khuôn mặt và tóm tắt nội dung thông minh bằng trí tuệ nhân tạo.
                         </p>
                         <div class="d-flex align-items-center gap-3 mt-2">
-                            <a href="#" class="btn px-4 py-2 text-white fw-bold shadow-none"
+                            <a href="#" v-if="!isLoggedIn" @click.prevent="handleThuNghiemClick" class="btn px-4 py-2 text-white fw-bold shadow-none"
                                 style="background-color: #0d9488; border-radius: 8px;">Thử nghiệm miễn phí</a>
-
+                            <template v-else>
+                                <router-link v-if="isDoiTac == 0" to="/nguoi-dung/trang-chinh" class="btn px-4 py-2 text-white fw-bold shadow-none" style="background-color: #0d9488; border-radius: 8px;">Trang của tôi</router-link>
+                                <router-link v-else-if="isDoiTac == 1" to="/doi-tac/trang-chinh" class="btn px-4 py-2 text-white fw-bold shadow-none" style="background-color: #0d9488; border-radius: 8px;">Trang đối tác</router-link>
+                            </template>
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -450,12 +453,46 @@ export default {
     data() {
         return {
             list_goi: [],
+            isLoggedIn: false,
+            isDoiTac: 0,
         }
     },
     mounted() {
         this.loadDataGoi();
+        this.checkLoginStatus();
     },
     methods: {
+        checkLoginStatus() {
+            const userStr = localStorage.getItem('thong_tin_user');
+            if (userStr) {
+                this.isLoggedIn = true;
+                try {
+                    const user = JSON.parse(userStr);
+                    this.isDoiTac = user.is_doi_tac == 1 ? 1 : 0;
+                } catch (e) {
+                    this.isDoiTac = 0;
+                }
+            } else {
+                this.isLoggedIn = false;
+            }
+        },
+        handleThuNghiemClick() {
+            const userStr = localStorage.getItem('thong_tin_user');
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    if (user.is_doi_tac == 1) {
+                        if (this.$toast) this.$toast.info('Bạn đã đăng nhập với tài khoản đối tác!');
+                    } else {
+                        if (this.$toast) this.$toast.info('Bạn đã đăng nhập!');
+                    }
+                } catch (e) {
+                    if (this.$toast) this.$toast.info('Bạn đã đăng nhập!');
+                }
+            } else {
+                this.$router.push('/nguoi-dung/dang-ky');
+            }
+        },
         loadDataGoi() {
             axios
                 .get(API + '/goi/data')

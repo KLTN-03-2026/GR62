@@ -400,9 +400,11 @@ export default {
             this.currentDate = `${days[now.getDay()]}, ${now.toLocaleDateString('vi-VN')}`;
         },
         logout() {
+            localStorage.removeItem('token_nguoi_dung');
+            localStorage.removeItem('thong_tin_user');
             localStorage.removeItem('token_doi_tac');
-            this.$router.push('/');
             this.$toast && this.$toast.success("Đăng xuất thành công!");
+            this.$router.push('/');
         },
         async taoPhongHop() {
             if (!this.formTaoPhong.ten_phong.trim()) {

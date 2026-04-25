@@ -123,7 +123,27 @@ export default {
             rememberMe: false,
         };
     },
+    mounted() {
+        this.checkAlreadyLoggedIn();
+    },
     methods: {
+        checkAlreadyLoggedIn() {
+            const userStr = localStorage.getItem('thong_tin_user');
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    if (user.is_doi_tac == 1) {
+                        if (this.$toast) this.$toast.info('Bạn đã đăng nhập với tài khoản đối tác!');
+                        this.$router.push('/doi-tac/trang-chinh');
+                    } else {
+                        if (this.$toast) this.$toast.info('Bạn đã đăng nhập!');
+                        this.$router.push('/nguoi-dung/trang-chinh');
+                    }
+                } catch (e) {
+                    // Invalid JSON, ignore
+                }
+            }
+        },
         async login() {
             this.isLoading = true;
             try {

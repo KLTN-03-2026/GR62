@@ -374,7 +374,7 @@ export default {
       try {
         const token = localStorage.getItem('token_doi_tac');
         if (!token) {
-          this.$router.push('/nguoi-dung/dang-nhap');
+          this.$router.push('/dang-nhap');
           return;
         }
         const res = await axios.get(`${apiUrl}/doi-tac/me`, {
@@ -393,7 +393,7 @@ export default {
           }
         }
       } catch (e) {
-        this.$router.push('/nguoi-dung/dang-nhap');
+        this.$router.push('/dang-nhap');
       }
     },
     async loadPhong() {
@@ -492,8 +492,11 @@ export default {
       }
     },
     logout() {
-      localStorage.removeItem("token_doi_tac");
-      this.$router.push("/nguoi-dung/dang-nhap");
+      localStorage.removeItem('token_nguoi_dung');
+      localStorage.removeItem('thong_tin_user');
+      localStorage.removeItem('token_doi_tac');
+      this.$toast && this.$toast.success("Đăng xuất thành công!");
+      this.$router.push('/');
     }
   }
 };

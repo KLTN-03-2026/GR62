@@ -21,7 +21,7 @@
                             nhận diện khuôn mặt và bảo mật tuyệt đối cho doanh nghiệp hiện đại.
                         </p>
                         <div class="d-flex flex-wrap gap-3">
-                            <router-link to="/nguoi-dung/dang-nhap"
+                            <router-link to="/dang-nhap"
                                 class="btn-orange shadow-lg px-5 py-3 rounded-pill fw-bold">
                                 Bắt đầu <i class='bx bx-right-arrow-alt ms-2'></i>
                             </router-link>

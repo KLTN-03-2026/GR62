@@ -250,8 +250,11 @@ export default {
       return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
     },
     logout() {
+      localStorage.removeItem('token_nguoi_dung');
+      localStorage.removeItem('thong_tin_user');
       localStorage.removeItem('token_doi_tac');
-      this.$router.push('/dang-nhap');
+      this.$toast && this.$toast.success("Đăng xuất thành công!");
+      this.$router.push('/');
     }
   }
 };
