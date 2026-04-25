@@ -41,14 +41,14 @@
                                     <td class="align-middle text-center">{{ value.so_phong_toi_da }}</td>
                                     <td class="align-middle text-center">{{ value.thoi_han }} ngày</td>
                                     <td class="align-middle text-center" v-on:click="doiTrangThai(value)">
-                                        <button v-if="value.trang_thai == 1" class="btn btn-info w-100" style="color:white">Hoạt động</button>
-                                        <button v-else class="btn btn-secondary w-100">Tạm tắt</button>
+                                        <button v-if="value.trang_thai == 1" class="btn btn-info w-100" style="color:white" :disabled="value.id == 1">Hoạt động</button>
+                                        <button v-else class="btn btn-secondary w-100" :disabled="value.id == 1">Tạm tắt</button>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <button v-on:click="edit_goi = Object.assign({}, value)"
-                                            class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#updateModal">Cập nhật</button>
+                                        <button v-on:click="openUpdateModal(value)"
+                                            class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#updateModal" :disabled="value.id == 1">Cập nhật</button>
                                         <button v-on:click="del_goi = value" class="btn btn-danger"
-                                            data-bs-toggle="modal" data-bs-target="#deleteModal">Xóa</button>
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal" :disabled="value.id == 1">Xóa</button>
                                     </td>
                                 </tr>
                             </template>
@@ -109,6 +109,28 @@
                     </div>
 
                     <div class="col-md-12 mb-3">
+                        <label class="form-label">Các Tính Năng Nâng Cao</label>
+                        <div class="d-flex flex-wrap gap-3 p-3 border rounded bg-light">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="record_meeting" id="add_record" v-model="create_goi.tinh_nang_nang_cao">
+                                <label class="form-check-label text-dark" for="add_record">Ghi âm cuộc họp</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="hd_video" id="add_hd" v-model="create_goi.tinh_nang_nang_cao">
+                                <label class="form-check-label text-dark" for="add_hd">Video 1080p</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="premium_support" id="add_support" v-model="create_goi.tinh_nang_nang_cao">
+                                <label class="form-check-label text-dark" for="add_support">Hỗ trợ 24/7</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="custom_url" id="add_url" v-model="create_goi.tinh_nang_nang_cao">
+                                <label class="form-check-label text-dark" for="add_url">Tùy chỉnh link phòng</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
                         <label class="form-label">Mô Tả</label>
                         <textarea v-model="create_goi.mo_ta" class="form-control" rows="3"></textarea>
                     </div>
@@ -160,6 +182,28 @@
                             </select>
                         </div>
                         <div class="col-md-12 mb-3">
+                            <label class="form-label">Các Tính Năng Nâng Cao</label>
+                            <div class="d-flex flex-wrap gap-3 p-3 border rounded bg-light">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="record_meeting" id="edit_record" v-model="edit_goi.tinh_nang_nang_cao">
+                                    <label class="form-check-label text-dark" for="edit_record">Ghi âm cuộc họp</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="hd_video" id="edit_hd" v-model="edit_goi.tinh_nang_nang_cao">
+                                    <label class="form-check-label text-dark" for="edit_hd">Video 1080p</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="premium_support" id="edit_support" v-model="edit_goi.tinh_nang_nang_cao">
+                                    <label class="form-check-label text-dark" for="edit_support">Hỗ trợ 24/7</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="custom_url" id="edit_url" v-model="edit_goi.tinh_nang_nang_cao">
+                                    <label class="form-check-label text-dark" for="edit_url">Tùy chỉnh link phòng</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
                             <label class="form-label">Mô Tả</label>
                             <textarea v-model="edit_goi.mo_ta" class="form-control" rows="3"></textarea>
                         </div>
@@ -203,14 +247,26 @@ export default {
         return {
             list_goi: [],
             list_goi_goc: [],
-            create_goi: { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "1" },
-            edit_goi: { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "" },
+            create_goi: { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "1", tinh_nang_nang_cao: [] },
+            edit_goi: { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "", tinh_nang_nang_cao: [] },
             del_goi: {},
             tu_khoa: '',
         };
     },
     mounted() { this.loadData(); },
     methods: {
+        openUpdateModal(value) {
+            this.edit_goi = Object.assign({}, value);
+            if (!this.edit_goi.tinh_nang_nang_cao) {
+                this.edit_goi.tinh_nang_nang_cao = [];
+            } else if (typeof this.edit_goi.tinh_nang_nang_cao === 'string') {
+                try {
+                    this.edit_goi.tinh_nang_nang_cao = JSON.parse(this.edit_goi.tinh_nang_nang_cao);
+                } catch(e) {
+                    this.edit_goi.tinh_nang_nang_cao = [];
+                }
+            }
+        },
         headers() {
             return { Authorization: 'Bearer ' + localStorage.getItem('token_admin') };
         },
@@ -238,7 +294,7 @@ export default {
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);
-                        this.create_goi = { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "1" };
+                        this.create_goi = { ten_goi: "", gia_goi: "", so_nguoi_toi_da: "", so_phong_toi_da: "", thoi_han: "", mo_ta: "", trang_thai: "1", tinh_nang_nang_cao: [] };
                         this.loadData();
                     }
                     else this.$toast.error(res.data.message);

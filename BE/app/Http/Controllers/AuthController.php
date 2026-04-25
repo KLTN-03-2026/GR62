@@ -45,8 +45,13 @@ class AuthController extends Controller
                 ], 403);
             }
 
-            // Theo logic Frontend, nếu người dùng có id_doi_tac thì sẽ coi là Đối tác, nếu không thì là Người dùng
-            $role = ($user->id_doi_tac) ? 'doi_tac' : 'nguoi_dung';
+            // Nếu NguoiDung có id_doi_tac = 1 thì là Chủ Đối Tác -> role = 'doi_tac'
+            // Nếu id_doi_tac > 1 (là id của Đối tác chủ) thì là Thành viên -> role = 'nguoi_dung'
+            if ($user->id_doi_tac == 1) {
+                $role = 'doi_tac';
+            } else {
+                $role = 'nguoi_dung';
+            }
             $type = 'nguoi_dung';
             
             // Cấp token chung

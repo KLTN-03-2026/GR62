@@ -11,6 +11,11 @@
                 <div class="row m-2">
                     <div class="col-lg-12">
                         <div class="position-relative search-bar-box input-group" style="width: 100%;">
+                            <select v-model="loc_trang_thai" class="form-select" style="max-width: 180px;" @change="timKiem()">
+                                <option value="all">Trạng thái (Tất cả)</option>
+                                <option value="1">Hoạt động</option>
+                                <option value="0">Tạm tắt</option>
+                            </select>
                             <input @keyup="timKiem()" v-model="tu_khoa" type="text"
                                 class="form-control search-control" placeholder="Tìm kiếm theo tên, email, SĐT...">
                             <button v-on:click="timKiem()" class="btn btn-primary">Tìm Kiếm</button>
@@ -218,6 +223,7 @@ export default {
             },
             del_doi_tac: {},
             tu_khoa: "",
+            loc_trang_thai: "all",
         };
     },
     mounted() {
@@ -229,16 +235,22 @@ export default {
         },
         timKiem() {
             const ds = this.list_doi_tac_goc || [];
-            if (!this.tu_khoa) {
-                this.list_doi_tac = [...ds];
-                return;
-            }
-            const kw = this.tu_khoa.trim().toLowerCase();
-            this.list_doi_tac = ds.filter(v =>
-                (v.ho_va_ten && v.ho_va_ten.toLowerCase().includes(kw)) ||
-                (v.email && v.email.toLowerCase().includes(kw)) ||
-                (v.so_dien_thoai && v.so_dien_thoai.includes(kw))
-            );
+            this.list_doi_tac = ds.filter(v => {
+                let matchTuKhoa = true;
+                if (this.tu_khoa) {
+                    const kw = this.tu_khoa.trim().toLowerCase();
+                    matchTuKhoa = (v.ho_va_ten && v.ho_va_ten.toLowerCase().includes(kw)) ||
+                                  (v.email && v.email.toLowerCase().includes(kw)) ||
+                                  (v.so_dien_thoai && v.so_dien_thoai.includes(kw));
+                }
+
+                let matchTrangThai = true;
+                if (this.loc_trang_thai !== 'all') {
+                    matchTrangThai = v.trang_thai == this.loc_trang_thai;
+                }
+
+                return matchTuKhoa && matchTrangThai;
+            });
         },
         loadData() {
             axios.get(`${API}/doi-tac/data`, { headers: this.headers() })

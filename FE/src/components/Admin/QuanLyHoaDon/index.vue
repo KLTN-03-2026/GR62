@@ -65,13 +65,20 @@
 
     <!-- Data Table -->
     <div class="card radius-10 border-top border-0 border-3 border-primary shadow-sm">
-        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+        <div class="card-header bg-white py-3 flex-wrap d-flex align-items-center justify-content-between gap-3">
             <h5 class="mb-0 fw-bold text-primary"><i class="bx bx-list-ul me-2"></i>QUẢN LÝ HÓA ĐƠN</h5>
-            <div class="d-flex gap-2">
-                <div class="input-group" style="width: 300px;">
+            <div class="d-flex flex-wrap gap-2">
+                <input type="date" class="form-control" style="max-width: 150px;" v-model="tu_ngay" @change="locHoaDon()" title="Từ ngày">
+                <input type="date" class="form-control" style="max-width: 150px;" v-model="den_ngay" @change="locHoaDon()" title="Đến ngày">
+                <select class="form-select" style="max-width: 150px;" v-model="loai_tai_khoan" @change="locHoaDon()">
+                    <option value="all">Tất cả tài khoản</option>
+                    <option value="basic">Gói Basic</option>
+                    <option value="partner">Gói Đối Tác</option>
+                </select>
+                <div class="input-group" style="width: 250px;">
                     <span class="input-group-text bg-transparent border-end-0"><i class="bx bx-search"></i></span>
-                    <input type="text" class="form-control border-start-0" placeholder="Tìm mã GD, tên khách..." 
-                           v-model="tu_khoa" @keyup.enter="loadData()">
+                    <input type="text" class="form-control border-start-0" placeholder="Mã GD, tên khách..." 
+                           v-model="tu_khoa" @keyup.enter="locHoaDon()">
                 </div>
                 <button class="btn btn-primary px-4" @click="loadData()">
                     <i class="bx bx-refresh me-1"></i> Làm mới
@@ -250,7 +257,11 @@ export default {
     data() {
         return {
             list_hoa_don: [],
+            list_hoa_don_goc: [],
             tu_khoa: '',
+            tu_ngay: '',
+            den_ngay: '',
+            loai_tai_khoan: 'all',
             hoa_don_chi_tiet: null,
             hoa_don_xoa: {},
             tong_doanh_thu: 0,
@@ -268,21 +279,47 @@ export default {
         async loadData() {
             try {
                 let url = `${API}/hoa-don/data`;
-                if (this.tu_khoa) {
-                    const res = await axios.post(`${API}/hoa-don/tim-kiem`, { keyword: this.tu_khoa }, { headers: this.headers() });
-                    if (res.data.status) {
-                        this.list_hoa_don = res.data.data;
-                    }
-                } else {
-                    const res = await axios.get(url, { headers: this.headers() });
-                    if (res.data.status) {
-                        this.list_hoa_don = res.data.data;
-                    }
+                const res = await axios.get(url, { headers: this.headers() });
+                if (res.data.status) {
+                    this.list_hoa_don_goc = res.data.data;
                 }
-                this.calculateStats();
+                this.locHoaDon();
             } catch (error) {
                 this.$toast.error('Lỗi khi tải dữ liệu hóa đơn');
             }
+        },
+        locHoaDon() {
+            let filtered = this.list_hoa_don_goc || [];
+
+            if (this.tu_khoa) {
+                const kw = this.tu_khoa.toLowerCase();
+                filtered = filtered.filter(item => 
+                    (item.ma_giao_dich && item.ma_giao_dich.toLowerCase().includes(kw)) ||
+                    (item.nguoi_dung && item.nguoi_dung.ho_va_ten && item.nguoi_dung.ho_va_ten.toLowerCase().includes(kw))
+                );
+            }
+
+            if (this.tu_ngay) {
+                const fromDate = new Date(this.tu_ngay);
+                filtered = filtered.filter(item => new Date(item.created_at) >= fromDate);
+            }
+
+            if (this.den_ngay) {
+                const toDate = new Date(this.den_ngay);
+                toDate.setHours(23, 59, 59, 999);
+                filtered = filtered.filter(item => new Date(item.created_at) <= toDate);
+            }
+
+            if (this.loai_tai_khoan !== 'all') {
+                if (this.loai_tai_khoan === 'basic') {
+                    filtered = filtered.filter(item => !item.nguoi_dung || !item.nguoi_dung.id_doi_tac);
+                } else if (this.loai_tai_khoan === 'partner') {
+                    filtered = filtered.filter(item => item.nguoi_dung && item.nguoi_dung.id_doi_tac);
+                }
+            }
+
+            this.list_hoa_don = filtered;
+            this.calculateStats();
         },
         calculateStats() {
             this.tong_doanh_thu = this.list_hoa_don.reduce((sum, item) => {

@@ -11,6 +11,16 @@
                 <div class="row m-2">
                     <div class="col-lg-12">
                         <div class="position-relative search-bar-box input-group" style="width: 100%;">
+                            <select v-model="loc_loai_tai_khoan" class="form-select" style="max-width: 180px;" @change="timKiem()">
+                                <option value="all">Loại tài khoản (Tất cả)</option>
+                                <option value="basic">Basic</option>
+                                <option value="partner">Partner</option>
+                            </select>
+                            <select v-model="loc_trang_thai" class="form-select" style="max-width: 180px;" @change="timKiem()">
+                                <option value="all">Trạng thái (Tất cả)</option>
+                                <option value="1">Hoạt động</option>
+                                <option value="0">Tạm tắt</option>
+                            </select>
                             <input @keyup="timKiem()" v-model="tu_khoa" type="text"
                                 class="form-control search-control" placeholder="Tìm kiếm theo tên, email, SĐT...">
                             <button v-on:click="timKiem()" class="btn btn-primary">Tìm Kiếm</button>
@@ -249,6 +259,8 @@ export default {
             },
             del_nguoi_dung: {},
             tu_khoa: "",
+            loc_loai_tai_khoan: "all",
+            loc_trang_thai: "all",
         };
     },
     mounted() {
@@ -262,16 +274,29 @@ export default {
         },
         timKiem() {
             const ds = this.list_nguoi_dung_goc || [];
-            if (!this.tu_khoa) {
-                this.list_nguoi_dung = [...ds];
-                return;
-            }
-            const kw = this.tu_khoa.trim().toLowerCase();
-            this.list_nguoi_dung = ds.filter(v =>
-                (v.ho_va_ten && v.ho_va_ten.toLowerCase().includes(kw)) ||
-                (v.email && v.email.toLowerCase().includes(kw)) ||
-                (v.so_dien_thoai && v.so_dien_thoai.includes(kw))
-            );
+            this.list_nguoi_dung = ds.filter(v => {
+                let matchTuKhoa = true;
+                if (this.tu_khoa) {
+                    const kw = this.tu_khoa.trim().toLowerCase();
+                    matchTuKhoa = (v.ho_va_ten && v.ho_va_ten.toLowerCase().includes(kw)) ||
+                                  (v.email && v.email.toLowerCase().includes(kw)) ||
+                                  (v.so_dien_thoai && v.so_dien_thoai.includes(kw));
+                }
+                
+                let matchLoai = true;
+                if (this.loc_loai_tai_khoan === 'basic') {
+                    matchLoai = !v.id_doi_tac; // null or 0
+                } else if (this.loc_loai_tai_khoan === 'partner') {
+                    matchLoai = !!v.id_doi_tac; // not null and > 0
+                }
+
+                let matchTrangThai = true;
+                if (this.loc_trang_thai !== 'all') {
+                    matchTrangThai = v.trang_thai == this.loc_trang_thai;
+                }
+
+                return matchTuKhoa && matchLoai && matchTrangThai;
+            });
         },
         loadData() {
             axios.get(`${API}/nguoi-dung/data`, { headers: this.headers() })

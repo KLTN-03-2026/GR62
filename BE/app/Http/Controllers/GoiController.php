@@ -49,6 +49,12 @@ class GoiController extends Controller
 
     public function update(GoiUpdateRequest $request)
     {
+        if ($request->id == 1) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Không được phép chỉnh sửa gói Basic mặc định!'
+            ]);
+        }
         $data = Goi::where('id', $request->id)->first();
         if ($data) {
             $data->update($request->all());
@@ -66,6 +72,12 @@ class GoiController extends Controller
 
     public function destroy(Request $request)
     {
+        if ($request->id == 1) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Không được phép xóa gói Basic mặc định!'
+            ]);
+        }
         $data = Goi::where('id', $request->id)->first();
         if ($data) {
             $data->delete();
@@ -98,6 +110,12 @@ class GoiController extends Controller
 
     public function changeStatus(GoiChangeStatusRequest $request)
     {
+        if ($request->id == 1) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Không được phép thay đổi trạng thái gói Basic mặc định!'
+            ]);
+        }
         $data = Goi::where('id', $request->id)->first();
         if ($data) {
             $data->trang_thai = !$data->trang_thai;

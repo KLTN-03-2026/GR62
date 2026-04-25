@@ -13,6 +13,7 @@ class Goi extends Model
         'so_phong_toi_da',
         'thoi_han',
         'mo_ta',
+        'tinh_nang_nang_cao',
         'is_nguoi_dung',
         'is_open',
         'is_hien_thi',
@@ -26,6 +27,7 @@ class Goi extends Model
             'is_open' => 'boolean',
             'is_hien_thi' => 'boolean',
             'trang_thai' => 'boolean',
+            'tinh_nang_nang_cao' => 'array',
         ];
     }
 }

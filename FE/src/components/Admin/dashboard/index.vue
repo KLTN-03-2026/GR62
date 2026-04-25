@@ -20,6 +20,18 @@
             <hr class="mt-0 mb-4" style="border-width: 2px; opacity: 0.1">
         </div>
 
+        <div class="col-12 px-4 mb-4 d-flex gap-3 justify-content-end align-items-center flex-wrap">
+            <div class="d-flex align-items-center gap-2 bg-white rounded shadow-sm px-3 py-2">
+                <span class="text-secondary fw-bold small">TỪ NGÀY</span>
+                <input type="date" v-model="tu_ngay" class="form-control form-control-sm border-0 bg-light" @change="locDuLieu()">
+                <span class="text-secondary fw-bold small ms-2">ĐẾN NGÀY</span>
+                <input type="date" v-model="den_ngay" class="form-control form-control-sm border-0 bg-light" @change="locDuLieu()">
+            </div>
+            <button class="btn btn-success px-4 py-2 shadow-sm d-flex align-items-center gap-2" @click="xuatBaoCao()">
+                <i class="fa-solid fa-file-export"></i> Xuất Báo Cáo
+            </button>
+        </div>
+
         <!-- WOW CHART -->
         <div class="col-12 mb-5">
             <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
@@ -231,6 +243,16 @@ export default {
             list_chat_room: [],
             list_chuc_vu: [],
             list_chuc_nang: [],
+            goc_nguoi_dung: [],
+            goc_doi_tac: [],
+            goc_phong_hop: [],
+            goc_goi: [],
+            goc_hoa_don: [],
+            goc_chat_room: [],
+            goc_chuc_vu: [],
+            goc_chuc_nang: [],
+            tu_ngay: '',
+            den_ngay: '',
             current_time: '',
             current_date: '',
             timer: null,
@@ -320,18 +342,71 @@ export default {
                 axios.get(`${baseUrl}/chuc-vu/data`).catch(() => ({ data: { data: [] } })),
                 axios.get(`${baseUrl}/chuc-nang/data`).catch(() => ({ data: { data: [] } }))
             ]).then((responses) => {
-                this.list_nguoi_dung = responses[0].data.data;
-                this.list_doi_tac = responses[1].data.data;
-                this.list_phong_hop = responses[2].data.data;
-                this.list_goi = responses[3].data.data;
-                this.list_hoa_don = responses[4].data.data;
-                this.list_chat_room = responses[5].data.data;
-                this.list_chuc_vu = responses[6].data.data;
-                this.list_chuc_nang = responses[7].data.data;
+                this.goc_nguoi_dung = responses[0].data.data || [];
+                this.goc_doi_tac = responses[1].data.data || [];
+                this.goc_phong_hop = responses[2].data.data || [];
+                this.goc_goi = responses[3].data.data || [];
+                this.goc_hoa_don = responses[4].data.data || [];
+                this.goc_chat_room = responses[5].data.data || [];
+                this.goc_chuc_vu = responses[6].data.data || [];
+                this.goc_chuc_nang = responses[7].data.data || [];
 
-                this.selectCard('all');
+                this.locDuLieu();
                 this.loadingCount = 0;
             });
+        },
+        locDuLieu() {
+            const filterByDate = (arr) => {
+                let res = arr;
+                if (this.tu_ngay) {
+                    const from = new Date(this.tu_ngay);
+                    res = res.filter(i => new Date(i.created_at) >= from);
+                }
+                if (this.den_ngay) {
+                    const to = new Date(this.den_ngay);
+                    to.setHours(23, 59, 59, 999);
+                    res = res.filter(i => new Date(i.created_at) <= to);
+                }
+                return res;
+            };
+
+            this.list_nguoi_dung = filterByDate(this.goc_nguoi_dung);
+            this.list_doi_tac = filterByDate(this.goc_doi_tac);
+            this.list_phong_hop = filterByDate(this.goc_phong_hop);
+            this.list_goi = filterByDate(this.goc_goi);
+            this.list_hoa_don = filterByDate(this.goc_hoa_don);
+            this.list_chat_room = filterByDate(this.goc_chat_room);
+            this.list_chuc_vu = filterByDate(this.goc_chuc_vu);
+            this.list_chuc_nang = filterByDate(this.goc_chuc_nang);
+
+            this.selectCard(this.selectedCategory);
+        },
+        xuatBaoCao() {
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+            csvContent += "BÁO CÁO THỐNG KÊ HỆ THỐNG\n";
+            csvContent += `Thời gian xuất: ${new Date().toLocaleString('vi-VN')}\n`;
+            if (this.tu_ngay || this.den_ngay) {
+                csvContent += `Từ ngày: ${this.tu_ngay || '...'} Đến ngày: ${this.den_ngay || '...'}\n`;
+            }
+            csvContent += "\nDanh mục,Số lượng\n";
+            csvContent += `Người dùng,${this.list_nguoi_dung.length}\n`;
+            csvContent += `Đối tác,${this.list_doi_tac.length}\n`;
+            csvContent += `Phòng họp,${this.list_phong_hop.length}\n`;
+            csvContent += `Gói dịch vụ,${this.list_goi.length}\n`;
+            csvContent += `Hóa đơn,${this.list_hoa_don.length}\n`;
+            csvContent += `Phòng chat,${this.list_chat_room.length}\n`;
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "bao_cao_thong_ke.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            if (this.$toast) {
+                this.$toast.success("Đã xuất báo cáo CSV thành công!");
+            }
         },
         selectCard(category) {
             this.selectedCategory = category;
