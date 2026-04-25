@@ -30,6 +30,42 @@ class PhongHopController extends Controller
         ]);
     }
 
+    public function getPhongHopLienQuan(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
+        }
+
+        $query = PhongHop::with('chuPhong')->where('trang_thai', 1);
+
+        if ($user->id_doi_tac > 0) {
+            // Xác định ID của Chủ Đối Tác
+            // Nếu id_doi_tac == 1, nghĩa là user này chính là Chủ Đối Tác, do đó ID của chủ là $user->id
+            // Nếu id_doi_tac > 1, nghĩa là user này là Thành viên, ID của chủ là $user->id_doi_tac
+            $ownerId = ($user->id_doi_tac == 1) ? $user->id : $user->id_doi_tac;
+            
+            // Lấy ID của tất cả thành viên thuộc Đối Tác này
+            $memberIds = NguoiDung::where('id_doi_tac', $ownerId)->pluck('id')->toArray();
+            
+            // Bao gồm cả ID của Chủ Đối Tác và các thành viên
+            $companyUserIds = array_merge([$ownerId], $memberIds);
+
+            // Lọc ra các phòng họp do những người trong công ty/đối tác này tạo
+            $query->whereIn('id_chu_phong', $companyUserIds);
+        } else {
+            // Người dùng cơ bản (chỉ thấy phòng do chính mình tạo)
+            $query->where('id_chu_phong', $user->id);
+        }
+
+        $data = $query->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ]);
+    }
+
     public function store(PhongHopCreateRequest $request)
     {
 

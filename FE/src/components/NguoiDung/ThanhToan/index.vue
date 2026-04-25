@@ -269,6 +269,8 @@ export default {
                         if (this.user && (res.data.id_doi_tac == 1 || res.data.id_doi_tac === true)) {
                             // Cập nhật trạng thái đối tác ngay lập tức
                             this.user.id_doi_tac = 1;
+                            this.user.id_goi = this.id_goi;
+                            this.user.goi = this.goiInfo;
                             localStorage.setItem('thong_tin_user', JSON.stringify(this.user));
                             
                             // Đồng bộ token sang token_doi_tac nếu cần

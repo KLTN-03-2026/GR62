@@ -25,7 +25,7 @@ class AuthController extends Controller
         }
 
         // 1. Kiểm tra bảng NguoiDung trước
-        $user = NguoiDung::with('chucVu')->where('email', $request->email)->first();
+        $user = NguoiDung::with(['chucVu', 'goi'])->where('email', $request->email)->first();
         $role = null;
         $token = null;
         $type = null; // 'nguoi_dung' hoặc 'doi_tac' (table)

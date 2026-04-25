@@ -319,7 +319,8 @@ class DoiTacController extends Controller
 
     public function index()
     {
-        $data = DoiTac::all();
+        // Lấy danh sách các tài khoản là Đối Tác (id_doi_tac = 1) từ bảng NguoiDung
+        $data = NguoiDung::where('id_doi_tac', 1)->orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => true,
             'data' => $data
@@ -328,7 +329,14 @@ class DoiTacController extends Controller
 
     public function store(Request $request)
     {
-        $data = DoiTac::create($request->all());
+        // Khi Admin tạo thêm Đối tác mới, mặc định lưu vào bảng NguoiDung với id_doi_tac = 1
+        $dataRequest = $request->all();
+        $dataRequest['id_doi_tac'] = 1;
+        if(isset($dataRequest['password'])){
+            $dataRequest['password'] = Hash::make($dataRequest['password']);
+        }
+
+        $data = NguoiDung::create($dataRequest);
         return response()->json([
             'status' => true,
             'message' => 'Thêm mới thành công',
@@ -338,9 +346,13 @@ class DoiTacController extends Controller
 
     public function update(Request $request)
     {
-        $data = DoiTac::where('id', $request->id)->first();
+        $data = NguoiDung::where('id', $request->id)->where('id_doi_tac', 1)->first();
         if ($data) {
-            $data->update($request->all());
+            $updateData = $request->except(['password']);
+            if($request->has('password') && $request->password != ''){
+                $updateData['password'] = Hash::make($request->password);
+            }
+            $data->update($updateData);
             return response()->json([
                 'status' => true,
                 'message' => 'Cập nhật thành công',
@@ -355,7 +367,7 @@ class DoiTacController extends Controller
 
     public function destroy(Request $request)
     {
-        $data = DoiTac::where('id', $request->id)->first();
+        $data = NguoiDung::where('id', $request->id)->where('id_doi_tac', 1)->first();
         if ($data) {
             $data->delete();
             return response()->json([
@@ -371,7 +383,7 @@ class DoiTacController extends Controller
 
     public function search(Request $request)
     {
-        $query = DoiTac::query();
+        $query = NguoiDung::where('id_doi_tac', 1);
         if ($request->has('keyword') && $request->keyword != '') {
             $keyword = $request->keyword;
             $query->where(function($q) use ($keyword) {
@@ -389,7 +401,7 @@ class DoiTacController extends Controller
 
     public function changeStatus(Request $request)
     {
-        $data = DoiTac::where('id', $request->id)->first();
+        $data = NguoiDung::where('id', $request->id)->where('id_doi_tac', 1)->first();
         if ($data) {
             $data->trang_thai = !$data->trang_thai;
             $data->save();

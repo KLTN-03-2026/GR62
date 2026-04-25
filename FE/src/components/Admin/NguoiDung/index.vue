@@ -36,6 +36,7 @@
                                 <th class="text-center">Email</th>
                                 <th class="text-center">Số Điện Thoại</th>
                                 <th class="text-center">Chức Vụ</th>
+                                <th class="text-center">Gói Dịch Vụ</th>
                                 <th class="text-center">Trạng Thái</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -49,6 +50,10 @@
                                     <td class="align-middle text-center">{{ value.so_dien_thoai }}</td>
                                     <td class="align-middle text-center">
                                         {{ value.chuc_vu ? value.chuc_vu.ten_chuc_vu : 'N/A' }}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <span v-if="value.goi" class="badge bg-success shadow-sm px-2 py-1">{{ value.goi.ten_goi }}</span>
+                                        <span v-else class="badge bg-secondary shadow-sm px-2 py-1" style="opacity: 0.7;">Chưa đăng ký</span>
                                     </td>
                                     <td class="align-middle text-center" v-on:click="doiTrangThai(value)">
                                         <button v-if="value.trang_thai == 1" class="btn btn-info w-100"

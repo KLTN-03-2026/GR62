@@ -23,7 +23,14 @@ class NguoiDungController extends Controller
 {
     public function index()
     {
-        $data = NguoiDung::with('doiTac', 'chucVu')->get();
+        // Lấy người dùng chính (cá nhân hoặc chủ đối tác), loại bỏ nhân viên (id_doi_tac > 1)
+        $data = NguoiDung::with(['doiTac', 'chucVu', 'goi'])
+            ->where(function ($query) {
+                $query->whereNull('id_doi_tac')
+                      ->orWhere('id_doi_tac', 0);
+            })
+            ->get();
+            
         return response()->json([
             'status' => true,
             'data' => $data
@@ -81,7 +88,11 @@ class NguoiDungController extends Controller
 
     public function search(Request $request)
     {
-        $query = NguoiDung::with('doiTac', 'chucVu');
+        $query = NguoiDung::with(['doiTac', 'chucVu', 'goi'])
+            ->where(function ($q) {
+                $q->whereNull('id_doi_tac')
+                  ->orWhere('id_doi_tac', 0);
+            });
         if ($request->has('keyword') && $request->keyword != '') {
             $keyword = $request->keyword;
             $query->where(function ($q) use ($keyword) {
@@ -99,7 +110,11 @@ class NguoiDungController extends Controller
 
     public function changeStatus(Request $request)
     {
-        $data = NguoiDung::where('id', $request->id)->first();
+        $data = NguoiDung::where('id', $request->id)
+            ->where(function ($q) {
+                $q->whereNull('id_doi_tac')
+                  ->orWhere('id_doi_tac', 0);
+            })->first();
         if ($data) {
             $data->trang_thai = !$data->trang_thai;
             $data->save();
