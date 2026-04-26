@@ -1,4 +1,5 @@
-# 🚀 AI-Meet: Nền tảng Họp Trực tuyến Thông minh
+# 🚀 AI-Meet: Nền tảng Họp Trực tuyến Thông minh 
+Hiện Tại CHúng Tôi Đã Deloy Web lên sever đường link Truy Cập : https://nhom62kltn.deloydz.io.vn/
 
 
 
