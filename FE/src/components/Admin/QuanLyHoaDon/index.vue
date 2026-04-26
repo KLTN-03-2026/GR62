@@ -52,7 +52,7 @@
                     <div class="row align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tổng Hóa Đơn</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ list_hoa_don.length }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ tong_hoa_don }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="bx bx-receipt fs-1 text-info opacity-50"></i>
@@ -267,6 +267,7 @@ export default {
             tong_doanh_thu: 0,
             sl_thanh_cong: 0,
             sl_cho_xu_ly: 0,
+            tong_hoa_don: 0,
         }
     },
     mounted() {
@@ -318,15 +319,16 @@ export default {
                 }
             }
 
-            this.list_hoa_don = filtered;
-            this.calculateStats();
+            this.calculateStats(filtered);
+            this.list_hoa_don = filtered.filter(item => item.trang_thai_thanh_toan == 1);
         },
-        calculateStats() {
-            this.tong_doanh_thu = this.list_hoa_don.reduce((sum, item) => {
+        calculateStats(data) {
+            this.tong_doanh_thu = data.reduce((sum, item) => {
                 return item.trang_thai_thanh_toan == 1 ? sum + parseFloat(item.so_tien) : sum;
             }, 0);
-            this.sl_thanh_cong = this.list_hoa_don.filter(i => i.trang_thai_thanh_toan == 1).length;
-            this.sl_cho_xu_ly = this.list_hoa_don.filter(i => i.trang_thai_thanh_toan != 1).length;
+            this.sl_thanh_cong = data.filter(i => i.trang_thai_thanh_toan == 1).length;
+            this.sl_cho_xu_ly = data.filter(i => i.trang_thai_thanh_toan != 1).length;
+            this.tong_hoa_don = data.length;
         },
         showDetail(v) {
             this.hoa_don_chi_tiet = v;
