@@ -40,10 +40,6 @@
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>
                     </button>
-                    <button @click="$router.push('/nguoi-dung/danh-sach-goi')" class="nav-business-item">
-                        <i class="bx bxs-package"></i>
-                        <span>Mua gói</span>
-                    </button>
                     <button class="nav-business-item active">
                         <i class="bx bxs-cog"></i>
                         <span>Cài đặt</span>

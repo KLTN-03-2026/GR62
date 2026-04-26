@@ -4,7 +4,8 @@
             <!-- Sidebar (AI-Meet Business Branding) -->
             <aside class="sidebar-business d-flex flex-column py-5 shadow-sm">
                 <div class="logo-section px-4 mb-5">
-                    <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3" @click="$router.push('/doi-tac/trang-chinh')"
+                        style="cursor: pointer;">
                         <div class="logo-icon-business">
                             <i class="bx bxs-component fs-3"></i>
                         </div>
@@ -38,10 +39,6 @@
                         <i class="bx bxs-receipt"></i>
                         <span>Hóa đơn</span>
                     </button>
-                    <button @click="$router.push('/nguoi-dung/danh-sach-goi')" class="nav-business-item">
-                        <i class="bx bxs-package"></i>
-                        <span>Mua gói</span>
-                    </button>
                     <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>
@@ -65,7 +62,7 @@
             </aside>
 
             <!-- Main Content Section -->
-            <main class="flex-grow-1 p-0 overflow-auto bg-white">
+            <main class="flex-grow-1 p-0 overflow-auto bg-fbf9f6">
                 <!-- Header -->
                 <header class="content-header px-5 py-4 d-flex justify-content-between align-items-center">
                     <div class="search-business d-none d-lg-flex">
@@ -78,7 +75,6 @@
                             <div class="icon-btn-plain"><i class="bx bxs-bell fs-4"></i><span class="dot-badge"></span>
                             </div>
                             <div class="icon-btn-plain"><i class="bx bxs-calendar fs-4"></i></div>
-                            <div class="icon-btn-plain"><i class="bx bxs-message-square-detail fs-4"></i></div>
                         </div>
 
                         <div class="profile-trigger-business d-flex align-items-center gap-3 cursor-pointer"
@@ -94,6 +90,24 @@
 
                 <div class="p-5 pt-4">
                     <!-- Title Section -->
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+                        <div class="greeting-section">
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <div class="feature-icon-bg-mini"><i class='bx bxs-dashboard fs-4'></i></div>
+                                <h2 class="fw-900 text-dark mb-0">Tổng quan hệ thống</h2>
+                            </div>
+                            <p class="text-muted fw-500 mb-0 ms-5 ps-2">Chào mừng back, <b class="text-dark">{{ partnerName }}</b>! Hôm nay là {{ currentDate }}.</p>
+                        </div>
+                        <div class="header-actions-business d-flex gap-3">
+                            <button class="btn btn-light-orange-pro px-4 py-3 fw-800 rounded-4 border-0">
+                                <i class="bx bxs-time-five me-2"></i> {{ currentTime }}
+                            </button>
+                            <button @click="showCreateMeetingModal = true"
+                                class="btn btn-orange-pro px-4 py-3 fw-800 rounded-4 border-0 text-white shadow-orange">
+                                <i class="bx bx-plus-circle me-2"></i> Khởi tạo phòng mới
+                            </button>
+                        </div>
+                    </div>
                     <!-- Metrics & Quick Join Row -->
                     <div class="row g-4 mb-5">
                         <div class="col-md-3">
@@ -292,6 +306,8 @@ export default {
     data() {
         return {
             partnerId: null,
+            partnerName: 'Admin Đối tác',
+            partnerPosition: 'Đối tác',
             showCreateMeetingModal: false,
             isCreating: false,
             formTaoPhong: {
@@ -466,6 +482,23 @@ export default {
     background-color: #fff;
     font-family: 'Plus Jakarta Sans', sans-serif;
     color: #1a1e29;
+}
+
+.bg-fbf9f6 {
+    background-color: #fbf9f6;
+}
+
+.feature-icon-bg-mini {
+    width: 44px;
+    height: 44px;
+    background: #fff;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    color: #ea580c;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
 }
 
 /* Sidebar Business Style */
@@ -827,7 +860,8 @@ export default {
 
 /* Side Info section */
 .greeting-section h2 {
-    font-size: 2.2rem;
+    font-size: 2rem;
+    letter-spacing: -1.5px;
 }
 
 /* Buttons pro */

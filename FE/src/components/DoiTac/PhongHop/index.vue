@@ -29,7 +29,15 @@
                         <i class="bx bxs-megaphone"></i>
                         <span>Quản lý phòng họp</span>
                     </button>
-                    <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
+                    <button @click="$router.push('/doi-tac/quan-ly-thanh-vien')" class="nav-business-item">
+                        <i class="bx bxs-group"></i>
+                        <span>Thành viên</span>
+                    </button>
+                    <button @click="$router.push('/doi-tac/hoa-don')" class="nav-business-item">
+                        <i class="bx bxs-receipt"></i>
+                        <span>Hóa đơn</span>
+                    </button>
+                    <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">    
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>
                     </button>
@@ -61,6 +69,11 @@
                     </div>
 
                     <div class="header-right d-flex align-items-center gap-4">
+                        <div class="header-icon-btns d-flex gap-3">
+                            <div class="icon-btn-plain"><i class="bx bxs-bell fs-4"></i><span class="dot-badge"></span></div>
+                            <div class="icon-btn-plain"><i class="bx bxs-calendar fs-4"></i></div>
+                        </div>
+
                         <div class="profile-trigger-business d-flex align-items-center gap-3 cursor-pointer"
                             @click="$router.push('/doi-tac/profile')">
                             <div class="text-end d-none d-md-block">
@@ -540,4 +553,29 @@ export default {
 .search-business { background: #f3f0eb; border-radius: 14px; padding: 10px 20px; width: 400px; align-items: center; gap: 10px; }
 .search-business input { background: transparent; border: none; outline: none; font-size: 0.85rem; font-weight: 600; width: 100%; }
 .header-avatar-business { width: 44px; height: 44px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1px #f0ece6; }
+
+.header-icon-btns { display: flex; align-items: center; }
+.icon-btn-plain {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #5a5a5a;
+    position: relative;
+    border-radius: 12px;
+    transition: 0.2s;
+}
+.icon-btn-plain:hover { background: #f3f0eb; color: #1a1e29; }
+.dot-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    background: #ea580c;
+    border-radius: 50%;
+    border: 2px solid white;
+}
 </style>
