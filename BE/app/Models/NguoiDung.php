@@ -13,6 +13,7 @@ class NguoiDung extends Authenticatable
     protected $fillable = [
         'id_chuc_vu',
         'id_doi_tac',
+        'id_goi',
         'ho_va_ten',
         'so_dien_thoai',
         'email',
@@ -31,7 +32,7 @@ class NguoiDung extends Authenticatable
         return [
             'password' => 'hashed',
             'trang_thai' => 'boolean',
-            'id_doi_tac' => 'boolean',
+            'id_doi_tac' => 'integer',
         ];
     }
 
@@ -43,5 +44,10 @@ class NguoiDung extends Authenticatable
     public function chucVu()
     {
         return $this->belongsTo(ChucVu::class, 'id_chuc_vu');
+    }
+
+    public function goi()
+    {
+        return $this->belongsTo(Goi::class, 'id_goi');
     }
 }

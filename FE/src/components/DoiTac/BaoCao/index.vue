@@ -33,10 +33,6 @@
                         <i class="bx bxs-group"></i>
                         <span>Thành viên</span>
                     </button>
-                    <button @click="$router.push('/doi-tac/hoa-don')" class="nav-business-item">
-                        <i class="bx bxs-receipt"></i>
-                        <span>Hóa đơn</span>
-                    </button>
                     <button class="nav-business-item active">
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>

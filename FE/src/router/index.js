@@ -208,7 +208,6 @@ const routes = [
     meta: { layout: 'black' }
     },
 
-
 ]
 
 const router = createRouter({

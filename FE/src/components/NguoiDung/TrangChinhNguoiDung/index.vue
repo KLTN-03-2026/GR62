@@ -44,33 +44,43 @@
                                     :style="currentTab === 'settings' ? '' : 'color: #64748b;'"></i> Cài đặt
                             </a>
                         </li>
-                        <hr class="my-2 opacity-10">
-                        <li class="nav-item" v-if="la_doi_tac">
-                            <a href="/doi-tac/trang-chinh"
-                                class="nav-link d-flex align-items-center fw-medium py-2 px-3 rounded-3 text-dark text-muted-hover animate__animated animate__pulse">
-                                <i class='bx bxs-business me-3 fs-5 text-orange'></i> Quản trị Đối tác
-                            </a>
-                        </li>
                     </ul>
                 </div>
 
                 <!-- Pro Plan -->
                 <div class="p-4 mt-auto">
-                    <div class="p-3 rounded-4 pt-4 text-center"
+                    <!-- Chưa có gói -->
+                    <div v-if="!la_doi_tac" class="p-3 rounded-4 pt-4 text-center"
                         style="background-color: #fff7ed; border: 1px solid #ffedd5;">
                         <div class="text-start mb-2">
                             <h6 class="fw-bolder mb-1"
                                 style="color: #ea580c; font-size: 0.75rem; letter-spacing: 0.5px;">
-
-                                GÓI Đối Tác</h6>
+                                Nâng Cấp Gói</h6>
                             <p class="small text-muted mb-3 lh-sm"
                                 style="font-size: 0.8rem; color: #64748b !important;">
-                                Theo dõi khuôn mặt AI không giới hạn & lưu trữ.</p>
+                                Nâng cấp gói để tận hưởng tính năng doanh nghiệp.</p>
                         </div>
                         <router-link to="/nguoi-dung/danh-sach-goi" class="btn w-100 fw-bold text-white shadow-sm"
                             style="background-color: #ea580c; font-size: 0.85rem; padding: 10px 0; border-radius: 8px; text-decoration: none;">
-                            Nâng cấp gói
+                            Nâng cấp ngay
                         </router-link>
+                    </div>
+                    
+                    <!-- Đã có gói Đối tác -->
+                    <div v-else class="p-3 rounded-4 pt-4 text-center"
+                        style="background-color: #f0fdf4; border: 1px solid #dcfce7;">
+                        <div class="text-start mb-2">
+                            <h6 class="fw-bolder mb-1"
+                                style="color: #166534; font-size: 0.75rem; letter-spacing: 0.5px;">
+                                <i class="bx bx-check-shield me-1"></i> GÓI ĐANG DÙNG</h6>
+                            <p class="small text-muted mb-3 lh-sm fw-bold text-truncate"
+                                style="font-size: 0.85rem; color: #15803d !important;">
+                                {{ thong_tin_dang_nhap?.goi?.ten_goi || 'Gói Doanh Nghiệp (Đối Tác)' }}</p>
+                        </div>
+                        <button class="btn w-100 fw-bold text-white shadow-sm" disabled
+                            style="background-color: #22c55e; font-size: 0.85rem; padding: 10px 0; border-radius: 8px;">
+                            Đã kích hoạt
+                        </button>
                     </div>
                 </div>
             </aside>
@@ -162,8 +172,6 @@
                                         lại,
                                         {{ ten_nguoi_dung }}
                                     </h2>
-                                    <p class="mb-0" style="font-size: 1rem; color: #64748b;">Bạn có <strong>3
-                                            cuộc họp</strong> được lên lịch cho hôm nay.</p>
                                 </div>
                                 <div
                                     class="col-md-6 d-none d-md-flex flex-column justify-content-end align-items-end mb-1">
@@ -1173,11 +1181,15 @@ export default {
         },
         getDanhSachPhongHop() {
             axios
-                .get(`${apiUrl}/phong-hop/data`)
+                .get(`${apiUrl}/nguoi-dung/phong-hop-lien-quan`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token_nguoi_dung')}`
+                    }
+                })
                 .then((res) => {
                     if (res.data.status) {
-                        // Lọc chỉ lấy những phòng có trạng thái 1 (đang hoạt động)
-                        this.danh_sach_phong_hop = res.data.data.filter(phong => phong.trang_thai == 1);
+                        // Backend đã tự động lọc trang_thai = 1 và phòng theo tổ chức
+                        this.danh_sach_phong_hop = res.data.data;
                     }
                     else {
                         this.$toast.info(res.data.message)

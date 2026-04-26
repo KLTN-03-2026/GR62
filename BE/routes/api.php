@@ -103,6 +103,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/nguoi-dung/update-avatar', [NguoiDungController::class, 'updateAvatar']);
     Route::post('/nguoi-dung/change-password', [NguoiDungController::class, 'changePassword']);
     Route::post('/nguoi-dung/update-profile', [NguoiDungController::class, 'updateProfile']);
+    Route::get('/nguoi-dung/phong-hop-lien-quan', [PhongHopController::class, 'getPhongHopLienQuan']);
     Route::get('/hoa-don/history', [HoaDonController::class, 'getHistory']);
 });
 
