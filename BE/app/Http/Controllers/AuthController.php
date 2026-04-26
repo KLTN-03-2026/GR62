@@ -45,12 +45,12 @@ class AuthController extends Controller
                 ], 403);
             }
 
-            // Nếu NguoiDung có id_doi_tac = 1 thì là Chủ Đối Tác -> role = 'doi_tac'
-            // Nếu id_doi_tac > 1 (là id của Đối tác chủ) thì là Thành viên -> role = 'nguoi_dung'
-            if ($user->id_doi_tac == 1) {
-                $role = 'doi_tac';
-            } else {
-                $role = 'nguoi_dung';
+            $role = 'nguoi_dung';
+            if ($user->id_doi_tac) {
+                $doiTac = \App\Models\DoiTac::find($user->id_doi_tac);
+                if ($doiTac && $doiTac->id_admin == $user->id) {
+                    $role = 'doi_tac';
+                }
             }
             $type = 'nguoi_dung';
             

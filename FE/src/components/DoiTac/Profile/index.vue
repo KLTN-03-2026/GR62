@@ -109,7 +109,13 @@
                                 </div>
 
                                 <div class="face-preview-business rounded-4 overflow-hidden position-relative mb-4">
-                                    <template v-if="!isScanning">
+                                    <template v-if="doi_tac.du_lieu_khuon_mat">
+                                        <div class="d-flex flex-column align-items-center justify-content-center h-100" style="background-color: #d1e7dd; color: #0f5132; padding: 3rem; text-align: center;">
+                                            <i class="bx bx-check-shield mb-3" style="font-size: 3rem;"></i>
+                                            <p class="small fw-bold mb-0">Dữ liệu khuôn mặt đã được xác thực thành công.</p>
+                                        </div>
+                                    </template>
+                                    <template v-else-if="!isScanning">
                                         <div class="d-flex flex-column align-items-center justify-content-center h-100 bg-dark text-white p-5 text-center">
                                             <i class="bx bx-shield-quarter fs-1 mb-3 text-orange opacity-50"></i>
                                             <p class="small fw-bold mb-0 text-white-50">Khuôn mặt là chìa khóa truy cập bảo mật của bạn.</p>
@@ -128,10 +134,13 @@
                                     </template>
                                 </div>
 
-                                <button @click="toggleScanning" class="btn w-100 py-3 rounded-4 fw-800 shadow-orange"
+                                <button v-if="!doi_tac.du_lieu_khuon_mat" @click="toggleScanning" class="btn w-100 py-3 rounded-4 fw-800 shadow-orange"
                                     :class="isScanning ? 'btn-danger text-white' : 'btn-orange-pro text-white'">
                                     <i v-if="!isScanning" class="bx bx-scan me-2"></i>
-                                    {{ isScanning ? 'Hủy thiết lập' : (doi_tac.du_lieu_khuon_mat ? 'Thiết lập lại Face ID' : 'Bắt đầu thiết lập') }}
+                                    {{ isScanning ? 'Hủy thiết lập' : 'Bắt đầu thiết lập' }}
+                                </button>
+                                <button v-else class="btn w-100 py-3 rounded-4 fw-800 btn-success text-white" style="cursor: default;">
+                                    <i class="bx bx-check-circle me-2"></i> Đã thiết lập Face ID
                                 </button>
                                 <p class="text-center text-muted small mt-4 mb-0 fw-500">Dữ liệu được mã hóa chuẩn biometrics</p>
                             </div>
