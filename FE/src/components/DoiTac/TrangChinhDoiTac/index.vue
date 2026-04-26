@@ -35,13 +35,6 @@
                         <i class="bx bxs-group"></i>
                         <span>Thành viên</span>
                     </button>
-<<<<<<< HEAD
-                    <button @click="$router.push('/doi-tac/hoa-don')" class="nav-business-item">
-                        <i class="bx bxs-receipt"></i>
-                        <span>Hóa đơn</span>
-                    </button>
-=======
->>>>>>> cc9aab11d2a2ee70d8c628529683290d7177015d
                     <button @click="$router.push('/doi-tac/bao-cao')" class="nav-business-item">
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Báo cáo</span>
