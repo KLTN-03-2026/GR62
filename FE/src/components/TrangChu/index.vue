@@ -7,14 +7,14 @@
                 <div class="row align-items-center">
                     <div class="col-lg-6 mb-5 mb-lg-0 pe-lg-5">
                         <div class="d-inline-flex align-items-center rounded-pill px-3 py-1 mb-4"
-                            style="background-color: rgba(6, 182, 212, 0.1);">
-                            <i class="bx bxs-circle me-2" style="color: #06b6d4; font-size: 10px;"></i>
-                            <span class="fw-medium text-info" style="font-size: 13px; color: #06b6d4 !important;">Công
+                            style="background-color: rgba(255, 102, 0, 0.1);">
+                            <i class="bx bxs-circle me-2" style="color: #FF6600; font-size: 10px;"></i>
+                            <span class="fw-medium" style="font-size: 13px; color: #FF6600 !important;">Công
                                 nghệ AI tiên tiến nhất 2026</span>
                         </div>
                         <h1 class="display-3 fw-bold mb-4 pe-lg-5" style="line-height: 1.1;">
                             Phòng họp trực tuyến <span class="text-white">&</span> <br>
-                            <span style="color: #06b6d4;">Nhận diện khuôn mặt AI</span>
+                            <span style="color: #FF6600;">Nhận diện khuôn mặt AI</span>
                         </h1>
                         <p class="mb-5 lh-lg text-white-50" style="max-width: 500px; font-size: 1.1rem;">
                             Nâng tầm hiệu suất cuộc họp với tính năng điểm danh tự động, bảo mật
@@ -22,10 +22,10 @@
                         </p>
                         <div class="d-flex align-items-center gap-3 mt-2">
                             <a href="#" v-if="!isLoggedIn" @click.prevent="handleThuNghiemClick" class="btn px-4 py-2 text-white fw-bold shadow-none"
-                                style="background-color: #0d9488; border-radius: 8px;">Thử nghiệm miễn phí</a>
+                                style="background-color: #FF6600; border-radius: 8px;">Thử nghiệm miễn phí</a>
                             <template v-else>
-                                <router-link v-if="isDoiTac == 0" to="/nguoi-dung/trang-chinh" class="btn px-4 py-2 text-white fw-bold shadow-none" style="background-color: #0d9488; border-radius: 8px;">Trang của tôi</router-link>
-                                <router-link v-else-if="isDoiTac == 1" to="/doi-tac/trang-chinh" class="btn px-4 py-2 text-white fw-bold shadow-none" style="background-color: #0d9488; border-radius: 8px;">Trang đối tác</router-link>
+                                <router-link v-if="isDoiTac == 0" to="/nguoi-dung/trang-chinh" class="btn px-4 py-2 text-white fw-bold shadow-none" style="background-color: #FF6600; border-radius: 8px;">Trang của tôi</router-link>
+                                <router-link v-else-if="isDoiTac == 1" to="/doi-tac/trang-chinh" class="btn px-4 py-2 text-white fw-bold shadow-none" style="background-color: #FF6600; border-radius: 8px;">Trang đối tác</router-link>
                             </template>
                         </div>
                     </div>
@@ -43,41 +43,41 @@
                                     <div class="position-relative" style="width: 300px; height: 350px;">
                                         <!-- Corner brackets -->
                                         <div class="position-absolute top-0 start-0 border-top border-start"
-                                            style="width: 40px; height: 40px; border-color: #3b82f6 !important; border-width: 2px !important; border-top-left-radius: 12px;">
+                                            style="width: 40px; height: 40px; border-color: #FF6600 !important; border-width: 2px !important; border-top-left-radius: 12px;">
                                         </div>
                                         <div class="position-absolute top-0 end-0 border-top border-end"
-                                            style="width: 40px; height: 40px; border-color: #3b82f6 !important; border-width: 2px !important; border-top-right-radius: 12px;">
+                                            style="width: 40px; height: 40px; border-color: #FF6600 !important; border-width: 2px !important; border-top-right-radius: 12px;">
                                         </div>
                                         <div class="position-absolute bottom-0 start-0 border-bottom border-start"
-                                            style="width: 40px; height: 40px; border-color: #3b82f6 !important; border-width: 2px !important; border-bottom-left-radius: 12px;">
+                                            style="width: 40px; height: 40px; border-color: #FF6600 !important; border-width: 2px !important; border-bottom-left-radius: 12px;">
                                         </div>
                                         <div class="position-absolute bottom-0 end-0 border-bottom border-end"
-                                            style="width: 40px; height: 40px; border-color: #3b82f6 !important; border-width: 2px !important; border-bottom-right-radius: 12px;">
+                                            style="width: 40px; height: 40px; border-color: #FF6600 !important; border-width: 2px !important; border-bottom-right-radius: 12px;">
                                         </div>
 
                                         <!-- Green Outline Box mimicking shape -->
                                         <div class="position-absolute border"
-                                            style="top: -40px; left: -30px; right: -30px; bottom: -80px; border-color: #10b981 !important; border-width: 2px !important; border-radius: 20px; opacity: 0.8;">
+                                            style="top: -40px; left: -30px; right: -30px; bottom: -80px; border-color: #FF9933 !important; border-width: 2px !important; border-radius: 20px; opacity: 0.8;">
                                         </div>
 
                                         <!-- Face Box matching cyan lines -->
                                         <div class="position-absolute border-top border-start border-end"
-                                            style="top: 80px; left: 30px; right: 30px; height: 120px; border-color: #0ea5e9 !important; border-width: 2px !important;">
+                                            style="top: 80px; left: 30px; right: 30px; height: 120px; border-color: #FF6600 !important; border-width: 2px !important;">
                                         </div>
                                         <div class="position-absolute border-bottom border-start border-end"
-                                            style="bottom: 70px; left: 30px; right: 30px; height: 50px; border-color: #0ea5e9 !important; border-width: 2px !important;">
+                                            style="bottom: 70px; left: 30px; right: 30px; height: 50px; border-color: #FF6600 !important; border-width: 2px !important;">
                                         </div>
 
                                         <!-- Horizontal scanning line -->
                                         <div class="position-absolute w-100 scan-line"
-                                            style="height: 1px; background-color: #bae6fd; box-shadow: 0 0 10px 2px #38bdf8;">
+                                            style="height: 1px; background-color: #FFDAB9; box-shadow: 0 0 10px 2px #FF6600;">
                                         </div>
 
                                         <!-- Badge -->
                                         <div class="position-absolute w-100 text-center"
                                             style="bottom: 40px; z-index: 10;">
-                                            <div class="d-inline-flex flex-column align-items-start px-3 py-2 fw-bold text-dark rounded-1"
-                                                style="background-color: #38bdf8; font-size: 11px;">
+                                            <div class="d-inline-flex flex-column align-items-start px-3 py-2 fw-bold text-white rounded-1"
+                                                style="background-color: #FF6600; font-size: 11px;">
                                                 <span style="letter-spacing: 0.5px;">AUTHENTICATED:</span>
                                                 <span>USER 01</span>
                                             </div>
@@ -112,7 +112,7 @@
         <section class="py-5 bg-light">
             <div class="container py-5">
                 <div class="text-center mb-5">
-                    <span class="text-success fw-bold small text-uppercase ls-1">Ưu điểm vượt trội</span>
+                    <span class="text-orange fw-bold small text-uppercase ls-1">Ưu điểm vượt trội</span>
                     <h2 class="display-6 fw-bold mt-2">Giải pháp hội nghị AI toàn diện</h2>
                 </div>
                 <div class="row g-4 pt-4">
@@ -120,9 +120,9 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center text-md-start hover-lift">
                             <div class="mb-4">
-                                <div class="bg-success bg-opacity-10 d-inline-flex justify-content-center align-items-center rounded-circle"
-                                    style="width: 60px; height: 60px;">
-                                    <i class='bx bxs-check-shield text-success fs-2'></i>
+                                <div class="d-inline-flex justify-content-center align-items-center rounded-circle"
+                                    style="width: 60px; height: 60px; background-color: rgba(255, 102, 0, 0.1);">
+                                    <i class='bx bxs-check-shield fs-2' style="color: #FF6600;"></i>
                                 </div>
                             </div>
                             <h4 class="fw-bold mb-3">Bảo mật sinh trắc học</h4>
@@ -131,9 +131,9 @@
                                 Đảm bảo đúng người, đúng quyền trong mọi cuộc họp quan trọng.
                             </p>
                             <ul class="list-unstyled text-start small mb-0">
-                                <li class="mb-2"><i class='bx bx-check-circle text-success me-2'></i> Điểm danh tự động
+                                <li class="mb-2"><i class='bx bx-check-circle text-orange me-2'></i> Điểm danh tự động
                                 </li>
-                                <li><i class='bx bx-check-circle text-success me-2'></i> Phát hiện giả mạo AI</li>
+                                <li><i class='bx bx-check-circle text-orange me-2'></i> Phát hiện giả mạo AI</li>
                             </ul>
                         </div>
                     </div>
@@ -141,9 +141,9 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center text-md-start hover-lift">
                             <div class="mb-4">
-                                <div class="bg-success bg-opacity-10 d-inline-flex justify-content-center align-items-center rounded-circle"
-                                    style="width: 60px; height: 60px;">
-                                    <i class='bx bx-message-square-detail text-success fs-2'></i>
+                                <div class="d-inline-flex justify-content-center align-items-center rounded-circle"
+                                    style="width: 60px; height: 60px; background-color: rgba(255, 102, 0, 0.1);">
+                                    <i class='bx bx-message-square-detail fs-2' style="color: #FF6600;"></i>
                                 </div>
                             </div>
                             <h4 class="fw-bold mb-3">Tóm tắt nội dung thông minh</h4>
@@ -152,9 +152,9 @@
                                 và trích xuất các quyết định, hành động quan trọng.
                             </p>
                             <ul class="list-unstyled text-start small mb-0">
-                                <li class="mb-2"><i class='bx bx-check-circle text-success me-2'></i> Trích xuất Action
+                                <li class="mb-2"><i class='bx bx-check-circle text-orange me-2'></i> Trích xuất Action
                                     Items</li>
-                                <li><i class='bx bx-check-circle text-success me-2'></i> Hỗ trợ đa ngôn ngữ</li>
+                                <li><i class='bx bx-check-circle text-orange me-2'></i> Hỗ trợ đa ngôn ngữ</li>
                             </ul>
                         </div>
                     </div>
@@ -162,9 +162,9 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center text-md-start hover-lift">
                             <div class="mb-4">
-                                <div class="bg-success bg-opacity-10 d-inline-flex justify-content-center align-items-center rounded-circle"
-                                    style="width: 60px; height: 60px;">
-                                    <i class='bx bx-video text-success fs-2'></i>
+                                <div class="d-inline-flex justify-content-center align-items-center rounded-circle"
+                                    style="width: 60px; height: 60px; background-color: rgba(255, 102, 0, 0.1);">
+                                    <i class='bx bx-video fs-2' style="color: #FF6600;"></i>
                                 </div>
                             </div>
                             <h4 class="fw-bold mb-3">Chất lượng 4K Ultra HD</h4>
@@ -173,9 +173,9 @@
                                 Công nghệ nền AI giúp duy trì sự ổn định ngay cả khi đường truyền yếu.
                             </p>
                             <ul class="list-unstyled text-start small mb-0">
-                                <li class="mb-2"><i class='bx bx-check-circle text-success me-2'></i> Lọc nhiễu môi
+                                <li class="mb-2"><i class='bx bx-check-circle text-orange me-2'></i> Lọc nhiễu môi
                                     trường AI</li>
-                                <li><i class='bx bx-check-circle text-success me-2'></i> Tự động cân bằng sáng</li>
+                                <li><i class='bx bx-check-circle text-orange me-2'></i> Tự động cân bằng sáng</li>
                             </ul>
                         </div>
                     </div>
@@ -188,7 +188,7 @@
             <div class="container py-5">
                 <div class="row mb-5">
                     <div class="col-lg-6">
-                        <span class="text-info fw-bold small text-uppercase ls-1">Khách hàng nói gì</span>
+                        <span class="text-orange fw-bold small text-uppercase ls-1">Khách hàng nói gì</span>
                         <h2 class="display-6 fw-bold mt-2 text-white">Được sự tin tưởng từ <br> các chuyên gia</h2>
                     </div>
                     <div class="col-lg-6 d-flex align-items-end justify-content-lg-end mt-4 mt-lg-0">
@@ -197,8 +197,8 @@
                                 class="btn btn-outline-secondary rounded-pill d-flex justify-content-center align-items-center"
                                 style="width: 50px; height: 35px;"><i
                                     class='bx bx-left-arrow-alt fs-5 text-white'></i></button>
-                            <button class="btn btn-info rounded-pill d-flex justify-content-center align-items-center"
-                                style="width: 50px; height: 35px; background-color: #06b6d4; border-color: #06b6d4;"><i
+                            <button class="btn btn-orange rounded-pill d-flex justify-content-center align-items-center"
+                                style="width: 50px; height: 35px; background-color: #FF6600; border-color: #FF6600;"><i
                                     class='bx bx-right-arrow-alt fs-5 text-white'></i></button>
                         </div>
                     </div>
@@ -220,7 +220,7 @@
                                 việc điểm danh nhân viên trong các buổi họp giao ban sáng trở nên cực kỳ nhanh chóng và
                                 chính xác."</p>
                             <div class="d-flex align-items-center mt-auto">
-                                <div class="bg-success text-white rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
+                                <div class="bg-orange text-white rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
                                     style="width: 45px; height: 45px;">TH</div>
                                 <div>
                                     <h6 class="mb-0 text-white fw-bold">Trần Hoàng</h6>
@@ -244,7 +244,7 @@
                                 thông minh, giúp đội ngũ của tôi tiết kiệm ít nhất 2 giờ mỗi tuần cho việc ghi chép biên
                                 bản."</p>
                             <div class="d-flex align-items-center mt-auto">
-                                <div class="bg-info text-white rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
+                                <div class="bg-orange text-white rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
                                     style="width: 45px; height: 45px;">ML</div>
                                 <div>
                                     <h6 class="mb-0 text-white fw-bold">Mai Lan</h6>
@@ -268,7 +268,7 @@
                                 lượng hình ảnh ổn định hơn hẳn các nền tảng quốc tế mà chúng tôi từng sử dụng trước
                                 đây."</p>
                             <div class="d-flex align-items-center mt-auto">
-                                <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
+                                <div class="bg-orange text-white rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
                                     style="width: 45px; height: 45px;">PQ</div>
                                 <div>
                                     <h6 class="mb-0 text-white fw-bold">Phạm Quang</h6>
@@ -307,7 +307,7 @@
                                 :style="index != 1 ? 'background-color: #fdf5f3;' : 'box-shadow: 0 10px 40px rgba(0,0,0,0.06);'">
                                 <h5 class="fw-bold mb-3" style="color: #1a1e29; font-size: 1.1rem;">{{ value.ten_goi }}</h5>
                                 <div class="d-flex align-items-baseline mb-4">
-                                    <h1 class="display-5 fw-bold mb-0" :style="index == 1 ? 'color: #ea580c;' : 'color: #1a1e29;'">
+                                    <h1 class="display-5 fw-bold mb-0" :style="index == 1 ? 'color: #FF6600;' : 'color: #1a1e29;'">
                                         {{ value.gia_goi > 0 ? formatVND(value.gia_goi) : (value.gia_goi == 0 ? '0đ' : 'Liên hệ') }}
                                     </h1>
                                     <span v-if="value.gia_goi >= 0" class="text-muted ms-1" style="font-size: 0.9rem;">/tháng</span>
@@ -316,36 +316,36 @@
                                 <ul class="list-unstyled mb-5 mt-2 flex-grow-1">
                                     <li class="mb-3 d-flex align-items-center">
                                         <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
-                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;' : 'width: 24px; height: 24px; min-width: 24px;'">
-                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #c2410c; font-size: 18px;'"></i>
+                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #FF6600;' : 'width: 24px; height: 24px; min-width: 24px;'">
+                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #FF6600; font-size: 18px;'"></i>
                                         </div>
                                         <span class="text-dark fw-medium" style="font-size: 0.9rem;">Tối đa {{ value.so_nguoi_toi_da }} người tham gia</span>
                                     </li>
                                     <li class="mb-3 d-flex align-items-center">
                                         <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
-                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;' : 'width: 24px; height: 24px; min-width: 24px;'">
-                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #c2410c; font-size: 18px;'"></i>
+                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #FF6600;' : 'width: 24px; height: 24px; min-width: 24px;'">
+                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #FF6600; font-size: 18px;'"></i>
                                         </div>
                                         <span class="text-dark fw-medium" style="font-size: 0.9rem;">Tối đa {{ value.so_phong_toi_da }} phòng họp</span>
                                     </li>
                                     <li class="mb-3 d-flex align-items-center">
                                         <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
-                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;' : 'width: 24px; height: 24px; min-width: 24px;'">
-                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #c2410c; font-size: 18px;'"></i>
+                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #FF6600;' : 'width: 24px; height: 24px; min-width: 24px;'">
+                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #FF6600; font-size: 18px;'"></i>
                                         </div>
                                         <span class="text-dark fw-medium" style="font-size: 0.9rem;">Thời hạn: {{ value.thoi_han }} ngày</span>
                                     </li>
                                     <li class="mb-3 d-flex align-items-center">
                                         <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
-                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #ea580c;' : 'width: 24px; height: 24px; min-width: 24px;'">
-                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #c2410c; font-size: 18px;'"></i>
+                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #FF6600;' : 'width: 24px; height: 24px; min-width: 24px;'">
+                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #FF6600; font-size: 18px;'"></i>
                                         </div>
                                         <span class="text-dark fw-medium" style="font-size: 0.9rem;">{{ value.mo_ta }}</span>
                                     </li>
                                 </ul>
 
                                 <button :class="['btn border-0 fw-bold py-3 rounded-3 w-100 mt-auto', index == 1 ? 'text-white' : 'text-dark']"
-                                    :style="index == 1 ? 'background-color: #ea580c; font-size: 0.9rem;' : 'background-color: #fce7df; font-size: 0.9rem;'">
+                                    :style="index == 1 ? 'background-color: #FF6600; font-size: 0.9rem;' : 'background-color: #FFE5D9; font-size: 0.9rem;'">
                                     {{ value.gia_goi == 0 ? 'Bắt đầu miễn phí' : (value.gia_goi > 0 ? 'Nâng cấp ngay' : 'Liên hệ đội ngũ Sales') }}
                                 </button>
                             </div>
@@ -366,7 +366,7 @@
                                     <th scope="col" class="py-4 text-center fw-bold text-dark bg-transparent"
                                         style="font-size: 0.9rem;">Cơ bản</th>
                                     <th scope="col" class="py-4 text-center fw-bold bg-transparent"
-                                        style="color: #c2410c; font-size: 0.9rem;">Chuyên nghiệp</th>
+                                        style="color: #FF6600; font-size: 0.9rem;">Chuyên nghiệp</th>
                                     <th scope="col" class="py-4 text-center fw-bold text-dark bg-transparent"
                                         style="font-size: 0.9rem;">Doanh nghiệp</th>
                                 </tr>
@@ -408,9 +408,9 @@
                                     <td class="py-4 text-center text-secondary bg-transparent"><span
                                             style="color: #fbceb1; font-size: 1.5rem;">—</span></td>
                                     <td class="py-4 text-center bg-transparent"><i class="bx bxs-check-circle"
-                                            style="color: #c2410c; font-size: 1.25rem;"></i></td>
+                                            style="color: #FF6600; font-size: 1.25rem;"></i></td>
                                     <td class="py-4 text-center bg-transparent"><i class="bx bxs-check-circle"
-                                            style="color: #c2410c; font-size: 1.25rem;"></i></td>
+                                            style="color: #FF6600; font-size: 1.25rem;"></i></td>
                                 </tr>
                                 <tr style="border-bottom: 1px solid #f6e6e0;">
                                     <td class="py-4 ps-4 fw-bold text-dark bg-transparent" style="font-size: 0.9rem;">
@@ -464,24 +464,37 @@ export default {
     methods: {
         checkLoginStatus() {
             const userStr = localStorage.getItem('thong_tin_user');
+            const doiTacStr = localStorage.getItem('thong_tin_doi_tac');
+            
             if (userStr) {
                 this.isLoggedIn = true;
                 try {
                     const user = JSON.parse(userStr);
-                    this.isDoiTac = user.is_doi_tac == 1 ? 1 : 0;
+                    // Nếu id_doi_tac có giá trị (không phải null), coi là đối tác
+                    this.isDoiTac = user.id_doi_tac ? 1 : 0;
                 } catch (e) {
                     this.isDoiTac = 0;
                 }
+            } else if (doiTacStr) {
+                this.isLoggedIn = true;
+                this.isDoiTac = 1;
             } else {
                 this.isLoggedIn = false;
             }
         },
         handleThuNghiemClick() {
             const userStr = localStorage.getItem('thong_tin_user');
-            if (userStr) {
+            const doiTacStr = localStorage.getItem('thong_tin_doi_tac');
+            if (userStr || doiTacStr) {
                 try {
-                    const user = JSON.parse(userStr);
-                    if (user.is_doi_tac == 1) {
+                    let isDoiTac = false;
+                    if (userStr) {
+                        const user = JSON.parse(userStr);
+                        if (user.id_doi_tac) isDoiTac = true;
+                    }
+                    if (doiTacStr) isDoiTac = true;
+
+                    if (isDoiTac) {
                         if (this.$toast) this.$toast.info('Bạn đã đăng nhập với tài khoản đối tác!');
                     } else {
                         if (this.$toast) this.$toast.info('Bạn đã đăng nhập!');
@@ -512,6 +525,23 @@ export default {
 </script>
 
 <style scoped>
+.text-orange {
+    color: #FF6600 !important;
+}
+
+.bg-orange {
+    background-color: #FF6600 !important;
+}
+
+.bg-orange-light {
+    background-color: #FFE5D9 !important;
+}
+
+.btn-orange {
+    background-color: #FF6600 !important;
+    color: white !important;
+}
+
 .grayscale {
     filter: grayscale(100%);
 }
