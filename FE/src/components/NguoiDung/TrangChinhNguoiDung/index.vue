@@ -1202,11 +1202,8 @@ export default {
         dang_xuat() {
             localStorage.removeItem('token_nguoi_dung');
             localStorage.removeItem('thong_tin_user');
-
-            if (this.$toast) {
-                this.$toast.success("Đã đăng xuất");
-            }
-
+            localStorage.removeItem('token_doi_tac');
+            this.$toast && this.$toast.success("Đăng xuất thành công!");
             this.$router.push('/');
         },
         async layThongTinHoSo() {
