@@ -336,13 +336,12 @@ class DoiTacController extends Controller
         $dataRequest = $request->validated();
 
         $dataRequest['id_doi_tac'] = 1;
-<<<<<<< HEAD
         if (isset($dataRequest['password'])) {
             $dataRequest['password'] = Hash::make($dataRequest['password']);
         }
-=======
+
         $dataRequest['password'] = Hash::make($request->password);
->>>>>>> e4f4ebf (Cap nhat request doi tac va nguoi dung)
+
 
         $data = NguoiDung::create($dataRequest);
 
@@ -360,14 +359,12 @@ class DoiTacController extends Controller
             ->first();
 
         if ($data) {
-<<<<<<< HEAD
+
             $updateData = $request->except(['password']);
-=======
+
             $updateData = $request->validated();
 
             unset($updateData['id']);
-
->>>>>>> e4f4ebf (Cap nhat request doi tac va nguoi dung)
             if ($request->has('password') && $request->password != '') {
                 $updateData['password'] = Hash::make($request->password);
             } else {
