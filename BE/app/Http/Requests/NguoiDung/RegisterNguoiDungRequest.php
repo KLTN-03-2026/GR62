@@ -25,7 +25,7 @@ class RegisterNguoiDungRequest extends FormRequest
     {
         return [
             'ho_va_ten'     => 'required|string|max:255',
-            'so_dien_thoai' => 'required|string|max:15|regex:/^([0-9\s\-\+\(\)]*)$/',
+            'so_dien_thoai' => 'required|unique|string|max:15|regex:/^([0-9\s\-\+\(\)]*)$/',
             'email'         => [
                 'required',
                 'email',
@@ -48,6 +48,7 @@ class RegisterNguoiDungRequest extends FormRequest
             'so_dien_thoai.string'   => 'Số điện thoại phải là chuỗi ký tự.',
             'so_dien_thoai.max'      => 'Số điện thoại không được vượt quá 15 ký tự.',
             'so_dien_thoai.regex'    => 'Số điện thoại không đúng định dạng.',
+            'so_dien_thoai.unique'   => 'Số điện thoại này đã được sử dụng',
 
             'email.required'         => 'Địa chỉ Email là bắt buộc.',
             'email.email'            => 'Địa chỉ Email không đúng định dạng.',

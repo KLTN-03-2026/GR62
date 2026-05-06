@@ -25,7 +25,7 @@ class DoiTacUpdateRequest extends FormRequest
                 'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/',
                 Rule::unique('nguoi_dungs', 'email')->ignore($this->id),
             ],
-            'so_dien_thoai' => 'required|numeric',
+            'so_dien_thoai' => 'required|unique:nguoi_dungs,so_dien_thoai|numeric',
             'password'      => 'nullable|string|min:8',
             'dia_chi'       => 'nullable|string|max:255',
             'trang_thai'    => 'nullable|boolean',
@@ -51,6 +51,7 @@ class DoiTacUpdateRequest extends FormRequest
 
             'so_dien_thoai.required' => 'Số điện thoại không được để trống',
             'so_dien_thoai.numeric'  => 'Số điện thoại chỉ được nhập số',
+                'so_dien_thoai.unique'   => 'Số điện thoại này đã được sử dụng',
 
             'password.string' => 'Mật khẩu phải là chuỗi ký tự',
             'password.min'    => 'Mật khẩu phải có ít nhất 8 ký tự',

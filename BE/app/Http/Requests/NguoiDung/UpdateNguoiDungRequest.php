@@ -15,20 +15,29 @@ class UpdateNguoiDungRequest extends FormRequest
     }
 
     public function rules(): array
-    {
-        return [
-            'id'            => 'required|exists:nguoi_dungs,id',
-            'ho_va_ten'     => 'required|string|max:255',
-            'so_dien_thoai' => 'required|string|max:15',
-            'email'         => [
-                'required',
-                'email',
-                'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/',
-                Rule::unique('nguoi_dungs', 'email')->ignore($this->id),
-            ],
-            'id_chuc_vu'    => 'nullable|exists:chuc_vus,id',
-        ];
-    }
+{
+    return [
+        'id'            => 'required|exists:nguoi_dungs,id',
+        'ho_va_ten'     => 'required|string|max:255',
+
+        'so_dien_thoai' => [
+            'required',
+            'string',
+            'max:15',
+            Rule::unique('nguoi_dungs', 'so_dien_thoai')->ignore($this->id),
+        ],
+
+        'email'         => [
+            'required',
+            'email',
+            'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/',
+            Rule::unique('nguoi_dungs', 'email')->ignore($this->id),
+        ],
+
+        'id_chuc_vu'    => 'nullable|exists:chuc_vus,id',
+        'trang_thai'    => 'required|boolean',
+    ];
+}
 
     public function messages()
     {
@@ -43,6 +52,7 @@ class UpdateNguoiDungRequest extends FormRequest
             'so_dien_thoai.required' => 'Số điện thoại không được để trống',
             'so_dien_thoai.string'   => 'Số điện thoại phải là chuỗi ký tự',
             'so_dien_thoai.max'      => 'Số điện thoại không được vượt quá 15 ký tự',
+            'so_dien_thoai.unique'   => 'Số điện thoại này đã được sử dụng',
 
             'email.required'         => 'Email không được để trống',
             'email.email'            => 'Email không đúng định dạng',

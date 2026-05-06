@@ -23,7 +23,7 @@ class DoiTacRegisterRequest extends FormRequest
                 'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/',
                 'unique:doi_tacs,email',
             ],
-            'so_dien_thoai' => 'required|numeric',
+            'so_dien_thoai' => 'required|unique:doi_tacs,so_dien_thoai|numeric',
             'password'      => 'required|min:8',
             'dia_chi'       => 'nullable',
         ];
@@ -42,6 +42,7 @@ class DoiTacRegisterRequest extends FormRequest
 
             'so_dien_thoai.required' => 'Số điện thoại không được để trống',
             'so_dien_thoai.numeric'  => 'Số điện thoại chỉ được nhập số',
+            'so_dien_thoai.unique'   => 'Số điện thoại này đã được sử dụng',
 
             'password.required' => 'Mật khẩu không được để trống',
             'password.min'      => 'Mật khẩu phải có ít nhất 8 ký tự',

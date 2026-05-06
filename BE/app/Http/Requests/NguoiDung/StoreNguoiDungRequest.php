@@ -23,7 +23,7 @@ class StoreNguoiDungRequest extends FormRequest
     {
         return [
             'ho_va_ten'     => 'required|string|max:255',
-            'so_dien_thoai' => 'required|string|max:15',
+            'so_dien_thoai' => 'required|unique:nguoi_dungs,so_dien_thoai|string|max:15',
             'email'         => [
                 'required',
                 'email',
@@ -48,6 +48,7 @@ class StoreNguoiDungRequest extends FormRequest
 
             'so_dien_thoai.required' => 'Số điện thoại không được để trống',
             'so_dien_thoai.numeric'  => 'Số điện thoại chỉ được nhập số',
+            'so_dien_thoai.unique'   => 'Số điện thoại này đã được sử dụng',
 
             'password.required' => 'Mật khẩu không được để trống',
             'password.min'      => 'Mật khẩu phải có ít nhất 6 ký tự',
