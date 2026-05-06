@@ -290,38 +290,40 @@ export default {
             }
         },
         locHoaDon() {
-            let filtered = this.list_hoa_don_goc || [];
+        let filtered = this.list_hoa_don_goc || [];
 
-            if (this.tu_khoa) {
-                const kw = this.tu_khoa.toLowerCase();
-                filtered = filtered.filter(item => 
-                    (item.ma_giao_dich && item.ma_giao_dich.toLowerCase().includes(kw)) ||
-                    (item.nguoi_dung && item.nguoi_dung.ho_va_ten && item.nguoi_dung.ho_va_ten.toLowerCase().includes(kw))
-                );
-            }
+        if (this.tu_khoa) {
+        const kw = this.tu_khoa.toLowerCase();
+        filtered = filtered.filter(item =>
+            (item.ma_giao_dich && item.ma_giao_dich.toLowerCase().includes(kw)) ||
+            (item.nguoi_dung && item.nguoi_dung.ho_va_ten && item.nguoi_dung.ho_va_ten.toLowerCase().includes(kw))
+            );
+        }
 
-            if (this.tu_ngay) {
-                const fromDate = new Date(this.tu_ngay);
-                filtered = filtered.filter(item => new Date(item.created_at) >= fromDate);
-            }
+        if (this.tu_ngay) {
+        const fromDate = new Date(this.tu_ngay);
+        filtered = filtered.filter(item => new Date(item.created_at) >= fromDate);
+        }
 
-            if (this.den_ngay) {
-                const toDate = new Date(this.den_ngay);
-                toDate.setHours(23, 59, 59, 999);
-                filtered = filtered.filter(item => new Date(item.created_at) <= toDate);
-            }
+        if (this.den_ngay) {
+        const toDate = new Date(this.den_ngay);
+        toDate.setHours(23, 59, 59, 999);
+        filtered = filtered.filter(item => new Date(item.created_at) <= toDate);
+        }
 
-            if (this.loai_tai_khoan !== 'all') {
-                if (this.loai_tai_khoan === 'basic') {
-                    filtered = filtered.filter(item => !item.nguoi_dung || !item.nguoi_dung.id_doi_tac);
-                } else if (this.loai_tai_khoan === 'partner') {
-                    filtered = filtered.filter(item => item.nguoi_dung && item.nguoi_dung.id_doi_tac);
-                }
-            }
+        if (this.loai_tai_khoan !== 'all') {
+        if (this.loai_tai_khoan === 'basic') {
+            filtered = filtered.filter(item => !item.nguoi_dung || !item.nguoi_dung.id_doi_tac);
+        } else if (this.loai_tai_khoan === 'partner') {
+            filtered = filtered.filter(item => item.nguoi_dung && item.nguoi_dung.id_doi_tac);
+        }
+    }
 
-            this.calculateStats(filtered);
-            this.list_hoa_don = filtered.filter(item => item.trang_thai_thanh_toan == 1);
-        },
+    this.calculateStats(filtered);
+
+    // Hiển thị tất cả hóa đơn, không chỉ hóa đơn thành công
+    this.list_hoa_don = filtered;
+},
         calculateStats(data) {
             this.tong_doanh_thu = data.reduce((sum, item) => {
                 return item.trang_thai_thanh_toan == 1 ? sum + parseFloat(item.so_tien) : sum;

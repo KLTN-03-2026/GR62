@@ -11,13 +11,14 @@
                 <div class="row m-2">
                     <div class="col-lg-12">
                         <div class="position-relative search-bar-box input-group" style="width: 100%;">
-                            <select v-model="loc_trang_thai" class="form-select" style="max-width: 180px;" @change="timKiem()">
+                            <select v-model="loc_trang_thai" class="form-select" style="max-width: 180px;"
+                                @change="timKiem()">
                                 <option value="all">Trạng thái (Tất cả)</option>
                                 <option value="1">Hoạt động</option>
                                 <option value="0">Tạm tắt</option>
                             </select>
-                            <input @keyup="timKiem()" v-model="tu_khoa" type="text"
-                                class="form-control search-control" placeholder="Tìm kiếm theo tên, email, SĐT...">
+                            <input @keyup="timKiem()" v-model="tu_khoa" type="text" class="form-control search-control"
+                                placeholder="Tìm kiếm theo tên, email, SĐT...">
                             <button v-on:click="timKiem()" class="btn btn-primary">Tìm Kiếm</button>
                         </div>
                     </div>
@@ -36,7 +37,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                             <template v-for="(value, index) in list_doi_tac" :key="index">
+                            <template v-for="(value, index) in list_doi_tac" :key="index">
                                 <tr class="text-nowrap">
                                     <th class="align-middle text-center">{{ index + 1 }}</th>
                                     <td class="align-middle">{{ value.ho_va_ten }}</td>
@@ -150,7 +151,8 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Mật Khẩu Mới</label>
-                            <input v-model="edit_doi_tac.password" type="password" class="form-control" placeholder="Để trống nếu không đổi" />
+                            <input v-model="edit_doi_tac.password" type="password" class="form-control"
+                                placeholder="Để trống nếu không đổi" />
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Xác Nhận Mật Khẩu Mới</label>
@@ -240,8 +242,8 @@ export default {
                 if (this.tu_khoa) {
                     const kw = this.tu_khoa.trim().toLowerCase();
                     matchTuKhoa = (v.ho_va_ten && v.ho_va_ten.toLowerCase().includes(kw)) ||
-                                  (v.email && v.email.toLowerCase().includes(kw)) ||
-                                  (v.so_dien_thoai && v.so_dien_thoai.includes(kw));
+                        (v.email && v.email.toLowerCase().includes(kw)) ||
+                        (v.so_dien_thoai && v.so_dien_thoai.includes(kw));
                 }
 
                 let matchTrangThai = true;
@@ -265,26 +267,44 @@ export default {
                 this.$toast.error("Mật khẩu xác nhận không khớp!");
                 return;
             }
+
             axios.post(`${API}/doi-tac/create`, this.create_doi_tac, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);
-                        this.create_doi_tac = { ho_va_ten: "", email: "", password: "", re_password: "", so_dien_thoai: "", dia_chi: "", trang_thai: "1" };
+                        this.create_doi_tac = {
+                            ho_va_ten: "",
+                            email: "",
+                            password: "",
+                            re_password: "",
+                            so_dien_thoai: "",
+                            dia_chi: "",
+                            trang_thai: "1"
+                        };
                         this.loadData();
                     } else {
                         this.$toast.error(res.data.message);
                     }
                 })
-                .catch(res => {
-                    if (res.response?.data?.errors)
-                        Object.values(res.response.data.errors).forEach((v) => { this.$toast.error(v[0]); });
+                .catch((error) => {
+                    if (error.response?.data?.message) {
+                        this.$toast.error(error.response.data.message);
+                    } else if (error.response?.data?.errors) {
+                        Object.values(error.response.data.errors).forEach((v) => {
+                            this.$toast.error(v[0]);
+                        });
+                    } else {
+                        this.$toast.error("Thêm đối tác thất bại!");
+                    }
                 });
         },
+
         capNhatDoiTac() {
             if (this.edit_doi_tac.password && this.edit_doi_tac.password !== this.edit_doi_tac.re_password) {
                 this.$toast.error("Mật khẩu xác nhận không khớp!");
                 return;
             }
+
             axios.post(`${API}/doi-tac/update`, this.edit_doi_tac, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {
@@ -294,9 +314,16 @@ export default {
                         this.$toast.error(res.data.message);
                     }
                 })
-                .catch(res => {
-                    if (res.response?.data?.errors)
-                        Object.values(res.response.data.errors).forEach((v) => { this.$toast.error(v[0]); });
+                .catch((error) => {
+                    if (error.response?.data?.message) {
+                        this.$toast.error(error.response.data.message);
+                    } else if (error.response?.data?.errors) {
+                        Object.values(error.response.data.errors).forEach((v) => {
+                            this.$toast.error(v[0]);
+                        });
+                    } else {
+                        this.$toast.error("Cập nhật đối tác thất bại!");
+                    }
                 });
         },
         xoaDoiTac() {

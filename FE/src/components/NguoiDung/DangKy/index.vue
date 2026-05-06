@@ -150,15 +150,21 @@ export default {
                 }
             } catch (error) {
                 if (error.response && error.response.status === 422) {
-                    const errors = error.response.data.errors;
-                    Object.values(errors).forEach(errList => {
-                        errList.forEach(message => {
-                            if (this.$toast) this.$toast.error(message);
+                    if (error.response.data.message) {
+                        this.$toast.error(error.response.data.message);
+                    } else if (error.response.data.errors) {
+                        const errors = error.response.data.errors;
+                        Object.values(errors).forEach(errList => {
+                            errList.forEach(message => {
+                                this.$toast.error(message);
+                            });
                         });
-                    });
+                    } else {
+                        this.$toast.error('Dữ liệu không hợp lệ, vui lòng kiểm tra lại.');
+                    }
                 } else {
                     const msg = error.response?.data?.message || 'Lỗi hệ thống, vui lòng thử lại sau.';
-                    if (this.$toast) this.$toast.error(msg);
+                    this.$toast.error(msg);
                 }
             } finally {
                 this.isLoading = false;
