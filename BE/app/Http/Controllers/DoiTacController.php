@@ -323,19 +323,17 @@ class DoiTacController extends Controller
 
     public function index()
     {
-        // Lấy danh sách các tài khoản là Đối Tác (id_doi_tac = 1) từ bảng NguoiDung
-        $data = NguoiDung::where('id_doi_tac', 1)->orderBy('created_at', 'desc')->get();
-        return response()->json([
-            'status' => true,
-            'data' => $data
-        ]);
+    $data = DoiTac::orderBy('created_at', 'desc')->get();
+    return response()->json([
+        'status' => true,
+        'data'   => $data
+    ]);
     }
 
     public function store(DoiTacStoreRequest $request)
     {
         $dataRequest = $request->validated();
 
-        $dataRequest['id_doi_tac'] = 1;
         if (isset($dataRequest['password'])) {
             $dataRequest['password'] = Hash::make($dataRequest['password']);
         }
@@ -354,41 +352,38 @@ class DoiTacController extends Controller
 
     public function update(DoiTacUpdateRequest $request)
     {
-        $data = NguoiDung::where('id', $request->id)
-            ->where('id_doi_tac', 1)
-            ->first();
+    $data = DoiTac::find($request->id);
 
-        if ($data) {
-
-            $updateData = $request->except(['password']);
-
-            $updateData = $request->validated();
-
-            unset($updateData['id']);
-            if ($request->has('password') && $request->password != '') {
-                $updateData['password'] = Hash::make($request->password);
-            } else {
-                unset($updateData['password']);
-            }
-
-            $data->update($updateData);
-
-            return response()->json([
-                'status'  => true,
-                'message' => 'Cập nhật thành công',
-                'data'    => $data
-            ]);
-        }
-
+    if (!$data) {
         return response()->json([
             'status'  => false,
             'message' => 'Không tìm thấy dữ liệu'
         ]);
     }
 
+    $updateData = $request->validated();
+
+    unset($updateData['id']);
+    unset($updateData['re_password']);
+
+    if ($request->filled('password')) {
+        $updateData['password'] = Hash::make($request->password);
+    } else {
+        unset($updateData['password']);
+    }
+
+    $data->update($updateData);
+
+    return response()->json([
+        'status'  => true,
+        'message' => 'Cập nhật thành công',
+        'data'    => $data
+    ]);
+}
+
     public function destroy(Request $request)
     {
-        $data = NguoiDung::where('id', $request->id)->where('id_doi_tac', 1)->first();
+        $data = DoiTac::where('id', $request->id)->first();
         if ($data) {
             $data->delete();
             return response()->json([
@@ -404,35 +399,43 @@ class DoiTacController extends Controller
 
     public function search(Request $request)
     {
-        $query = NguoiDung::where('id_doi_tac', 1);
+        $query = DoiTac::query();
+
         if ($request->has('keyword') && $request->keyword != '') {
             $keyword = $request->keyword;
+
             $query->where(function ($q) use ($keyword) {
-                $q->where('ho_va_ten', 'like', '%' . $keyword . '%');
-                $q->orWhere('email', 'like', '%' . $keyword . '%');
-                $q->orWhere('so_dien_thoai', 'like', '%' . $keyword . '%');
+                $q->where('ho_va_ten', 'like', '%' . $keyword . '%')
+                    ->orWhere('email', 'like', '%' . $keyword . '%')
+                    ->orWhere('so_dien_thoai', 'like', '%' . $keyword . '%')
+                    ->orWhere('dia_chi', 'like', '%' . $keyword . '%');
             });
         }
-        $data = $query->get();
+
+        $data = $query->orderBy('created_at', 'desc')->get();
+
         return response()->json([
             'status' => true,
-            'data' => $data
+            'data'   => $data
         ]);
     }
 
     public function changeStatus(Request $request)
     {
-        $data = NguoiDung::where('id', $request->id)->where('id_doi_tac', 1)->first();
+        $data = DoiTac::find($request->id);
+
         if ($data) {
             $data->trang_thai = !$data->trang_thai;
             $data->save();
+
             return response()->json([
-                'status' => true,
+                'status'  => true,
                 'message' => 'Đã thay đổi trạng thái thành công'
             ]);
         }
+
         return response()->json([
-            'status' => false,
+            'status'  => false,
             'message' => 'Không tìm thấy dữ liệu'
         ]);
     }
