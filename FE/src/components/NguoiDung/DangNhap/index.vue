@@ -44,12 +44,12 @@
                     <h2 class="form-title">Chào mừng trở lại</h2>
                     <p class="form-subtitle">Vui lòng nhập thông tin để truy cập tài khoản AI-Meet của bạn.</p>
 
-                    <form @submit.prevent="login" class="auth-form">
+                    <form @submit.prevent="login" class="auth-form" novalidate>
                         <!-- Email -->
                         <div class="field-group">
                             <label class="field-label">Địa chỉ Email</label>
                             <div class="input-wrap">
-                                <input v-model="nguoi_dung.email" type="email" placeholder="name@company.com" />
+                                <input v-model="nguoi_dung.email" type="text" inputmode="email" placeholder="name@company.com" />
                                 <span class="icon-right"><i class="bx bx-envelope"></i></span>
                             </div>
                         </div>

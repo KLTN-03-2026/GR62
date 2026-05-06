@@ -45,14 +45,13 @@
                 <h2 class="form-title">Quản trị hệ thống</h2>
                 <p class="form-subtitle">Vui lòng đăng nhập để truy cập trang quản trị AI-Meet</p>
 
-                <form @submit.prevent="login" class="admin-form">
+                <form @submit.prevent="login" class="admin-form" novalidate>
                     <!-- Email -->
                     <div class="field-group">
                         <label class="field-label">EMAIL ADMIN</label>
                         <div class="input-wrap">
                             <span class="icon-left"><i class="bx bx-at"></i></span>
-                            <input id="email" v-model="admin.email" type="email" placeholder="admin@ai-meet.com"
-                                required />
+                            <input id="email" v-model="admin.email" type="text" inputmode="email" placeholder="admin@ai-meet.com" />
                         </div>
                     </div>
 
@@ -62,7 +61,7 @@
                         <div class="input-wrap">
                             <span class="icon-left"><i class="bx bx-lock-alt"></i></span>
                             <input id="password" v-model="admin.password" :type="showPass ? 'text' : 'password'"
-                                placeholder="••••••••" required />
+                                placeholder="••••••••" />
                             <span class="icon-right clickable" @click="showPass = !showPass">
                                 <i :class="showPass ? 'bx bx-show' : 'bx bx-hide'"></i>
                             </span>

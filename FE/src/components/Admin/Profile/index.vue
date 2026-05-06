@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid py-4">
         <!-- Floating shapes for background decoration (optional but adds to premium feel if we don't have global backgrounds) -->
-        
+
         <div class="row w-100 m-0">
             <div class="col-12 text-center p-0">
                 <!-- Custom Pill Navigation -->
@@ -19,8 +19,8 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#password-tab"
-                            type="button" role="tab" aria-selected="false">
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#password-tab" type="button"
+                            role="tab" aria-selected="false">
                             <i class="bx bx-shield-quarter me-2"></i>Bảo Mật
                         </button>
                     </li>
@@ -42,7 +42,8 @@
                                             <div class="avatar-wrapper">
                                                 <img :src="anh_tmp || (profile.hinh_anh ? (profile.hinh_anh.startsWith('http') ? profile.hinh_anh : API_BASE + '/' + profile.hinh_anh) : '../../../assets/images/avatars/avatar-1.png')"
                                                     class="avatar-img shadow-sm">
-                                                <label for="inputAvatar" class="camera-btn" title="Thay đổi ảnh đại diện">
+                                                <label for="inputAvatar" class="camera-btn"
+                                                    title="Thay đổi ảnh đại diện">
                                                     <i class="bx bx-camera"></i>
                                                 </label>
                                                 <input id="inputAvatar" type="file" class="d-none" accept="image/*"
@@ -50,10 +51,11 @@
                                             </div>
                                             <h4 class="mt-3 fw-bold mb-1 text-dark">{{ profile.ho_va_ten }}</h4>
                                             <span class="text-primary fw-bold" style="font-size: 0.9rem;">
-                                                <i class="bx bx-crown me-1 text-warning"></i>{{ profile.chuc_vu ? profile.chuc_vu.ten_chuc_vu : 'N/A' }}
+                                                <i class="bx bx-crown me-1 text-warning"></i>{{ profile.chuc_vu ?
+                                                profile.chuc_vu.ten_chuc_vu : 'N/A' }}
                                             </span>
                                         </div>
-                                        
+
                                         <div class="row g-3 mt-n5 justify-content-center">
                                             <div class="col-md-5">
                                                 <div class="info-item d-flex align-items-center">
@@ -61,7 +63,8 @@
                                                         <i class="bx bx-user"></i>
                                                     </div>
                                                     <div>
-                                                        <p class="text-muted mb-0 small fw-bold text-uppercase">Họ và Tên</p>
+                                                        <p class="text-muted mb-0 small fw-bold text-uppercase">Họ và
+                                                            Tên</p>
                                                         <h6 class="mb-0 fw-bold text-dark">{{ profile.ho_va_ten }}</h6>
                                                     </div>
                                                 </div>
@@ -72,8 +75,10 @@
                                                         <i class="bx bx-envelope"></i>
                                                     </div>
                                                     <div>
-                                                        <p class="text-muted mb-0 small fw-bold text-uppercase">Email</p>
-                                                        <h6 class="mb-0 fw-bold text-dark text-truncate" style="max-width: 180px;">{{ profile.email}}</h6>
+                                                        <p class="text-muted mb-0 small fw-bold text-uppercase">Email
+                                                        </p>
+                                                        <h6 class="mb-0 fw-bold text-dark text-truncate"
+                                                            style="max-width: 180px;">{{ profile.email }}</h6>
                                                     </div>
                                                 </div>
                                             </div>
@@ -83,8 +88,10 @@
                                                         <i class="bx bx-phone"></i>
                                                     </div>
                                                     <div>
-                                                        <p class="text-muted mb-0 small fw-bold text-uppercase">Số Điện Thoại</p>
-                                                        <h6 class="mb-0 fw-bold text-dark">{{ profile.so_dien_thoai}}</h6>
+                                                        <p class="text-muted mb-0 small fw-bold text-uppercase">Số Điện
+                                                            Thoại</p>
+                                                        <h6 class="mb-0 fw-bold text-dark">{{ profile.so_dien_thoai }}
+                                                        </h6>
                                                     </div>
                                                 </div>
                                             </div>
@@ -94,8 +101,10 @@
                                                         <i class="bx bx-briefcase"></i>
                                                     </div>
                                                     <div>
-                                                        <p class="text-muted mb-0 small fw-bold text-uppercase">Chức Vụ</p>
-                                                        <h6 class="mb-0 fw-bold text-dark">{{ profile.chuc_vu ? profile.chuc_vu.ten_chuc_vu : 'N/A' }}</h6>
+                                                        <p class="text-muted mb-0 small fw-bold text-uppercase">Chức Vụ
+                                                        </p>
+                                                        <h6 class="mb-0 fw-bold text-dark">{{ profile.chuc_vu ?
+                                                            profile.chuc_vu.ten_chuc_vu : 'N/A' }}</h6>
                                                     </div>
                                                 </div>
                                             </div>
@@ -113,13 +122,15 @@
                                 <div class="card profile-card">
                                     <div class="primary-header-gradient text-white text-center">
                                         <h4 class="mb-0 text-white fw-bold">Cập Nhật Hồ Sơ</h4>
-                                        <p class="text-white-50 mb-0 mt-2 small">Đảm bảo thông tin của bạn luôn mới nhất</p>
+                                        <p class="text-white-50 mb-0 mt-2 small">Đảm bảo thông tin của bạn luôn mới nhất
+                                        </p>
                                     </div>
                                     <div class="card-body p-4">
                                         <form>
                                             <div class="row g-3">
                                                 <div class="col-12">
-                                                    <label class="form-label fw-bold text-dark small mb-1 ms-1">Họ và Tên</label>
+                                                    <label class="form-label fw-bold text-dark small mb-1 ms-1">Họ và
+                                                        Tên</label>
                                                     <div class="input-group">
                                                         <span class="input-group-text"><i class="bx bx-user"></i></span>
                                                         <input type="text" class="form-control custom-input"
@@ -128,24 +139,29 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label class="form-label fw-bold text-dark small mb-1 ms-1">Email</label>
+                                                    <label
+                                                        class="form-label fw-bold text-dark small mb-1 ms-1">Email</label>
                                                     <div class="input-group">
-                                                        <span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                                                        <span class="input-group-text"><i
+                                                                class="bx bx-envelope"></i></span>
                                                         <input type="email" class="form-control custom-input"
-                                                            v-model="update_profile.email" placeholder="example@mail.com">
+                                                            v-model="update_profile.email"
+                                                            placeholder="example@mail.com">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label class="form-label fw-bold text-dark small mb-1 ms-1">Số Điện Thoại</label>
+                                                    <label class="form-label fw-bold text-dark small mb-1 ms-1">Số Điện
+                                                        Thoại</label>
                                                     <div class="input-group">
-                                                        <span class="input-group-text"><i class="bx bx-phone"></i></span>
+                                                        <span class="input-group-text"><i
+                                                                class="bx bx-phone"></i></span>
                                                         <input type="text" class="form-control custom-input"
-                                                            v-model="update_profile.so_dien_thoai"
-                                                            placeholder="09xxx">
+                                                            v-model="update_profile.so_dien_thoai" placeholder="09xxx">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 text-center mt-4">
-                                                    <button type="button" class="btn btn-update w-100" @click="updateProfile()">
+                                                    <button type="button" class="btn btn-update w-100"
+                                                        @click="updateProfile()">
                                                         <i class="bx bx-save me-2"></i>Lưu Thay Đổi
                                                     </button>
                                                 </div>
@@ -168,7 +184,8 @@
                                     </div>
                                     <div class="card-body p-4">
                                         <div class="mb-3">
-                                            <label class="form-label fw-bold text-dark small mb-1 ms-1">Mật Khẩu Hiện Tại</label>
+                                            <label class="form-label fw-bold text-dark small mb-1 ms-1">Mật Khẩu Hiện
+                                                Tại</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="bx bx-lock-open"></i></span>
                                                 <input :type="showPassword.password ? 'text' : 'password'"
@@ -182,35 +199,41 @@
                                             </div>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label fw-bold text-dark small mb-1 ms-1">Mật Khẩu Mới</label>
+                                            <label class="form-label fw-bold text-dark small mb-1 ms-1">Mật Khẩu
+                                                Mới</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="bx bx-lock"></i></span>
                                                 <input :type="showPassword.new_password ? 'text' : 'password'"
                                                     class="form-control custom-input"
                                                     v-model="update_password_profile.new_password"
-                                                    placeholder="Ít nhất 6 ký tự">
+                                                    placeholder="Ít nhất 8 ký tự">
                                                 <button @click="showPassword.new_password = !showPassword.new_password"
                                                     class="btn password-icon" type="button">
-                                                    <i :class="showPassword.new_password ? 'bx bx-hide' : 'bx bx-show'"></i>
+                                                    <i
+                                                        :class="showPassword.new_password ? 'bx bx-hide' : 'bx bx-show'"></i>
                                                 </button>
                                             </div>
                                         </div>
                                         <div class="mb-4">
-                                            <label class="form-label fw-bold text-dark small mb-1 ms-1">Xác Nhận Mật Khẩu Mới</label>
+                                            <label class="form-label fw-bold text-dark small mb-1 ms-1">Xác Nhận Mật
+                                                Khẩu Mới</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="bx bx-check-shield"></i></span>
                                                 <input :type="showPassword.re_newpassword ? 'text' : 'password'"
                                                     class="form-control custom-input"
                                                     v-model="update_password_profile.re_newpassword"
                                                     placeholder="Nhập lại mật khẩu mới">
-                                                <button @click="showPassword.re_newpassword = !showPassword.re_newpassword"
+                                                <button
+                                                    @click="showPassword.re_newpassword = !showPassword.re_newpassword"
                                                     class="btn password-icon" type="button">
-                                                    <i :class="showPassword.re_newpassword ? 'bx bx-hide' : 'bx bx-show'"></i>
+                                                    <i
+                                                        :class="showPassword.re_newpassword ? 'bx bx-hide' : 'bx bx-show'"></i>
                                                 </button>
                                             </div>
                                         </div>
                                         <div class="text-center">
-                                            <button type="button" class="btn btn-update w-100" @click="updatePassword()">
+                                            <button type="button" class="btn btn-update w-100"
+                                                @click="updatePassword()">
                                                 <i class="bx bx-shield-quarter me-2"></i>Cập Nhật Mật Khẩu
                                             </button>
                                         </div>
@@ -432,7 +455,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: all 0.3s ease;
     z-index: 11;
@@ -450,7 +473,7 @@ export default {
     border-radius: 10px;
     display: inline-flex;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
     border: 1px solid #edf2f7;
 }
 
@@ -489,7 +512,7 @@ export default {
 .info-item:hover {
     background: #fff;
     border-color: #008cff;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
 .icon-box {

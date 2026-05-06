@@ -15,6 +15,10 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email'    => 'required|email',
             'password' => 'required',
+        ], [
+            'email.required' => 'Email không được để trống',
+            'email.email'    => 'Email không đúng định dạng',
+            'password.required' => 'Mật khẩu không được để trống',
         ]);
 
         if ($validator->fails()) {

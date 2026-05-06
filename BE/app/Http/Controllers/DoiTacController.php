@@ -14,13 +14,13 @@ class DoiTacController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => $validator->errors()->first()
             ], 422);
         }
@@ -29,14 +29,14 @@ class DoiTacController extends Controller
 
         if (!$doi_tac || !Hash::check($request->password, $doi_tac->password)) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Email hoặc mật khẩu không đúng'
             ], 401);
         }
 
         if (!$doi_tac->trang_thai) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Tài khoản của bạn đang bị khóa'
             ], 403);
         }
@@ -44,10 +44,10 @@ class DoiTacController extends Controller
         $token = $doi_tac->createToken('token_doi_tac')->plainTextToken;
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Đăng nhập thành công',
-            'data'    => [
-                'token'   => $token,
+            'data' => [
+                'token' => $token,
                 'doi_tac' => $doi_tac
             ]
         ]);
@@ -56,33 +56,33 @@ class DoiTacController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'ho_va_ten'     => 'required|min:2',
-            'email'         => 'required|email|unique:doi_tacs,email',
+            'ho_va_ten' => 'required|min:2',
+            'email' => 'required|email|unique:doi_tacs,email',
             'so_dien_thoai' => 'required|numeric',
-            'password'      => 'required|min:6',
-            'dia_chi'       => 'nullable',
+            'password' => 'required|min:8',
+            'dia_chi' => 'nullable',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => $validator->errors()->first()
             ], 422);
         }
 
         $doi_tac = DoiTac::create([
-            'ho_va_ten'     => $request->ho_va_ten,
-            'email'         => $request->email,
+            'ho_va_ten' => $request->ho_va_ten,
+            'email' => $request->email,
             'so_dien_thoai' => $request->so_dien_thoai,
-            'dia_chi'       => $request->dia_chi,
-            'password'      => Hash::make($request->password),
-            'trang_thai'    => 1,
+            'dia_chi' => $request->dia_chi,
+            'password' => Hash::make($request->password),
+            'trang_thai' => 1,
         ]);
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Đăng ký tài khoản đối tác thành công!',
-            'data'    => $doi_tac
+            'data' => $doi_tac
         ]);
     }
 
@@ -91,7 +91,7 @@ class DoiTacController extends Controller
         $user = Auth::guard('sanctum')->user();
         if (!$user) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Token không hợp lệ hoặc đã hết hạn'
             ], 401);
         }
@@ -100,7 +100,7 @@ class DoiTacController extends Controller
         if ($user instanceof NguoiDung) {
             if ($user->id_doi_tac != 1) {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => 'Tài khoản của bạn chưa được nâng cấp lên Đối tác!'
                 ], 403);
             }
@@ -112,7 +112,7 @@ class DoiTacController extends Controller
 
         return response()->json([
             'status' => true,
-            'data'   => $user
+            'data' => $user
         ]);
     }
 
@@ -121,7 +121,7 @@ class DoiTacController extends Controller
         $user = Auth::guard('sanctum')->user();
         if (!$user) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
@@ -129,12 +129,12 @@ class DoiTacController extends Controller
         if ($request->hasFile('hinh_anh')) {
             $file = $request->file('hinh_anh');
             $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
-            
+
             $path = public_path('uploads/avatars');
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
             }
-            
+
             $file->move($path, $filename);
 
             // Xác định trường cần cập nhật dựa trên loại model
@@ -157,14 +157,14 @@ class DoiTacController extends Controller
             }
 
             return response()->json([
-                'status'    => true,
-                'message'   => 'Cập nhật ảnh đại diện thành công',
-                'hinh_anh'  => $return_filename
+                'status' => true,
+                'message' => 'Cập nhật ảnh đại diện thành công',
+                'hinh_anh' => $return_filename
             ]);
         }
 
         return response()->json([
-            'status'  => false,
+            'status' => false,
             'message' => 'Vui lòng chọn ảnh đại diện'
         ], 400);
     }
@@ -174,19 +174,19 @@ class DoiTacController extends Controller
         $doi_tac = Auth::guard('sanctum')->user();
         if (!$doi_tac) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
 
         $validator = Validator::make($request->all(), [
-            'ho_va_ten'     => 'required|min:2',
+            'ho_va_ten' => 'required|min:2',
             'so_dien_thoai' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => $validator->errors()->first()
             ], 422);
         }
@@ -196,7 +196,7 @@ class DoiTacController extends Controller
         $doi_tac->save();
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Cập nhật thông tin cá nhân thành công'
         ]);
     }
@@ -206,7 +206,7 @@ class DoiTacController extends Controller
         $doi_tac_hien_tai = Auth::guard('sanctum')->user();
         if (!$doi_tac_hien_tai) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
@@ -222,7 +222,7 @@ class DoiTacController extends Controller
 
         if (!is_array($vector_moi)) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Lỗi định dạng dữ liệu sinh trắc học.'
             ], 400);
         }
@@ -242,7 +242,7 @@ class DoiTacController extends Controller
             // Ngưỡng 0.50 (càng nhỏ càng giống)
             if ($khoang_cach < 0.50) {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => 'Lỗi bảo mật! Khuôn mặt này đã được liên kết với một tài khoản đối tác khác.'
                 ], 400);
             }
@@ -256,7 +256,7 @@ class DoiTacController extends Controller
         $doi_tac_hien_tai->save();
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Đăng ký Face ID doanh nghiệp thành công!'
         ]);
     }
@@ -272,7 +272,7 @@ class DoiTacController extends Controller
 
         $sum = 0;
         for ($i = 0; $i < count($vectorA); $i++) {
-            $sum += pow((float)$vectorA[$i] - (float)$vectorB[$i], 2);
+            $sum += pow((float) $vectorA[$i] - (float) $vectorB[$i], 2);
         }
 
         return sqrt($sum);
@@ -283,27 +283,27 @@ class DoiTacController extends Controller
         $doi_tac = Auth::guard('sanctum')->user();
         if (!$doi_tac) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
 
         $validator = Validator::make($request->all(), [
-            'old_password'     => 'required',
-            'new_password'     => 'required|min:6',
+            'old_password' => 'required',
+            'new_password' => 'required|min:8',
             'confirm_password' => 'required|same:new_password',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => $validator->errors()->first()
             ], 422);
         }
 
         if (!Hash::check($request->old_password, $doi_tac->password)) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Mật khẩu cũ không chính xác'
             ], 400);
         }
@@ -312,7 +312,7 @@ class DoiTacController extends Controller
         $doi_tac->save();
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Đổi mật khẩu thành công'
         ]);
     }
@@ -332,7 +332,7 @@ class DoiTacController extends Controller
         // Khi Admin tạo thêm Đối tác mới, mặc định lưu vào bảng NguoiDung với id_doi_tac = 1
         $dataRequest = $request->all();
         $dataRequest['id_doi_tac'] = 1;
-        if(isset($dataRequest['password'])){
+        if (isset($dataRequest['password'])) {
             $dataRequest['password'] = Hash::make($dataRequest['password']);
         }
 
@@ -349,7 +349,7 @@ class DoiTacController extends Controller
         $data = NguoiDung::where('id', $request->id)->where('id_doi_tac', 1)->first();
         if ($data) {
             $updateData = $request->except(['password']);
-            if($request->has('password') && $request->password != ''){
+            if ($request->has('password') && $request->password != '') {
                 $updateData['password'] = Hash::make($request->password);
             }
             $data->update($updateData);
@@ -386,7 +386,7 @@ class DoiTacController extends Controller
         $query = NguoiDung::where('id_doi_tac', 1);
         if ($request->has('keyword') && $request->keyword != '') {
             $keyword = $request->keyword;
-            $query->where(function($q) use ($keyword) {
+            $query->where(function ($q) use ($keyword) {
                 $q->where('ho_va_ten', 'like', '%' . $keyword . '%');
                 $q->orWhere('email', 'like', '%' . $keyword . '%');
                 $q->orWhere('so_dien_thoai', 'like', '%' . $keyword . '%');
@@ -420,7 +420,7 @@ class DoiTacController extends Controller
         $user = Auth::guard('sanctum')->user();
         if (!$user) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
@@ -429,7 +429,7 @@ class DoiTacController extends Controller
 
         // 1. Thống kê số lượng nhân viên (người dùng tham gia các phòng của đối tác này)
         $phong_ids = \App\Models\PhongHop::where('id_chu_phong', $id_partner)->pluck('id');
-        
+
         $total_nhan_vien = \App\Models\ChiTietPhongHop::whereIn('id_phong_hop', $phong_ids)
             ->distinct('id_nguoi_dung')
             ->count('id_nguoi_dung');
@@ -439,7 +439,7 @@ class DoiTacController extends Controller
             ->whereNotNull('thoi_gian_ket_thuc')
             ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, thoi_gian_bat_dau, thoi_gian_ket_thuc)) as total')
             ->first()->total ?? 0;
-        
+
         $total_hours = round($total_minutes / 60, 1);
 
         // 3. Thống kê biểu đồ (7 ngày gần nhất)
@@ -449,7 +449,7 @@ class DoiTacController extends Controller
             $count = \App\Models\PhongHop::where('id_chu_phong', $id_partner)
                 ->whereDate('created_at', $date->toDateString())
                 ->count();
-            
+
             $dayLabels = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
             $weekly_data[] = [
                 'label' => $dayLabels[$date->dayOfWeek],
@@ -463,25 +463,25 @@ class DoiTacController extends Controller
             ->orderBy('id', 'desc')
             ->limit(3)
             ->get()
-            ->map(function($phong) {
+            ->map(function ($phong) {
                 $members = \App\Models\ChiTietPhongHop::where('id_phong_hop', $phong->id)->count();
                 return [
-                    'name'    => $phong->ten_phong,
+                    'name' => $phong->ten_phong,
                     'members' => $members,
-                    'code'    => strtoupper(substr($phong->ten_phong, 0, 2)),
-                    'color'   => '#' . substr(md5($phong->ten_phong), 0, 6),
-                    'status'  => $phong->trang_thai ? 'active' : 'idle',
+                    'code' => strtoupper(substr($phong->ten_phong, 0, 2)),
+                    'color' => '#' . substr(md5($phong->ten_phong), 0, 6),
+                    'status' => $phong->trang_thai ? 'active' : 'idle',
                     'statusLabel' => $phong->trang_thai ? 'Active' : 'Closed'
                 ];
             });
 
         return response()->json([
             'status' => true,
-            'data'   => [
+            'data' => [
                 'total_nhan_vien' => $total_nhan_vien,
-                'total_hours'     => $total_hours,
-                'weekly_data'     => $weekly_data,
-                'departments'     => $rooms
+                'total_hours' => $total_hours,
+                'weekly_data' => $weekly_data,
+                'departments' => $rooms
             ]
         ]);
     }
@@ -507,12 +507,12 @@ class DoiTacController extends Controller
             ->map(function ($nd) {
                 $baseUrl = url('');
                 return [
-                    'id'            => $nd->id,
-                    'ho_va_ten'     => $nd->ho_va_ten,
-                    'email'         => $nd->email,
+                    'id' => $nd->id,
+                    'ho_va_ten' => $nd->ho_va_ten,
+                    'email' => $nd->email,
                     'so_dien_thoai' => $nd->so_dien_thoai,
-                    'avatar'        => $nd->avatar ? $baseUrl . '/' . $nd->avatar : null,
-                    'trang_thai'    => $nd->trang_thai,
+                    'avatar' => $nd->avatar ? $baseUrl . '/' . $nd->avatar : null,
+                    'trang_thai' => $nd->trang_thai,
                     'la_thanh_vien' => true,
                     'ngay_tham_gia' => $nd->created_at,
                 ];
@@ -520,7 +520,7 @@ class DoiTacController extends Controller
 
         return response()->json([
             'status' => true,
-            'data'   => $danh_sach
+            'data' => $danh_sach
         ]);
     }
 
@@ -564,12 +564,12 @@ class DoiTacController extends Controller
             ->update(['id_doi_tac' => $user->id]);
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Đã cấp quyền thành viên tổ chức thành công!',
-            'data'    => [
-                'id'        => $nguoi_dung->id,
+            'data' => [
+                'id' => $nguoi_dung->id,
                 'ho_va_ten' => $nguoi_dung->ho_va_ten,
-                'email'     => $nguoi_dung->email,
+                'email' => $nguoi_dung->email,
             ]
         ]);
     }
@@ -610,7 +610,7 @@ class DoiTacController extends Controller
             ->update(['id_doi_tac' => 0]);
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Đã thu hồi quyền thành viên thành công!'
         ]);
     }
@@ -639,21 +639,21 @@ class DoiTacController extends Controller
             ->get()
             ->map(function ($hd) {
                 return [
-                    'id'                     => $hd->id,
-                    'ma_giao_dich'           => $hd->ma_giao_dich,
-                    'so_tien'                => $hd->so_tien,
+                    'id' => $hd->id,
+                    'ma_giao_dich' => $hd->ma_giao_dich,
+                    'so_tien' => $hd->so_tien,
                     'phuong_thuc_thanh_toan' => $hd->phuong_thuc_thanh_toan,
-                    'trang_thai_thanh_toan'  => $hd->trang_thai_thanh_toan,
-                    'ngay_tao'               => $hd->created_at,
-                    'ten_goi'                => $hd->goi?->ten_goi ?? 'N/A',
-                    'ten_nguoi_dung'         => $hd->nguoiDung?->ho_va_ten ?? 'N/A',
-                    'email_nguoi_dung'       => $hd->nguoiDung?->email ?? 'N/A',
+                    'trang_thai_thanh_toan' => $hd->trang_thai_thanh_toan,
+                    'ngay_tao' => $hd->created_at,
+                    'ten_goi' => $hd->goi?->ten_goi ?? 'N/A',
+                    'ten_nguoi_dung' => $hd->nguoiDung?->ho_va_ten ?? 'N/A',
+                    'email_nguoi_dung' => $hd->nguoiDung?->email ?? 'N/A',
                 ];
             });
 
         return response()->json([
             'status' => true,
-            'data'   => $hoa_don
+            'data' => $hoa_don
         ]);
     }
 
@@ -669,7 +669,7 @@ class DoiTacController extends Controller
 
         $validator = Validator::make($request->all(), [
             'id_nguoi_dung' => 'required|integer',
-            'ho_va_ten'     => 'required|string|max:255',
+            'ho_va_ten' => 'required|string|max:255',
             'so_dien_thoai' => 'nullable|string|max:20',
         ]);
 
@@ -692,12 +692,12 @@ class DoiTacController extends Controller
         \Illuminate\Support\Facades\DB::table('nguoi_dungs')
             ->where('id', $nguoi_dung->id)
             ->update([
-                'ho_va_ten'     => $request->ho_va_ten,
+                'ho_va_ten' => $request->ho_va_ten,
                 'so_dien_thoai' => $request->so_dien_thoai,
             ]);
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Đã cập nhật thông tin thành viên thành công!',
         ]);
     }
