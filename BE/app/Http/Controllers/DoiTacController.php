@@ -1,6 +1,10 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DoiTacRegisterRequest;
+use App\Http\Requests\DoiTacStoreRequest;
+use App\Http\Requests\DoiTacUpdateRequest;
 use App\Models\DoiTac;
 use App\Models\NguoiDung;
 use App\Models\HoaDon;
@@ -53,7 +57,7 @@ class DoiTacController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register(DoiTacRegisterRequest $request)
     {
         $validator = Validator::make($request->all(), [
             'ho_va_ten' => 'required|min:2',
@@ -327,40 +331,60 @@ class DoiTacController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(DoiTacStoreRequest $request)
     {
-        // Khi Admin tạo thêm Đối tác mới, mặc định lưu vào bảng NguoiDung với id_doi_tac = 1
-        $dataRequest = $request->all();
+        $dataRequest = $request->validated();
+
         $dataRequest['id_doi_tac'] = 1;
+<<<<<<< HEAD
         if (isset($dataRequest['password'])) {
             $dataRequest['password'] = Hash::make($dataRequest['password']);
         }
+=======
+        $dataRequest['password'] = Hash::make($request->password);
+>>>>>>> e4f4ebf (Cap nhat request doi tac va nguoi dung)
 
         $data = NguoiDung::create($dataRequest);
+
         return response()->json([
-            'status' => true,
+            'status'  => true,
             'message' => 'Thêm mới thành công',
-            'data' => $data
+            'data'    => $data
         ]);
     }
 
-    public function update(Request $request)
+    public function update(DoiTacUpdateRequest $request)
     {
-        $data = NguoiDung::where('id', $request->id)->where('id_doi_tac', 1)->first();
+        $data = NguoiDung::where('id', $request->id)
+            ->where('id_doi_tac', 1)
+            ->first();
+
         if ($data) {
+<<<<<<< HEAD
             $updateData = $request->except(['password']);
+=======
+            $updateData = $request->validated();
+
+            unset($updateData['id']);
+
+>>>>>>> e4f4ebf (Cap nhat request doi tac va nguoi dung)
             if ($request->has('password') && $request->password != '') {
                 $updateData['password'] = Hash::make($request->password);
+            } else {
+                unset($updateData['password']);
             }
+
             $data->update($updateData);
+
             return response()->json([
-                'status' => true,
+                'status'  => true,
                 'message' => 'Cập nhật thành công',
-                'data' => $data
+                'data'    => $data
             ]);
         }
+
         return response()->json([
-            'status' => false,
+            'status'  => false,
             'message' => 'Không tìm thấy dữ liệu'
         ]);
     }
