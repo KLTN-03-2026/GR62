@@ -1,89 +1,80 @@
 <template>
     <div class="homepage">
         <!-- Hero Section -->
-        <section class="hero-section text-white py-5 position-relative"
-            style="background-color: #0d121c; min-height: 85vh; display: flex; align-items: center;">
-            <div class="container py-5 mt-4">
+        <section class="hero-section py-5 position-relative" style="min-height: 90vh; display: flex; align-items: center;">
+            <div class="container pt-5 mt-4">
                 <div class="row align-items-center">
-                    <div class="col-lg-6 mb-5 mb-lg-0 pe-lg-5">
-                        <div class="d-inline-flex align-items-center rounded-pill px-3 py-1 mb-4"
-                            style="background-color: rgba(255, 102, 0, 0.1);">
-                            <i class="bx bxs-circle me-2" style="color: #FF6600; font-size: 10px;"></i>
-                            <span class="fw-medium" style="font-size: 13px; color: #FF6600 !important;">Công
-                                nghệ AI tiên tiến nhất 2026</span>
+                    <!-- Left Content -->
+                    <div class="col-lg-6 mb-5 mb-lg-0 z-1 pe-lg-5">
+                        <div class="d-inline-flex align-items-center rounded-pill px-3 py-2 mb-4 bg-orange-subtle">
+                            <span class="text-orange fw-bold text-uppercase" style="font-size: 11px; letter-spacing: 1px;">TRẢI NGHIỆM AI THẾ HỆ MỚI</span>
                         </div>
-                        <h1 class="display-3 fw-bold mb-4 pe-lg-5" style="line-height: 1.1;">
-                            Phòng họp trực tuyến <span class="text-white">&</span> <br>
-                            <span style="color: #FF6600;">Nhận diện khuôn mặt AI</span>
+                        <h1 class="display-4 fw-bold mb-4 pe-lg-4" style="line-height: 1.15; font-weight: 800 !important; color: #1a1e29; letter-spacing: -1px;">
+                            Kiến tạo không gian<br>
+                            <span class="text-gradient">hội thoại tương lai</span>
                         </h1>
-                        <p class="mb-5 lh-lg text-white-50" style="max-width: 500px; font-size: 1.1rem;">
-                            Nâng tầm hiệu suất cuộc họp với tính năng điểm danh tự động, bảo mật
-                            khuôn mặt và tóm tắt nội dung thông minh bằng trí tuệ nhân tạo.
+                        <p class="mb-5 text-muted lh-lg" style="font-size: 1.05rem; max-width: 500px;">
+                            Nền tảng họp trực tuyến tích hợp AI nhận diện khuôn mặt và tự động hóa biên bản cuộc họp, giúp tối ưu hóa 200% hiệu suất làm việc của doanh nghiệp bạn.
                         </p>
-                        <div class="d-flex align-items-center gap-3 mt-2">
-                            <a href="#" v-if="!isLoggedIn" @click.prevent="handleThuNghiemClick" class="btn px-4 py-2 text-white fw-bold shadow-none"
-                                style="background-color: #FF6600; border-radius: 8px;">Thử nghiệm miễn phí</a>
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <a href="#" v-if="!isLoggedIn" @click.prevent="handleThuNghiemClick" class="btn btn-orange px-4 py-3 fw-bold rounded-pill shadow-sm d-flex align-items-center gap-2">
+                                Bắt đầu ngay <i class='bx bx-right-arrow-alt fs-5'></i>
+                            </a>
                             <template v-else>
-                                <router-link v-if="isDoiTac == 0" to="/nguoi-dung/trang-chinh" class="btn px-4 py-2 text-white fw-bold shadow-none" style="background-color: #FF6600; border-radius: 8px;">Trang của tôi</router-link>
-                                <router-link v-else-if="isDoiTac == 1" to="/doi-tac/trang-chinh" class="btn px-4 py-2 text-white fw-bold shadow-none" style="background-color: #FF6600; border-radius: 8px;">Trang đối tác</router-link>
+                                <router-link v-if="isDoiTac == 0" to="/nguoi-dung/trang-chinh" class="btn btn-orange px-4 py-3 fw-bold rounded-pill shadow-sm d-flex align-items-center gap-2">Trang của tôi <i class='bx bx-right-arrow-alt fs-5'></i></router-link>
+                                <router-link v-else-if="isDoiTac == 1" to="/doi-tac/trang-chinh" class="btn btn-orange px-4 py-3 fw-bold rounded-pill shadow-sm d-flex align-items-center gap-2">Trang đối tác <i class='bx bx-right-arrow-alt fs-5'></i></router-link>
                             </template>
+
+                            <a href="#" class="btn btn-orange-light px-4 py-3 fw-bold rounded-pill d-flex align-items-center gap-2">
+                                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
+                                    <i class='bx bx-play text-orange ms-1' style="font-size: 18px;"></i>
+                                </div>
+                                Xem Demo
+                            </a>
+                        </div>
+                        
+                        <div class="mt-5 pt-3 d-flex align-items-center gap-3">
+                            <div class="d-flex">
+                                <div class="rounded-circle border border-2 border-white bg-secondary overflow-hidden" style="width: 35px; height: 35px; margin-left: -10px; z-index: 4;"><img src="https://ui-avatars.com/api/?name=User+1&background=random" class="w-100 h-100"></div>
+                                <div class="rounded-circle border border-2 border-white bg-secondary overflow-hidden" style="width: 35px; height: 35px; margin-left: -10px; z-index: 3;"><img src="https://ui-avatars.com/api/?name=User+2&background=random" class="w-100 h-100"></div>
+                                <div class="rounded-circle border border-2 border-white bg-secondary overflow-hidden" style="width: 35px; height: 35px; margin-left: -10px; z-index: 2;"><img src="https://ui-avatars.com/api/?name=User+3&background=random" class="w-100 h-100"></div>
+                            </div>
+                            <span class="text-muted small fw-medium">+10,000 doanh nghiệp đang tin dùng</span>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="position-relative hero-image-wrapper mx-auto" style="max-width: 550px;">
-                            <!-- Face Recognition Graphic -->
-                            <div class="rounded-4 overflow-hidden position-relative"
-                                style="aspect-ratio: 1/1; background: #000;">
-                                <img src="../../assets/images/hero-face.png" class="w-100 h-100 object-fit-cover"
-                                    alt="AI Face Recognition" style="filter: brightness(0.85) contrast(1.1);">
-                                <div
-                                    class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-
+                    
+                    <!-- Right Content (Mockup) -->
+                    <div class="col-lg-6 position-relative mt-5 mt-lg-0">
+                        <div class="hero-mockup-wrapper position-relative mx-auto" style="max-width: 550px;">
+                            <!-- Soft Background blob/shape behind mockup -->
+                            <div class="position-absolute" style="top: -10%; right: -10%; width: 120%; height: 120%; background: radial-gradient(circle, #FFE4D6 0%, rgba(255,237,213,0) 60%); z-index: 0;"></div>
+                            
+                            <!-- Face ID Scanning Animation Box -->
+                            <div class="card border-0 shadow-lg position-relative" style="border-radius: 30px; z-index: 1; overflow: hidden; background: #000; border: 8px solid rgba(255, 255, 255, 0.8) !important; box-shadow: 0 30px 60px rgba(234, 88, 12, 0.1) !important; aspect-ratio: 1/1;">
+                                <img src="../../assets/images/hero-face.png" class="w-100 h-100 object-fit-cover" alt="AI Face Recognition" style="filter: brightness(0.85) contrast(1.1); opacity: 0.8;">
+                                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center">
                                     <!-- Scanning Box -->
-                                    <div class="position-relative" style="width: 300px; height: 350px;">
+                                    <div class="position-relative" style="width: 80%; height: 85%;">
                                         <!-- Corner brackets -->
-                                        <div class="position-absolute top-0 start-0 border-top border-start"
-                                            style="width: 40px; height: 40px; border-color: #FF6600 !important; border-width: 2px !important; border-top-left-radius: 12px;">
-                                        </div>
-                                        <div class="position-absolute top-0 end-0 border-top border-end"
-                                            style="width: 40px; height: 40px; border-color: #FF6600 !important; border-width: 2px !important; border-top-right-radius: 12px;">
-                                        </div>
-                                        <div class="position-absolute bottom-0 start-0 border-bottom border-start"
-                                            style="width: 40px; height: 40px; border-color: #FF6600 !important; border-width: 2px !important; border-bottom-left-radius: 12px;">
-                                        </div>
-                                        <div class="position-absolute bottom-0 end-0 border-bottom border-end"
-                                            style="width: 40px; height: 40px; border-color: #FF6600 !important; border-width: 2px !important; border-bottom-right-radius: 12px;">
-                                        </div>
-
-                                        <!-- Green Outline Box mimicking shape -->
-                                        <div class="position-absolute border"
-                                            style="top: -40px; left: -30px; right: -30px; bottom: -80px; border-color: #FF9933 !important; border-width: 2px !important; border-radius: 20px; opacity: 0.8;">
-                                        </div>
+                                        <div class="position-absolute top-0 start-0 border-top border-start" style="width: 40px; height: 40px; border-color: #EA580C !important; border-width: 3px !important; border-top-left-radius: 12px;"></div>
+                                        <div class="position-absolute top-0 end-0 border-top border-end" style="width: 40px; height: 40px; border-color: #EA580C !important; border-width: 3px !important; border-top-right-radius: 12px;"></div>
+                                        <div class="position-absolute bottom-0 start-0 border-bottom border-start" style="width: 40px; height: 40px; border-color: #EA580C !important; border-width: 3px !important; border-bottom-left-radius: 12px;"></div>
+                                        <div class="position-absolute bottom-0 end-0 border-bottom border-end" style="width: 40px; height: 40px; border-color: #EA580C !important; border-width: 3px !important; border-bottom-right-radius: 12px;"></div>
 
                                         <!-- Face Box matching cyan lines -->
-                                        <div class="position-absolute border-top border-start border-end"
-                                            style="top: 80px; left: 30px; right: 30px; height: 120px; border-color: #FF6600 !important; border-width: 2px !important;">
-                                        </div>
-                                        <div class="position-absolute border-bottom border-start border-end"
-                                            style="bottom: 70px; left: 30px; right: 30px; height: 50px; border-color: #FF6600 !important; border-width: 2px !important;">
-                                        </div>
+                                        <div class="position-absolute border-top border-start border-end" style="top: 20%; left: 10%; right: 10%; height: 35%; border-color: #F97316 !important; border-width: 2px !important;"></div>
+                                        <div class="position-absolute border-bottom border-start border-end" style="bottom: 20%; left: 10%; right: 10%; height: 15%; border-color: #F97316 !important; border-width: 2px !important;"></div>
 
                                         <!-- Horizontal scanning line -->
-                                        <div class="position-absolute w-100 scan-line"
-                                            style="height: 1px; background-color: #FFDAB9; box-shadow: 0 0 10px 2px #FF6600;">
-                                        </div>
+                                        <div class="position-absolute w-100 scan-line" style="height: 2px; background-color: #FFEDD5; box-shadow: 0 0 15px 4px #EA580C;"></div>
 
                                         <!-- Badge -->
-                                        <div class="position-absolute w-100 text-center"
-                                            style="bottom: 40px; z-index: 10;">
-                                            <div class="d-inline-flex flex-column align-items-start px-3 py-2 fw-bold text-white rounded-1"
-                                                style="background-color: #FF6600; font-size: 11px;">
-                                                <span style="letter-spacing: 0.5px;">AUTHENTICATED:</span>
-                                                <span>USER 01</span>
+                                        <div class="position-absolute w-100 text-center" style="bottom: 10%; z-index: 10;">
+                                            <div class="d-inline-flex flex-column align-items-center px-3 py-2 fw-bold text-white rounded-pill" style="background-color: #EA580C; font-size: 11px;">
+                                                <span style="letter-spacing: 0.5px;"><i class='bx bx-scan'></i> ĐANG QUÉT KHUÔN MẶT...</span>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -92,187 +83,98 @@
             </div>
         </section>
 
-        <!-- Trusted By -->
-        <section class="py-4 border-bottom bg-white shadow-sm">
+        <!-- Partners -->
+        <section class="py-4 bg-transparent mt-3">
             <div class="container text-center">
-                <p class="text-muted small fw-bold mb-3 ls-1 text-uppercase">Được tin dùng bởi các doanh nghiệp hàng đầu
-                </p>
-                <div
-                    class="d-flex justify-content-center align-items-center gap-4 gap-md-5 flex-wrap opacity-50 grayscale">
-                    <i class='bx bxl-microsoft fs-2'></i>
-                    <i class='bx bxl-amazon fs-2'></i>
-                    <i class='bx bxl-google fs-2'></i>
-                    <i class='bx bxl-meta fs-2'></i>
-                    <i class='bx bxl-apple fs-2'></i>
+                <p class="text-muted fw-bold mb-4 text-uppercase" style="letter-spacing: 2px; font-size: 0.75rem;">ĐỐI TÁC CHIẾN LƯỢC</p>
+                <div class="d-flex justify-content-center align-items-center gap-4 gap-md-5 flex-wrap text-muted fw-bold fs-5 grayscale opacity-50">
+                    <span style="font-family: Arial, Helvetica, sans-serif; letter-spacing: 1px;">VINTECH</span>
+                    <span style="font-family: Arial, Helvetica, sans-serif; letter-spacing: 1px;">FPT AI</span>
+                    <span style="font-family: Arial, Helvetica, sans-serif; letter-spacing: 1px;">MOCHA</span>
+                    <span style="font-family: Arial, Helvetica, sans-serif; letter-spacing: 1px;">VNPT</span>
+                    <span style="font-family: Arial, Helvetica, sans-serif; letter-spacing: 1px;">TECHCOM</span>
                 </div>
             </div>
         </section>
 
         <!-- Features -->
-        <section class="py-5 bg-light">
-            <div class="container py-5">
+        <section class="py-5 my-5">
+            <div class="container py-4">
                 <div class="text-center mb-5">
-                    <span class="text-orange fw-bold small text-uppercase ls-1">Ưu điểm vượt trội</span>
-                    <h2 class="display-6 fw-bold mt-2">Giải pháp hội nghị AI toàn diện</h2>
-                </div>
-                <div class="row g-4 pt-4">
-                    <!-- Card 1 -->
-                    <div class="col-md-4">
-                        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center text-md-start hover-lift">
-                            <div class="mb-4">
-                                <div class="d-inline-flex justify-content-center align-items-center rounded-circle"
-                                    style="width: 60px; height: 60px; background-color: rgba(255, 102, 0, 0.1);">
-                                    <i class='bx bxs-check-shield fs-2' style="color: #FF6600;"></i>
-                                </div>
-                            </div>
-                            <h4 class="fw-bold mb-3">Bảo mật sinh trắc học</h4>
-                            <p class="text-muted mb-4 small">
-                                Ngăn chặn truy cập trái phép bằng nhận diện khuôn mặt thời gian thực.
-                                Đảm bảo đúng người, đúng quyền trong mọi cuộc họp quan trọng.
-                            </p>
-                            <ul class="list-unstyled text-start small mb-0">
-                                <li class="mb-2"><i class='bx bx-check-circle text-orange me-2'></i> Điểm danh tự động
-                                </li>
-                                <li><i class='bx bx-check-circle text-orange me-2'></i> Phát hiện giả mạo AI</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- Card 2 -->
-                    <div class="col-md-4">
-                        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center text-md-start hover-lift">
-                            <div class="mb-4">
-                                <div class="d-inline-flex justify-content-center align-items-center rounded-circle"
-                                    style="width: 60px; height: 60px; background-color: rgba(255, 102, 0, 0.1);">
-                                    <i class='bx bx-message-square-detail fs-2' style="color: #FF6600;"></i>
-                                </div>
-                            </div>
-                            <h4 class="fw-bold mb-3">Tóm tắt nội dung thông minh</h4>
-                            <p class="text-muted mb-4 small">
-                                Không cần ghi chép thủ công. AI tự động chuyển đổi giọng nói thành văn bản
-                                và trích xuất các quyết định, hành động quan trọng.
-                            </p>
-                            <ul class="list-unstyled text-start small mb-0">
-                                <li class="mb-2"><i class='bx bx-check-circle text-orange me-2'></i> Trích xuất Action
-                                    Items</li>
-                                <li><i class='bx bx-check-circle text-orange me-2'></i> Hỗ trợ đa ngôn ngữ</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- Card 3 -->
-                    <div class="col-md-4">
-                        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center text-md-start hover-lift">
-                            <div class="mb-4">
-                                <div class="d-inline-flex justify-content-center align-items-center rounded-circle"
-                                    style="width: 60px; height: 60px; background-color: rgba(255, 102, 0, 0.1);">
-                                    <i class='bx bx-video fs-2' style="color: #FF6600;"></i>
-                                </div>
-                            </div>
-                            <h4 class="fw-bold mb-3">Chất lượng 4K Ultra HD</h4>
-                            <p class="text-muted mb-4 small">
-                                Trải nghiệm hình ảnh sắc nét và âm thanh trung thực.
-                                Công nghệ nền AI giúp duy trì sự ổn định ngay cả khi đường truyền yếu.
-                            </p>
-                            <ul class="list-unstyled text-start small mb-0">
-                                <li class="mb-2"><i class='bx bx-check-circle text-orange me-2'></i> Lọc nhiễu môi
-                                    trường AI</li>
-                                <li><i class='bx bx-check-circle text-orange me-2'></i> Tự động cân bằng sáng</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Testimonials -->
-        <section class="py-5" style="background-color: #1a1e29;">
-            <div class="container py-5">
-                <div class="row mb-5">
-                    <div class="col-lg-6">
-                        <span class="text-orange fw-bold small text-uppercase ls-1">Khách hàng nói gì</span>
-                        <h2 class="display-6 fw-bold mt-2 text-white">Được sự tin tưởng từ <br> các chuyên gia</h2>
-                    </div>
-                    <div class="col-lg-6 d-flex align-items-end justify-content-lg-end mt-4 mt-lg-0">
-                        <div class="d-flex gap-2">
-                            <button
-                                class="btn btn-outline-secondary rounded-pill d-flex justify-content-center align-items-center"
-                                style="width: 50px; height: 35px;"><i
-                                    class='bx bx-left-arrow-alt fs-5 text-white'></i></button>
-                            <button class="btn btn-orange rounded-pill d-flex justify-content-center align-items-center"
-                                style="width: 50px; height: 35px; background-color: #FF6600; border-color: #FF6600;"><i
-                                    class='bx bx-right-arrow-alt fs-5 text-white'></i></button>
-                        </div>
-                    </div>
+                    <h2 class="display-6 fw-bold mb-3 text-dark" style="letter-spacing: -1px;">Đẳng cấp công nghệ AI</h2>
+                    <p class="text-muted mx-auto" style="max-width: 600px; font-size: 1.05rem;">
+                        Tích hợp những công nghệ đột phá nhất để biến mỗi cuộc họp trở thành một trải nghiệm thông minh và hiệu quả.
+                    </p>
                 </div>
 
-                <div class="row g-4">
-                    <!-- Testimonial 1 -->
-                    <div class="col-md-4">
-                        <div
-                            class="card h-100 bg-secondary bg-opacity-25 border border-secondary border-opacity-50 p-4 rounded-4 shadow hover-lift">
-                            <div class="mb-3">
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
+                <div class="row g-4 mt-2">
+                    <!-- Feature 1 (Large) -->
+                    <div class="col-lg-7">
+                        <div class="feature-card fc-1 h-100 p-4 p-md-5 d-flex flex-column position-relative overflow-hidden">
+                            <div class="mb-4 position-relative z-1">
+                                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm mb-4 text-orange" style="width: 54px; height: 54px;">
+                                    <i class='bx bx-scan fs-3'></i>
+                                </div>
+                                <h4 class="fw-bold mb-3 text-dark fs-3">Face ID & Sinh trắc học</h4>
+                                <p class="text-muted lh-lg" style="font-size: 1rem; max-width: 380px;">
+                                    Tự động nhận diện và điểm danh thành viên tham gia cuộc họp bằng công nghệ AI Face Scanning độ chính xác 99.9%.
+                                </p>
                             </div>
-                            <p class="fst-italic text-white-50 mb-4 small lh-lg">"Tính năng nhận diện khuôn mặt giúp
-                                việc điểm danh nhân viên trong các buổi họp giao ban sáng trở nên cực kỳ nhanh chóng và
-                                chính xác."</p>
-                            <div class="d-flex align-items-center mt-auto">
-                                <div class="bg-orange text-white rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
-                                    style="width: 45px; height: 45px;">TH</div>
-                                <div>
-                                    <h6 class="mb-0 text-white fw-bold">Trần Hoàng</h6>
-                                    <small class="text-muted" style="font-size: 0.75rem;">CTO @ TECHFLOW</small>
+                            <div class="position-absolute end-0 bottom-0 p-4 w-50 text-end d-none d-md-block">
+                                <div class="bg-white p-2 rounded-4 shadow-sm d-inline-block text-start w-100" style="transform: rotate(-3deg);">
+                                    <img src="../../assets/images/face_id_biometric.png" class="w-100 rounded-3 object-fit-cover" alt="Face ID Sinh trắc học" style="height: 120px; object-position: center 20%;">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Testimonial 2 -->
-                    <div class="col-md-4">
-                        <div
-                            class="card h-100 bg-secondary bg-opacity-25 border border-secondary border-opacity-50 p-4 rounded-4 shadow hover-lift">
-                            <div class="mb-3">
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
+
+                    <!-- Feature 2 (Medium) -->
+                    <div class="col-lg-5">
+                        <div class="feature-card fc-2 h-100 p-4 p-md-5 d-flex flex-column">
+                            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm mb-4 text-orange" style="width: 54px; height: 54px;">
+                                <i class='bx bx-volume-mute fs-3'></i>
                             </div>
-                            <p class="fst-italic text-white-50 mb-4 small lh-lg">"Tóm tắt họp tự động của AI-Meet rất
-                                thông minh, giúp đội ngũ của tôi tiết kiệm ít nhất 2 giờ mỗi tuần cho việc ghi chép biên
-                                bản."</p>
-                            <div class="d-flex align-items-center mt-auto">
-                                <div class="bg-orange text-white rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
-                                    style="width: 45px; height: 45px;">ML</div>
-                                <div>
-                                    <h6 class="mb-0 text-white fw-bold">Mai Lan</h6>
-                                    <small class="text-muted" style="font-size: 0.75rem;">OPERATIONS DIRECTOR</small>
-                                </div>
-                            </div>
+                            <h4 class="fw-bold mb-3 text-dark fs-3">Chống ồn AI</h4>
+                            <p class="text-muted lh-lg" style="font-size: 1rem;">
+                                Loại bỏ hoàn toàn tiếng ồn môi trường, tập trung tối đa vào giọng nói con người bằng thuật toán Neural Link.
+                            </p>
                         </div>
                     </div>
-                    <!-- Testimonial 3 -->
-                    <div class="col-md-4">
-                        <div
-                            class="card h-100 bg-secondary bg-opacity-25 border border-secondary border-opacity-50 p-4 rounded-4 shadow hover-lift">
-                            <div class="mb-3">
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
-                                <i class='bx bxs-star text-warning'></i>
+
+                    <!-- Feature 3 (Medium) -->
+                    <div class="col-lg-4">
+                        <div class="feature-card fc-3 h-100 p-4 p-md-5 d-flex flex-column">
+                            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm mb-4 text-orange" style="width: 54px; height: 54px;">
+                                <i class='bx bx-file-blank fs-3'></i>
                             </div>
-                            <p class="fst-italic text-white-50 mb-4 small lh-lg">"Dịch vụ khách hàng tuyệt vời và chất
-                                lượng hình ảnh ổn định hơn hẳn các nền tảng quốc tế mà chúng tôi từng sử dụng trước
-                                đây."</p>
-                            <div class="d-flex align-items-center mt-auto">
-                                <div class="bg-orange text-white rounded-circle d-flex justify-content-center align-items-center fw-bold me-3"
-                                    style="width: 45px; height: 45px;">PQ</div>
-                                <div>
-                                    <h6 class="mb-0 text-white fw-bold">Phạm Quang</h6>
-                                    <small class="text-muted" style="font-size: 0.75rem;">HR MANAGER @ J.CORP</small>
+                            <h4 class="fw-bold mb-3 text-dark fs-3">Tóm tắt tự động</h4>
+                            <p class="text-muted lh-lg" style="font-size: 1rem;">
+                                Tự động tạo biên bản cuộc họp và danh sách công việc cần làm ngay sau khi kết thúc thảo luận.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Feature 4 (Large) -->
+                    <div class="col-lg-8">
+                        <div class="feature-card fc-4 h-100 p-4 p-md-5 d-flex flex-column position-relative overflow-hidden">
+                            <div class="mb-4 position-relative z-1">
+                                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm mb-4 text-orange" style="width: 54px; height: 54px;">
+                                    <i class='bx bx-transfer-alt fs-3'></i>
+                                </div>
+                                <h4 class="fw-bold mb-3 text-dark fs-3">Dịch thuật thời gian thực</h4>
+                                <p class="text-muted lh-lg" style="font-size: 1rem; max-width: 400px;">
+                                    Kết nối không biên giới với tính năng dịch phụ đề trực tiếp hơn 50 ngôn ngữ trong lúc họp.
+                                </p>
+                            </div>
+                            <div class="position-absolute end-0 top-50 translate-middle-y pe-4 w-50 d-none d-md-block opacity-75">
+                                <div class="bg-white p-4 rounded-4 shadow-sm w-100">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <span class="badge bg-light text-dark px-3 py-2">English</span>
+                                        <i class='bx bx-transfer text-muted'></i>
+                                        <span class="badge bg-orange-subtle text-orange px-3 py-2">Tiếng Việt</span>
+                                    </div>
+                                    <div class="bg-light rounded p-3 mb-2"><span class="text-muted small fw-medium">Hello everyone, let's start.</span></div>
+                                    <div class="bg-orange-subtle rounded p-3"><span class="text-orange small fw-bold">Chào mọi người, chúng ta bắt đầu nhé.</span></div>
                                 </div>
                             </div>
                         </div>
@@ -282,165 +184,96 @@
         </section>
 
         <!-- Pricing -->
-        <section id="pricing" class="py-5" style="background-color: #fafaf9;">
-            <div class="container py-5 mt-4">
-                <div class="text-center mb-5" style="max-width: 800px; margin: 0 auto;">
-                    <h2 class="display-5 fw-bold mb-3" style="color: #1a1e29; letter-spacing: -1px;">Lựa chọn gói dịch
-                        vụ phù hợp<br>cho sự nghiệp của bạn</h2>
-                    <p class="text-muted fs-5 lh-base">
-                        Trải nghiệm hội nghị truyền hình thế hệ mới với sức mạnh từ trí tuệ nhân tạo.<br>
-                        Tối ưu hóa quy trình làm việc từ cá nhân đến doanh nghiệp lớn.
+        <section class="py-5 my-5" style="background-color: #FDF3ED;">
+            <div class="container py-5">
+                <div class="text-center mb-5 pb-3">
+                    <h2 class="display-6 fw-bold mb-3 text-dark" style="letter-spacing: -1px;">Lựa chọn gói dịch vụ</h2>
+                    <p class="text-muted mx-auto" style="max-width: 600px; font-size: 1.05rem;">
+                        Phù hợp cho mọi quy mô từ cá nhân đến tập đoàn đa quốc gia.
                     </p>
                 </div>
 
-                <div class="row g-4 align-items-stretch mb-5">
+                <div class="row g-4 justify-content-center mt-2">
                     <template v-for="(value, index) in list_goi" :key="index">
-                        <div v-if="value.is_hien_thi" :class="index == 1 ? 'col-lg-4 position-relative' : 'col-lg-4'">
+                        <div v-if="value.is_hien_thi" :class="['col-lg-4', index == 1 ? 'position-relative z-2' : 'mt-lg-4 z-1']">
+                            
                             <!-- Popular Badge -->
-                            <div v-if="index == 1"
-                                class="position-absolute start-50 translate-middle d-inline-block rounded-pill text-white fw-bold px-3 py-1 shadow-sm"
-                                style="background-color: #ea580c; top: 0; font-size: 0.75rem; letter-spacing: 0.5px; z-index: 10;">
-                                PHỔ BIẾN NHẤT
+                            <div v-if="index == 1" class="position-absolute start-50 translate-middle-x" style="top: -16px; z-index: 10;">
+                                <div class="bg-orange text-white fw-bold px-4 py-2 rounded-pill shadow" style="font-size: 0.8rem; letter-spacing: 1px;">
+                                    PHỔ BIẾN NHẤT
+                                </div>
                             </div>
 
-                            <div :class="['card h-100 border-0 p-5 rounded-4 shadow-sm', index == 1 ? 'bg-white pricing-pro' : '']"
-                                :style="index != 1 ? 'background-color: #fdf5f3;' : 'box-shadow: 0 10px 40px rgba(0,0,0,0.06);'">
-                                <h5 class="fw-bold mb-3" style="color: #1a1e29; font-size: 1.1rem;">{{ value.ten_goi }}</h5>
-                                <div class="d-flex align-items-baseline mb-4">
-                                    <h1 class="display-5 fw-bold mb-0" :style="index == 1 ? 'color: #FF6600;' : 'color: #1a1e29;'">
-                                        {{ value.gia_goi > 0 ? formatVND(value.gia_goi) : (value.gia_goi == 0 ? '0đ' : 'Liên hệ') }}
-                                    </h1>
-                                    <span v-if="value.gia_goi >= 0" class="text-muted ms-1" style="font-size: 0.9rem;">/tháng</span>
+                            <div class="pricing-card card h-100 p-4 p-xl-5 bg-white" :style="index == 1 ? 'box-shadow: 0 20px 60px rgba(234,88,12,0.1) !important; transform: scale(1.04);' : 'box-shadow: 0 10px 30px rgba(0,0,0,0.02);'">
+                                <div class="mb-4">
+                                    <h6 class="fw-bold text-dark mb-2" style="font-size: 1.1rem;">{{ value.ten_goi }}</h6>
+                                    <h2 class="fw-bold mb-0 text-dark d-flex align-items-baseline gap-1" style="font-size: 2.2rem; letter-spacing: -1px;">
+                                        {{ value.gia_goi > 0 ? formatVND(value.gia_goi) : (value.gia_goi == 0 ? 'Miễn phí' : 'Liên hệ') }}
+                                        <span v-if="value.gia_goi > 0" class="text-muted fw-normal" style="font-size: 0.9rem; letter-spacing: 0;">/tháng</span>
+                                    </h2>
+                                    <p class="text-muted mt-2 mb-0 small" style="min-height: 40px;">{{ index == 0 ? 'Dành cho 1 người dùng' : (index == 1 ? 'Dành cho các nhóm startup' : 'Dành cho tập đoàn lớn') }}</p>
                                 </div>
 
-                                <ul class="list-unstyled mb-5 mt-2 flex-grow-1">
-                                    <li class="mb-3 d-flex align-items-center">
-                                        <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
-                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #FF6600;' : 'width: 24px; height: 24px; min-width: 24px;'">
-                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #FF6600; font-size: 18px;'"></i>
-                                        </div>
-                                        <span class="text-dark fw-medium" style="font-size: 0.9rem;">Tối đa {{ value.so_nguoi_toi_da }} người tham gia</span>
+                                <hr class="text-muted opacity-10 mb-4">
+
+                                <ul class="list-unstyled mb-5 flex-grow-1">
+                                    <li class="mb-3 d-flex align-items-start gap-2">
+                                        <i class='bx bx-check-circle text-orange fs-5 mt-1'></i>
+                                        <span class="text-dark" style="font-size: 0.95rem;">Tối đa {{ value.so_nguoi_toi_da }} người tham gia</span>
                                     </li>
-                                    <li class="mb-3 d-flex align-items-center">
-                                        <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
-                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #FF6600;' : 'width: 24px; height: 24px; min-width: 24px;'">
-                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #FF6600; font-size: 18px;'"></i>
-                                        </div>
-                                        <span class="text-dark fw-medium" style="font-size: 0.9rem;">Tối đa {{ value.so_phong_toi_da }} phòng họp</span>
+                                    <li class="mb-3 d-flex align-items-start gap-2">
+                                        <i class='bx bx-check-circle text-orange fs-5 mt-1'></i>
+                                        <span class="text-dark" style="font-size: 0.95rem;">Tối đa {{ value.so_phong_toi_da }} phòng họp</span>
                                     </li>
-                                    <li class="mb-3 d-flex align-items-center">
-                                        <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
-                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #FF6600;' : 'width: 24px; height: 24px; min-width: 24px;'">
-                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #FF6600; font-size: 18px;'"></i>
-                                        </div>
-                                        <span class="text-dark fw-medium" style="font-size: 0.9rem;">Thời hạn: {{ value.thoi_han }} ngày</span>
+                                    <li class="mb-3 d-flex align-items-start gap-2">
+                                        <i class='bx bx-check-circle text-orange fs-5 mt-1'></i>
+                                        <span class="text-dark" style="font-size: 0.95rem;">Thời hạn: {{ value.thoi_han }} ngày</span>
                                     </li>
-                                    <li class="mb-3 d-flex align-items-center">
-                                        <div :class="['rounded-circle d-flex align-items-center justify-content-center me-3', index == 1 ? '' : 'bg-white shadow-sm']"
-                                            :style="index == 1 ? 'width: 24px; height: 24px; min-width: 24px; background-color: #FF6600;' : 'width: 24px; height: 24px; min-width: 24px;'">
-                                            <i class="bx bx-check" :style="index == 1 ? 'color: white; font-size: 18px;' : 'color: #FF6600; font-size: 18px;'"></i>
-                                        </div>
-                                        <span class="text-dark fw-medium" style="font-size: 0.9rem;">{{ value.mo_ta }}</span>
+                                    <li class="mb-3 d-flex align-items-start gap-2">
+                                        <i class='bx bx-check-circle text-orange fs-5 mt-1'></i>
+                                        <span class="text-dark" style="font-size: 0.95rem;">{{ value.mo_ta }}</span>
+                                    </li>
+                                    
+                                    <li v-if="index >= 1" class="mb-3 d-flex align-items-start gap-2">
+                                        <i class='bx bx-check-circle text-orange fs-5 mt-1'></i>
+                                        <span class="text-dark" style="font-size: 0.95rem;">{{ index == 1 ? 'Tích hợp AI tóm tắt nội dung' : 'Tùy biến AI theo dữ liệu riêng' }}</span>
+                                    </li>
+                                    <li v-if="index >= 1" class="mb-3 d-flex align-items-start gap-2">
+                                        <i class='bx bx-check-circle text-orange fs-5 mt-1'></i>
+                                        <span class="text-dark" style="font-size: 0.95rem;">{{ index == 1 ? 'Hỗ trợ 24/7 chuyên nghiệp' : 'Quản lý tập trung SSO/SAML' }}</span>
                                     </li>
                                 </ul>
 
-                                <button :class="['btn border-0 fw-bold py-3 rounded-3 w-100 mt-auto', index == 1 ? 'text-white' : 'text-dark']"
-                                    :style="index == 1 ? 'background-color: #FF6600; font-size: 0.9rem;' : 'background-color: #FFE5D9; font-size: 0.9rem;'">
-                                    {{ value.gia_goi == 0 ? 'Bắt đầu miễn phí' : (value.gia_goi > 0 ? 'Nâng cấp ngay' : 'Liên hệ đội ngũ Sales') }}
+                                <button :class="['btn w-100 py-3 rounded-3 fw-bold mt-auto transition', index == 1 ? 'btn-orange shadow-sm' : 'btn-outline-dark']" style="font-size: 0.95rem;">
+                                    {{ value.gia_goi == 0 ? 'Sử dụng ngay' : (value.gia_goi > 0 ? 'Dùng thử 14 ngày' : 'Liên hệ chúng tôi') }}
                                 </button>
                             </div>
                         </div>
                     </template>
                 </div>
-
-                <!-- So sánh tính năng chi tiết -->
-                <div class="mt-5 pt-4">
-                    <h3 class="text-center fw-bold mb-5" style="color: #1a1e29; font-size: 1.6rem;">So sánh tính năng
-                        chi tiết</h3>
-                    <div class="table-responsive rounded-4 overflow-hidden border-0" style="background-color: #fdf5f3;">
-                        <table class="table table-borderless align-middle mb-0" style="min-width: 800px;">
-                            <thead>
-                                <tr style="border-bottom: 1px solid #f6e6e0;">
-                                    <th scope="col" class="py-4 ps-4 fw-medium text-muted bg-transparent"
-                                        style="width: 30%; font-size: 0.9rem;">Tính năng</th>
-                                    <th scope="col" class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">Cơ bản</th>
-                                    <th scope="col" class="py-4 text-center fw-bold bg-transparent"
-                                        style="color: #FF6600; font-size: 0.9rem;">Chuyên nghiệp</th>
-                                    <th scope="col" class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">Doanh nghiệp</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="border-bottom: 1px solid #f6e6e0;">
-                                    <td class="py-4 ps-4 fw-bold text-dark bg-transparent" style="font-size: 0.9rem;">
-                                        Thời gian họp</td>
-                                    <td class="py-4 text-center text-secondary bg-transparent"
-                                        style="font-size: 0.9rem;">40 phút</td>
-                                    <td class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">Không giới hạn</td>
-                                    <td class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">Không giới hạn</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #f6e6e0;">
-                                    <td class="py-4 ps-4 fw-bold text-dark bg-transparent" style="font-size: 0.9rem;">Số
-                                        lượng người tham gia</td>
-                                    <td class="py-4 text-center text-secondary bg-transparent"
-                                        style="font-size: 0.9rem;">100</td>
-                                    <td class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">500</td>
-                                    <td class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">Tùy chỉnh</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #f6e6e0;">
-                                    <td class="py-4 ps-4 fw-bold text-dark bg-transparent" style="font-size: 0.9rem;">
-                                        Nhận diện khuôn mặt AI</td>
-                                    <td class="py-4 text-center text-secondary bg-transparent"
-                                        style="font-size: 0.9rem;">Cơ bản</td>
-                                    <td class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">Nâng cao (Face ID)</td>
-                                    <td class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">Nâng cao & Tùy biến</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #f6e6e0;">
-                                    <td class="py-4 ps-4 fw-bold text-dark bg-transparent" style="font-size: 0.9rem;">
-                                        Tóm tắt cuộc họp AI</td>
-                                    <td class="py-4 text-center text-secondary bg-transparent"><span
-                                            style="color: #fbceb1; font-size: 1.5rem;">—</span></td>
-                                    <td class="py-4 text-center bg-transparent"><i class="bx bxs-check-circle"
-                                            style="color: #FF6600; font-size: 1.25rem;"></i></td>
-                                    <td class="py-4 text-center bg-transparent"><i class="bx bxs-check-circle"
-                                            style="color: #FF6600; font-size: 1.25rem;"></i></td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #f6e6e0;">
-                                    <td class="py-4 ps-4 fw-bold text-dark bg-transparent" style="font-size: 0.9rem;">
-                                        Dung lượng lưu trữ</td>
-                                    <td class="py-4 text-center text-secondary bg-transparent"
-                                        style="font-size: 0.9rem;">1GB Cloud</td>
-                                    <td class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">100GB Cloud</td>
-                                    <td class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">Không giới hạn</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 ps-4 fw-bold text-dark bg-transparent" style="font-size: 0.9rem;">Hỗ
-                                        trợ kỹ thuật</td>
-                                    <td class="py-4 text-center text-secondary bg-transparent"
-                                        style="font-size: 0.9rem;">Trung tâm trợ giúp</td>
-                                    <td class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">Email & Chat</td>
-                                    <td class="py-4 text-center fw-bold text-dark bg-transparent"
-                                        style="font-size: 0.9rem;">24/7 Ưu tiên</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
         </section>
 
+        <!-- CTA Section -->
+        <section class="container mb-5 pb-5 mt-5 pt-3">
+            <div class="cta-section p-5 text-center text-white shadow-lg d-flex align-items-center justify-content-center flex-column" style="border-radius: 32px; min-height: 400px;">
+                <div class="cta-bg-shape" style="width: 400px; height: 400px; top: -150px; left: -100px;"></div>
+                <div class="cta-bg-shape" style="width: 500px; height: 500px; bottom: -250px; right: -150px;"></div>
+                
+                <div class="position-relative z-1 py-4">
+                    <h2 class="display-5 fw-bold mb-4" style="letter-spacing: -1px;">Sẵn sàng nâng cấp<br>văn hóa họp của bạn?</h2>
+                    <p class="mb-5 mx-auto opacity-75" style="max-width: 600px; font-size: 1.1rem;">
+                        Gia nhập cùng hàng ngàn doanh nghiệp đang sử dụng AI-Meet để tối ưu hóa quy trình làm việc và ra quyết định nhanh hơn.
+                    </p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <button @click.prevent="handleThuNghiemClick" class="btn btn-light px-5 py-3 fw-bold rounded-pill text-orange transition shadow-sm hover-lift">Trải nghiệm miễn phí</button>
+                        <button class="btn btn-outline-light px-5 py-3 fw-bold rounded-pill transition hover-lift">Tư vấn giải pháp</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+      
     </div>
 </template>
 
@@ -525,72 +358,131 @@ export default {
 </script>
 
 <style scoped>
-.text-orange {
-    color: #FF6600 !important;
+.homepage {
+    background-color: #FCF8F5;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #1a1e29;
+    overflow-x: hidden;
+}
+
+.text-gradient {
+    background: linear-gradient(90deg, #EA580C, #F97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .bg-orange {
-    background-color: #FF6600 !important;
+    background-color: #EA580C !important;
 }
 
-.bg-orange-light {
-    background-color: #FFE5D9 !important;
+.bg-orange-subtle {
+    background-color: #FFEDD5 !important;
+}
+
+.text-orange {
+    color: #EA580C !important;
 }
 
 .btn-orange {
-    background-color: #FF6600 !important;
+    background-color: #EA580C !important;
     color: white !important;
+    border: none;
+}
+
+.btn-orange:hover {
+    background-color: #C2410C !important;
+    color: white !important;
+}
+
+.btn-orange-light {
+    background-color: #FFEDD5 !important;
+    color: #EA580C !important;
+    border: none;
+}
+
+.btn-orange-light:hover {
+    background-color: #FDBA74 !important;
+    color: #9A3412 !important;
+}
+
+.hover-orange:hover {
+    color: #EA580C !important;
+}
+
+.hover-orange.bg-light:hover {
+    background-color: #FFEDD5 !important;
+}
+
+.transition {
+    transition: all 0.3s ease;
+}
+
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+}
+
+.feature-card {
+    border-radius: 32px;
+    border: none;
+    transition: all 0.4s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(234, 88, 12, 0.06);
+}
+
+.fc-1 { background-color: #FFFFFF; border: 1px solid rgba(0,0,0,0.03); }
+.fc-2 { background-color: #FFF5F0; }
+.fc-3 { background-color: #FFF5F0; }
+.fc-4 { background-color: #FFFFFF; border: 1px solid rgba(0,0,0,0.03); }
+
+.pricing-card {
+    border-radius: 32px;
+    transition: all 0.4s ease;
+    border: 2px solid transparent !important;
+}
+
+.pricing-card:hover {
+    border-color: rgba(234, 88, 12, 0.2) !important;
+    transform: translateY(-5px);
+}
+
+.cta-section {
+    background: linear-gradient(135deg, #C2410C, #EA580C, #F97316);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-bg-shape {
+    position: absolute;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }
 
 .grayscale {
     filter: grayscale(100%);
 }
 
-.ls-1 {
-    letter-spacing: 1px;
-}
-
-.nav-link {
-    color: #4b5563;
-}
-
-.nav-link.active {
-    color: #111827;
-}
-
-.hover-lift {
-    transition: transform 0.3s ease;
-}
-
-.hover-lift:hover {
-    transform: translateY(-8px);
-}
-
-@media (min-width: 992px) {
-    .pricing-pro {
-        transform: scale(1.08);
-        z-index: 10;
-        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
-    }
-}
-
-.pricing-pro {
-    transition: transform 0.3s ease;
-}
-
 @keyframes scan-animation {
     0% {
-        top: 80px;
+        top: 20%;
         opacity: 1;
     }
-
     50% {
-        top: 260px;
+        top: 80%;
         opacity: 1;
     }
-
     100% {
-        top: 80px;
+        top: 20%;
         opacity: 1;
     }
 }
