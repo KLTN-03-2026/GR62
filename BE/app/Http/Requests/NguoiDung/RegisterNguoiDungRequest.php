@@ -24,7 +24,7 @@ class RegisterNguoiDungRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ho_va_ten' => 'required|string|max:255',
+            'ho_va_ten' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u',
             'so_dien_thoai' => 'required|string|max:15|regex:/^([0-9\s\-\+\(\)]*)$/|unique:nguoi_dungs,so_dien_thoai',
             'email' => [
                 'required',
@@ -43,6 +43,7 @@ class RegisterNguoiDungRequest extends FormRequest
             'ho_va_ten.required' => 'Họ và tên là bắt buộc.',
             'ho_va_ten.string' => 'Họ và tên phải là chuỗi ký tự.',
             'ho_va_ten.max' => 'Họ và tên không được vượt quá 255 ký tự.',
+            'ho_va_ten.regex' => 'Họ và tên chỉ được chứa chữ cái và khoảng trắng.',
 
             'so_dien_thoai.required' => 'Số điện thoại là bắt buộc.',
             'so_dien_thoai.string' => 'Số điện thoại phải là chuỗi ký tự.',
