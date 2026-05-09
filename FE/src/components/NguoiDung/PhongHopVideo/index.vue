@@ -14,7 +14,8 @@
         </header>
 
         <main class="flex-grow-1 position-relative p-2 p-md-4 mt-5 d-flex flex-column">
-            <div id="video-grid" class="video-grid w-100 flex-grow-1" :style="{ paddingRight: isChatOpen ? '350px' : '0', transition: 'padding 0.3s ease' }">
+            <div id="video-grid" class="video-grid w-100 flex-grow-1"
+                :style="{ paddingRight: isChatOpen ? '350px' : '0', transition: 'padding 0.3s ease' }">
                 <div id="local-video-wrapper" class="video-wrapper shadow-lg">
                     <div class="w-100 h-100 bg-secondary position-relative">
                         <div v-if="!cameraReady" class="position-absolute top-50 start-50 translate-middle z-3">
@@ -60,8 +61,16 @@
                     <i class='bx bx-slider-alt fs-4'></i>
                 </button>
 
-                <button @click="toggleChat" :class="['btn rounded-circle tool-btn shadow-sm', isChatOpen ? 'btn-primary text-white' : 'btn-light']" title="Mở Chat">
+                <button @click="toggleChat"
+                    :class="['btn rounded-circle tool-btn shadow-sm', isChatOpen ? 'btn-primary text-white' : 'btn-light']"
+                    title="Mở Chat">
                     <i class='bx bx-message-rounded-dots fs-4'></i>
+                </button>
+
+                <button @click="toggleParticipants"
+                    :class="['btn rounded-circle tool-btn shadow-sm', isParticipantsOpen ? 'btn-primary text-white' : 'btn-light']"
+                    title="Danh sách người tham gia">
+                    <i class='bx bx-group fs-4'></i>
                 </button>
 
                 <div class="vr bg-secondary mx-2"></div>
@@ -109,17 +118,21 @@
         </div>
 
         <!-- Chat Sidebar -->
-        <aside v-if="isChatOpen" class="bg-dark border-start border-secondary d-flex flex-column z-3" 
+        <aside v-if="isChatOpen" class="bg-dark border-start border-secondary d-flex flex-column z-3"
             style="width: 350px; position: absolute; right: 0; top: 0; bottom: 0; box-shadow: -5px 0 15px rgba(0,0,0,0.5);">
-            <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center bg-dark text-white">
+            <div
+                class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center bg-dark text-white">
                 <h6 class="mb-0 fw-bold"><i class='bx bx-message-rounded-dots me-2'></i> Trò chuyện trong phòng</h6>
                 <button @click="toggleChat" class="btn-close btn-close-white"></button>
             </div>
-            
+
             <div class="flex-grow-1 overflow-auto p-3 d-flex flex-column gap-3" ref="chatBox">
-                <div v-for="(msg, index) in chatMessages" :key="index" :class="['d-flex flex-column', msg.isLocal ? 'align-items-end' : 'align-items-start']">
-                    <span class="small text-secondary mb-1">{{ msg.sender }} <span style="font-size: 0.7rem;">{{ msg.timestamp }}</span></span>
-                    <div :class="['px-3 py-2 rounded-4 text-white', msg.isLocal ? 'bg-primary' : 'bg-secondary']" style="max-width: 85%; word-wrap: break-word;">
+                <div v-for="(msg, index) in chatMessages" :key="index"
+                    :class="['d-flex flex-column', msg.isLocal ? 'align-items-end' : 'align-items-start']">
+                    <span class="small text-secondary mb-1">{{ msg.sender }} <span style="font-size: 0.7rem;">{{
+                        msg.timestamp }}</span></span>
+                    <div :class="['px-3 py-2 rounded-4 text-white', msg.isLocal ? 'bg-primary' : 'bg-secondary']"
+                        style="max-width: 85%; word-wrap: break-word;">
                         {{ msg.text }}
                     </div>
                 </div>
@@ -127,11 +140,62 @@
 
             <div class="p-3 border-top border-secondary">
                 <form @submit.prevent="sendChatMessage" class="d-flex gap-2">
-                    <input type="text" v-model="newMessage" class="form-control bg-dark text-white border-secondary rounded-pill" placeholder="Nhập tin nhắn..." autocomplete="off">
-                    <button type="submit" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; flex-shrink: 0;" :disabled="!newMessage.trim()">
+                    <input type="text" v-model="newMessage"
+                        class="form-control bg-dark text-white border-secondary rounded-pill"
+                        placeholder="Nhập tin nhắn..." autocomplete="off">
+                    <button type="submit"
+                        class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center"
+                        style="width: 40px; height: 40px; flex-shrink: 0;" :disabled="!newMessage.trim()">
                         <i class='bx bx-send'></i>
                     </button>
                 </form>
+            </div>
+        </aside>
+
+        <!-- Participants Sidebar -->
+        <aside v-if="isParticipantsOpen" class="bg-dark border-start border-secondary d-flex flex-column z-3"
+            style="width: 350px; position: absolute; right: 0; top: 0; bottom: 0; box-shadow: -5px 0 15px rgba(0,0,0,0.5);">
+            <div
+                class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center bg-dark text-white">
+                <h6 class="mb-0 fw-bold text-white"><i class='bx bx-group me-2'></i> Danh sách người tham gia</h6>
+                <button @click="toggleParticipants" class="btn-close btn-close-white"></button>
+            </div>
+
+            <div
+                class="p-3 border-bottom border-secondary text-white small d-flex justify-content-between align-items-center">
+                <span>Tổng số người tham gia</span>
+                <span class="badge bg-primary rounded-pill">{{ participants.length }}</span>
+            </div>
+
+            <div class="flex-grow-1 overflow-auto p-3 d-flex flex-column gap-2">
+                <div v-for="participant in participants" :key="participant.sid"
+                    class="participant-item d-flex align-items-center justify-content-between gap-3 p-3 rounded-4 border border-secondary bg-black bg-opacity-25">
+                    <div class="d-flex align-items-center gap-3">
+                        <div
+                            class="participant-avatar rounded-circle d-flex align-items-center justify-content-center bg-secondary text-white fw-bold">
+                            {{ getParticipantInitial(participant) }}
+                        </div>
+                        <div>
+                            <div class="text-white fw-semibold">{{ participant.name }}</div>
+                            <div class="small text-secondary">
+                                <i v-if="participant.isLocal" class='bx bx-user-check me-1'></i>
+                                <span v-if="participant.isLocal">Bạn</span>
+                                <span v-else>Thành viên trong phòng</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i :class="participant.audioEnabled ? 'bx bx-microphone text-success' : 'bx bx-microphone-off text-danger'"
+                            :title="participant.audioEnabled ? 'Mic đang bật' : 'Mic đang tắt'"></i>
+                        <i :class="participant.videoEnabled ? 'bx bx-video text-success' : 'bx bx-video-off text-danger'"
+                            :title="participant.videoEnabled ? 'Camera đang bật' : 'Camera đang tắt'"></i>
+                    </div>
+                </div>
+
+                <div v-if="participants.length === 0" class="text-center text-secondary py-5">
+                    <i class='bx bx-group fs-1 mb-2 d-block'></i>
+                    Chưa có người tham gia nào.
+                </div>
             </div>
         </aside>
     </div>
@@ -163,7 +227,11 @@ export default {
             // State cho Chat
             isChatOpen: false,
             chatMessages: [],
-            newMessage: ''
+            newMessage: '',
+
+            // State cho danh sách người tham gia
+            isParticipantsOpen: false,
+            participants: []
         };
     },
     async mounted() {
@@ -194,6 +262,14 @@ export default {
                 } else if (track.kind === 'audio') {
                     track.attach();
                 }
+            });
+
+            this.room.on(RoomEvent.ParticipantConnected, () => {
+                this.syncParticipants();
+            });
+
+            this.room.on(RoomEvent.ParticipantDisconnected, () => {
+                this.syncParticipants();
             });
 
             this.room.on(RoomEvent.TrackUnsubscribed, (track, publication, participant) => {
@@ -245,6 +321,7 @@ export default {
             });
 
             await this.room.connect(livekitUrl, token);
+            this.syncParticipants();
 
             // Bắn API lưu lịch sử tham gia phòng
             const user = JSON.parse(localStorage.getItem('thong_tin_user'));
@@ -284,6 +361,33 @@ export default {
         }
     },
     methods: {
+        syncParticipants() {
+            if (!this.room) return;
+
+            const localParticipant = this.room.localParticipant;
+            const remoteParticipants = Array.from(this.room.remoteParticipants.values());
+
+            this.participants = [
+                {
+                    sid: localParticipant.sid,
+                    name: localParticipant.identity || 'Bạn',
+                    isLocal: true,
+                    audioEnabled: localParticipant.isMicrophoneEnabled,
+                    videoEnabled: localParticipant.isCameraEnabled,
+                },
+                ...remoteParticipants.map(participant => ({
+                    sid: participant.sid,
+                    name: participant.identity || 'Khách',
+                    isLocal: false,
+                    audioEnabled: participant.isMicrophoneEnabled,
+                    videoEnabled: participant.isCameraEnabled,
+                }))
+            ];
+        },
+        getParticipantInitial(participant) {
+            const name = (participant.name || '').trim();
+            return name ? name.charAt(0).toUpperCase() : '?';
+        },
         attachRemoteVideo(track, participant, isScreenShare = false) {
             const videoGrid = document.getElementById('video-grid');
 
@@ -325,10 +429,12 @@ export default {
         async toggleMic() {
             this.isMicOn = !this.isMicOn;
             await this.room.localParticipant.setMicrophoneEnabled(this.isMicOn);
+            this.syncParticipants();
         },
         async toggleCamera() {
             this.isCameraOn = !this.isCameraOn;
             await this.room.localParticipant.setCameraEnabled(this.isCameraOn);
+            this.syncParticipants();
         },
         async toggleScreenShare() {
             try {
@@ -341,9 +447,21 @@ export default {
             }
         },
         toggleChat() {
+            if (this.isParticipantsOpen) {
+                this.isParticipantsOpen = false;
+            }
             this.isChatOpen = !this.isChatOpen;
             if (this.isChatOpen) {
                 this.scrollToBottom();
+            }
+        },
+        toggleParticipants() {
+            if (this.isChatOpen) {
+                this.isChatOpen = false;
+            }
+            this.isParticipantsOpen = !this.isParticipantsOpen;
+            if (this.isParticipantsOpen) {
+                this.syncParticipants();
             }
         },
         async sendChatMessage() {
@@ -351,11 +469,11 @@ export default {
             const msgData = {
                 text: this.newMessage.trim(),
                 sender: JSON.parse(localStorage.getItem('thong_tin_user'))?.ho_va_ten || 'Khách',
-                timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
-            
+
             this.chatMessages.push({ ...msgData, isLocal: true });
-            
+
             try {
                 const strData = JSON.stringify(msgData);
                 const encoder = new TextEncoder();
@@ -363,7 +481,7 @@ export default {
             } catch (err) {
                 console.error("Lỗi gửi tin nhắn:", err);
             }
-            
+
             this.newMessage = '';
             this.scrollToBottom();
         },
@@ -419,10 +537,10 @@ export default {
                 this.room.disconnect();
             }
             sessionStorage.removeItem('livekit_token');
-            
+
             // Dọn dẹp ID phòng
             sessionStorage.removeItem('id_phong_hop');
-            
+
             // Lấy thông tin role để điều hướng
             const userData = localStorage.getItem('thong_tin_user');
             if (userData) {
@@ -433,7 +551,7 @@ export default {
                     return;
                 }
             }
-            
+
             // Mặc định về trang người dùng
             this.$router.push('/nguoi-dung/trang-chinh');
         }
@@ -512,6 +630,16 @@ export default {
     transform: scale(1.1);
 }
 
+.participant-item {
+    min-height: 74px;
+}
+
+.participant-avatar {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+}
+
 .text-shadow {
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
@@ -541,7 +669,8 @@ export default {
     align-content: flex-end;
     justify-content: flex-end;
     gap: 16px;
-    padding-bottom: 90px; /* Nhường chỗ cho thanh công cụ */
+    padding-bottom: 90px;
+    /* Nhường chỗ cho thanh công cụ */
     padding-right: 24px;
     padding-left: 24px;
     z-index: 1;
@@ -555,8 +684,10 @@ export default {
     height: 100% !important;
     max-height: none !important;
     z-index: 1;
-    border-radius: 8px; /* Bo góc nhẹ hơn cho màn hình share */
-    background-color: #000 !important; /* Đè màu xám của bg-secondary */
+    border-radius: 8px;
+    /* Bo góc nhẹ hơn cho màn hình share */
+    background-color: #000 !important;
+    /* Đè màu xám của bg-secondary */
 }
 
 /* Đảm bảo video bên trong lấp đầy và không bị xám */
@@ -572,7 +703,7 @@ export default {
     height: 135px !important;
     max-height: none !important;
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
     border: 2px solid rgba(255, 255, 255, 0.15);
     transition: transform 0.3s ease;
 }
