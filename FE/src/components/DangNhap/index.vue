@@ -131,7 +131,7 @@ export default {
             if (userStr) {
                 try {
                     const user = JSON.parse(userStr);
-                    if (user.is_doi_tac == 1) {
+                    if (user.id_doi_tac > 0) {
                         if (this.$toast) this.$toast.info('Bạn đã đăng nhập với tài khoản đối tác!');
                         this.$router.push('/doi-tac/trang-chinh');
                     } else {
