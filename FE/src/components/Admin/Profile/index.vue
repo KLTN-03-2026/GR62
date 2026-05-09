@@ -40,7 +40,7 @@
                                     <div class="card-body p-4 pt-0">
                                         <div class="text-center mb-4 mt-n5 position-relative" style="top: -65px;">
                                             <div class="avatar-wrapper">
-                                                <img :src="anh_tmp || (profile.hinh_anh ? (profile.hinh_anh.startsWith('http') ? profile.hinh_anh : API_BASE + '/' + profile.hinh_anh) : '../../../assets/images/avatars/avatar-1.png')"
+                                                <img :src="anh_tmp || getAvatar"
                                                     class="avatar-img shadow-sm">
                                                 <label for="inputAvatar" class="camera-btn"
                                                     title="Thay đổi ảnh đại diện">
@@ -271,6 +271,17 @@ export default {
                 re_newpassword: false
             },
             list_chuc_vu: []
+        }
+    },
+    computed: {
+        getAvatar() {
+            if (this.profile && this.profile.hinh_anh) {
+                if (this.profile.hinh_anh.startsWith('http')) {
+                    return this.profile.hinh_anh;
+                }
+                return API_BASE + '/' + this.profile.hinh_anh;
+            }
+            return 'https://ui-avatars.com/api/?name=' + (this.profile.ho_va_ten || 'Admin') + '&background=random';
         }
     },
     mounted() {

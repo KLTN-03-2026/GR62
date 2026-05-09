@@ -233,10 +233,15 @@ export default {
                          this.avatarUrl = hinh_anh.startsWith('http') ? hinh_anh : `${baseUrl}/${cleanPath}`;
                     }
                     if(res.data.data.du_lieu_khuon_mat) {
-                        this.savedDescriptor = new Float32Array(JSON.parse(res.data.data.du_lieu_khuon_mat));
+                        try {
+                            this.savedDescriptor = new Float32Array(JSON.parse(res.data.data.du_lieu_khuon_mat));
+                        } catch(parseErr) {
+                            console.error("Lỗi parse dữ liệu khuôn mặt:", parseErr);
+                        }
                     }
                 }
             } catch (e) {
+                console.error("Lỗi khi gọi API /doi-tac/me:", e);
                 this.$router.push('/dang-nhap');
             }
         },
