@@ -133,10 +133,10 @@
                                 </div>
                                 <div class="mt-4 p-4 rounded-4 bg-white border border-light">
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-muted small fw-800">DẪN ĐẦU THÁNG</span>
-                                        <span class="text-orange fw-900 small">+85%</span>
+                                        <span class="text-muted small fw-800">DẪN ĐẦU</span>
+                                        <span class="text-orange fw-900 small">{{ topParticipantSummary.meetings }}</span>
                                     </div>
-                                    <h6 class="fw-900 mb-0 text-dark">Phòng Kỹ thuật (KT)</h6>
+                                    <h6 class="fw-900 mb-0 text-dark">{{ topParticipantSummary.name }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -220,6 +220,10 @@ export default {
                 { label: 'TG Trung bình', value: '0 phút', change: '+0%', trend: 'up' }
             ],
             meetingLogs: [],
+            topParticipantSummary: {
+                name: 'Chưa có dữ liệu',
+                meetings: '0 cuộc họp'
+            },
 
             activitySeries: [{ name: 'Cuộc họp', data: [0, 0, 0, 0, 0, 0, 0] }],
             activityChartOptions: {
@@ -284,10 +288,11 @@ export default {
         },
 
         async fetchThongKeBaoCao() {
-            if (!this.partnerId) return;
+            const token = localStorage.getItem('token_doi_tac');
+            if (!token) return;
             try {
                 const res = await axios.get(`${apiUrl}/phong-hop/thong-ke-bao-cao`, {
-                    params: { id_chu_phong: this.partnerId }
+                    headers: { Authorization: 'Bearer ' + token }
                 });
 
                 if (res.data.status) {
@@ -302,12 +307,24 @@ export default {
                     // Cập nhật bảng nhật ký từ dữ liệu thực
                     this.meetingLogs = d.logs.map(log => ({
                         title: log.ten_phong,
-                        host: this.partnerName,
+                        host: log.chu_phong || this.partnerName,
                         roomId: log.ma_phong,
                         duration: log.thoi_luong,
                         attendees: log.so_nguoi,
                         status: log.trang_thai ? 'live' : 'ended'
                     }));
+
+                    if (d.top_participant) {
+                        this.topParticipantSummary = {
+                            name: d.top_participant.ho_va_ten,
+                            meetings: `${d.top_participant.so_cuoc_hop} cuộc họp`
+                        };
+                    } else {
+                        this.topParticipantSummary = {
+                            name: 'Chưa có dữ liệu',
+                            meetings: '0 cuộc họp'
+                        };
+                    }
 
                     // Cập nhật biểu đồ area từ dữ liệu 7 ngày thực
                     this.activitySeries = [{ name: 'Cuộc họp', data: d.chart_data }];
@@ -330,6 +347,15 @@ export default {
                             xaxis: {
                                 ...this.deptChartOptions.xaxis,
                                 categories: topRooms.map(r => r.ten_phong.substring(0, 10))
+                            }
+                        };
+                    } else {
+                        this.deptSeries = [{ name: 'Số người', data: [0, 0, 0] }];
+                        this.deptChartOptions = {
+                            ...this.deptChartOptions,
+                            xaxis: {
+                                ...this.deptChartOptions.xaxis,
+                                categories: ['—', '—', '—']
                             }
                         };
                     }

@@ -354,20 +354,7 @@ class PhongHopController extends Controller
             ], 403);
         }
 
-        $ownerId = $doiTac->id_admin;
-        if (!$ownerId && $doiTac->email) {
-            $ownerId = NguoiDung::where('email', $doiTac->email)->value('id');
-        }
-
-        $memberIds = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [(int) $doiTac->id])
-            ->pluck('id');
-
-        $companyUserIds = collect([$ownerId])
-            ->merge($memberIds)
-            ->filter()
-            ->unique()
-            ->values()
-            ->all();
+        $companyUserIds = $this->getCompanyUserIdsForPartner($doiTac);
 
         $data = empty($companyUserIds)
             ? collect()
@@ -511,33 +498,60 @@ class PhongHopController extends Controller
      */
     public function getThongKeBaoCao(Request $request)
     {
-        $request->validate(['id_chu_phong' => 'required|integer']);
-        $id_chu_phong = $request->id_chu_phong;
+        $doiTac = Auth::guard('sanctum')->user();
+        if (!$doiTac) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Token khong hop le'
+            ], 401);
+        }
 
-        $phong_list = PhongHop::where('id_chu_phong', $id_chu_phong)
-            ->orderBy('thoi_gian_bat_dau', 'desc')
-            ->get();
+        if (!$doiTac instanceof DoiTac) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chi chu doi tac moi duoc xem bao cao to chuc.'
+            ], 403);
+        }
+
+        $companyUserIds = $this->getCompanyUserIdsForPartner($doiTac);
+
+        $phong_list = empty($companyUserIds)
+            ? collect()
+            : PhongHop::with('chuPhong')
+                ->whereIn('id_chu_phong', $companyUserIds)
+                ->orderBy('thoi_gian_bat_dau', 'desc')
+                ->get();
 
         $logs = $phong_list->map(function ($phong) {
             // Số người tham gia thực tế từ ChiTietPhongHop
             $so_nguoi = ChiTietPhongHop::where('id_phong_hop', $phong->id)->count();
 
             // Tính thời lượng thực tế
+            $bat_dau = null;
+            $ket_thuc = null;
             $thoi_luong_phut = 0;
-            $thoi_luong_str  = 'Đang diễn ra';
-            if ($phong->thoi_gian_bat_dau && $phong->thoi_gian_ket_thuc) {
-                $bat_dau     = Carbon::parse($phong->thoi_gian_bat_dau);
-                $ket_thuc    = Carbon::parse($phong->thoi_gian_ket_thuc);
-                $thoi_luong_phut = $bat_dau->diffInMinutes($ket_thuc);
+            $thoi_luong_str = $phong->trang_thai ? 'Đang diễn ra' : '0 phút';
+            if ($phong->thoi_gian_bat_dau) {
+                $bat_dau = Carbon::parse($phong->thoi_gian_bat_dau);
+                $ket_thuc = $phong->thoi_gian_ket_thuc
+                    ? Carbon::parse($phong->thoi_gian_ket_thuc)
+                    : ($phong->trang_thai && $bat_dau->lessThanOrEqualTo(Carbon::now()) ? Carbon::now() : null);
+            }
+
+            if ($bat_dau && $ket_thuc && $ket_thuc->greaterThan($bat_dau)) {
+                $thoi_luong_phut = (int) $bat_dau->diffInMinutes($ket_thuc);
                 $gio  = intdiv($thoi_luong_phut, 60);
                 $phut = $thoi_luong_phut % 60;
                 $thoi_luong_str = $gio > 0 ? "{$gio}g {$phut}p" : "{$phut} phút";
+            } elseif ($bat_dau && $phong->trang_thai && $bat_dau->greaterThan(Carbon::now())) {
+                $thoi_luong_str = 'Chưa bắt đầu';
             }
 
             return [
                 'id'             => $phong->id,
                 'ten_phong'      => $phong->ten_phong,
                 'ma_phong'       => $phong->ma_phong,
+                'chu_phong'      => $phong->chuPhong?->ho_va_ten ?? 'N/A',
                 'trang_thai'     => $phong->trang_thai,
                 'bat_dau'        => $phong->thoi_gian_bat_dau,
                 'ket_thuc'       => $phong->thoi_gian_ket_thuc,
@@ -545,7 +559,7 @@ class PhongHopController extends Controller
                 'thoi_luong_phut'=> $thoi_luong_phut,
                 'so_nguoi'       => $so_nguoi,
             ];
-        });
+        })->values();
 
         // Tổng hợp metrics
         $tong_cuoc_hop   = $phong_list->count();
@@ -553,6 +567,25 @@ class PhongHopController extends Controller
         $tong_gio        = round($tong_phut / 60, 1);
         $tong_nguoi      = $logs->sum('so_nguoi');
         $tb_phut         = $tong_cuoc_hop > 0 ? round($tong_phut / $tong_cuoc_hop) : 0;
+        $phongIds        = $phong_list->pluck('id');
+
+        $topParticipantRow = $phongIds->isEmpty()
+            ? null
+            : ChiTietPhongHop::with('nguoiDung')
+                ->select('id_nguoi_dung')
+                ->selectRaw('COUNT(DISTINCT id_phong_hop) as so_cuoc_hop')
+                ->whereIn('id_phong_hop', $phongIds)
+                ->groupBy('id_nguoi_dung')
+                ->orderByDesc('so_cuoc_hop')
+                ->orderBy('id_nguoi_dung')
+                ->first();
+
+        $top_participant = $topParticipantRow ? [
+            'id'          => $topParticipantRow->id_nguoi_dung,
+            'ho_va_ten'   => $topParticipantRow->nguoiDung?->ho_va_ten ?? 'N/A',
+            'email'       => $topParticipantRow->nguoiDung?->email,
+            'so_cuoc_hop' => (int) $topParticipantRow->so_cuoc_hop,
+        ] : null;
 
         // Dữ liệu biểu đồ 7 ngày gần nhất
         $chart_data = [];
@@ -560,8 +593,8 @@ class PhongHopController extends Controller
         for ($i = 6; $i >= 0; $i--) {
             $ngay = Carbon::now()->subDays($i);
             $chart_labels[] = $ngay->format('d/m');
-            $chart_data[] = PhongHop::where('id_chu_phong', $id_chu_phong)
-                ->whereDate('thoi_gian_bat_dau', $ngay->toDateString())
+            $chart_data[] = $phong_list
+                ->filter(fn ($phong) => $phong->thoi_gian_bat_dau && Carbon::parse($phong->thoi_gian_bat_dau)->isSameDay($ngay))
                 ->count();
         }
 
@@ -573,10 +606,30 @@ class PhongHopController extends Controller
                 'tong_nguoi'     => $tong_nguoi,
                 'tb_phut'        => $tb_phut,
                 'logs'           => $logs,
+                'top_participant'=> $top_participant,
                 'chart_labels'   => $chart_labels,
                 'chart_data'     => $chart_data,
             ]
         ]);
+    }
+
+    private function getCompanyUserIdsForPartner(DoiTac $doiTac): array
+    {
+        $ownerId = $doiTac->id_admin;
+        if (!$ownerId && $doiTac->email) {
+            $ownerId = NguoiDung::where('email', $doiTac->email)->value('id');
+        }
+
+        $memberIds = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [(int) $doiTac->id])
+            ->pluck('id');
+
+        return collect([$ownerId])
+            ->merge($memberIds)
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values()
+            ->all();
     }
 
     private function isBasicHost(?NguoiDung $host): bool
