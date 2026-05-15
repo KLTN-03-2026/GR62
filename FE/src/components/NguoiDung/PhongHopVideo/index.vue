@@ -542,14 +542,12 @@ export default {
             sessionStorage.removeItem('id_phong_hop');
 
             // Lấy thông tin role để điều hướng
-            const userData = localStorage.getItem('thong_tin_user');
-            if (userData) {
-                const user = JSON.parse(userData);
+            const doiTacData = localStorage.getItem('thong_tin_doi_tac');
+            const tokenDoiTac = localStorage.getItem('token_doi_tac');
+            if (doiTacData && tokenDoiTac) {
                 // Nếu là Đối tác (id_doi_tac == 1), về trang đối tác
-                if (user.id_doi_tac == 1) {
-                    this.$router.push('/doi-tac/trang-chinh');
-                    return;
-                }
+                this.$router.push('/doi-tac/trang-chinh');
+                return;
             }
 
             // Mặc định về trang người dùng

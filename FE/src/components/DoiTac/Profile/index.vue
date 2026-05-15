@@ -274,7 +274,7 @@ export default {
                 });
                 if (res.data.status) {
                     this.doi_tac = res.data.data;
-                    this.partnerPosition = res.data.data.chuc_vu?.ten_chuc_vu || (res.data.data.id_doi_tac == 1 ? "Quản trị viên Đối tác" : "Đối tác");
+                    this.partnerPosition = res.data.data.chuc_vu?.ten_chuc_vu || "Đối tác";
                     const hinh_anh = this.doi_tac.hinh_anh;
                     if (hinh_anh) {
                         const baseUrl = apiUrl.replace('/api', '');

@@ -75,8 +75,8 @@ export default {
       if (userStr && tokenNguoiDung) {
         this.isLoggedIn = true;
         try {
-          const user = JSON.parse(userStr);
-          this.isDoiTac = user.id_doi_tac ? 1 : 0;
+          JSON.parse(userStr);
+          this.isDoiTac = 0;
         } catch (e) {
           this.isLoggedIn = false;
           this.isDoiTac = 0;

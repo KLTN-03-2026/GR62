@@ -19,6 +19,8 @@ class DoiTac extends Authenticatable
         'email',
         'password',
         'dia_chi',
+        'hinh_anh',
+        'du_lieu_khuon_mat',
         'trang_thai',
     ];
 
@@ -32,5 +34,15 @@ class DoiTac extends Authenticatable
             'password' => 'hashed',
             'trang_thai' => 'boolean',
         ];
+    }
+
+    public function ownerUser()
+    {
+        return $this->belongsTo(NguoiDung::class, 'id_admin');
+    }
+
+    public function members()
+    {
+        return $this->hasMany(NguoiDung::class, 'id_doi_tac');
     }
 }

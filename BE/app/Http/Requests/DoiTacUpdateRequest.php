@@ -17,15 +17,19 @@ class DoiTacUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id'            => 'required|integer|exists:nguoi_dungs,id',
+            'id'            => 'required|integer|exists:doi_tacs,id',
             'ho_va_ten'     => 'required|string|min:2|max:255',
             'email'         => [
                 'required',
                 'email',
                 'regex:/^[^\s@]+@[^\s@]+\.[^\s@]+$/',
-                Rule::unique('nguoi_dungs', 'email')->ignore($this->id),
+                Rule::unique('doi_tacs', 'email')->ignore($this->id),
             ],
-            'so_dien_thoai' => 'required|unique:nguoi_dungs,so_dien_thoai|numeric',
+            'so_dien_thoai' => [
+                'required',
+                'numeric',
+                Rule::unique('doi_tacs', 'so_dien_thoai')->ignore($this->id),
+            ],
             'password'      => 'nullable|string|min:8',
             'dia_chi'       => 'nullable|string|max:255',
             'trang_thai'    => 'nullable|boolean',

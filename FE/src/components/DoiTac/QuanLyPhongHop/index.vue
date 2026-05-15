@@ -373,9 +373,9 @@ export default {
           headers: { Authorization: 'Bearer ' + token }
         });
         if (res.data.status) {
-          this.partnerId = res.data.data.id;
+          this.partnerId = res.data.data.owner_user_id || res.data.data.id_admin || res.data.data.id;
           this.partnerName = res.data.data.ho_va_ten;
-          this.partnerPosition = res.data.data.chuc_vu?.ten_chuc_vu || (res.data.data.id_doi_tac == 1 ? "Quản trị viên Đối tác" : "Đối tác");
+          this.partnerPosition = res.data.data.chuc_vu?.ten_chuc_vu || "Đối tác";
           this.hasFaceId = !!res.data.data.du_lieu_khuon_mat;
           const hinh_anh = res.data.data.hinh_anh;
           if (hinh_anh) {
@@ -389,10 +389,15 @@ export default {
       }
     },
     async loadPhong() {
-      if (!this.partnerId) return;
       try {
-        const res = await axios.get(`${apiUrl}/phong-hop/data-by-chu-phong`, {
-          params: { id_chu_phong: this.partnerId }
+        const token = localStorage.getItem('token_doi_tac');
+        if (!token) {
+          this.$router.push('/dang-nhap');
+          return;
+        }
+
+        const res = await axios.get(`${apiUrl}/doi-tac/phong-hop`, {
+          headers: { Authorization: 'Bearer ' + token }
         });
         if (res.data.status) {
           this.ds_phong = res.data.data;

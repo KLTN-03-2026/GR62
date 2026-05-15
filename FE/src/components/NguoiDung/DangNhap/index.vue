@@ -128,17 +128,22 @@ export default {
         async login() {
             this.isLoading = true;
             try {
-                const res = await axios.post(`${apiUrl}/nguoi-dung/login`, this.nguoi_dung);
+                const res = await axios.post(`${apiUrl}/login`, this.nguoi_dung);
                 if (res.data.status) {
-                    localStorage.setItem('token_nguoi_dung', res.data.data.token);
-                    localStorage.setItem('thong_tin_user', JSON.stringify(res.data.data.user));
-                    if (this.$toast) this.$toast.success('Đăng nhập thành công! Chào mừng bạn quay trở lại.');
-                    if (res.data.data.user.id_doi_tac) {
-                        localStorage.setItem('token_doi_tac', res.data.data.token);
-                        this.$router.push('/doi-tac/trang-chinh');
+                    const { token, user, role, type, redirect_to } = res.data.data;
+                    localStorage.removeItem('token_nguoi_dung');
+                    localStorage.removeItem('token_doi_tac');
+                    localStorage.removeItem('thong_tin_user');
+                    localStorage.removeItem('thong_tin_doi_tac');
+                    if (type === 'doi_tac' || role === 'doi_tac') {
+                        localStorage.setItem('token_doi_tac', token);
+                        localStorage.setItem('thong_tin_doi_tac', JSON.stringify(user));
                     } else {
-                        this.$router.push('/nguoi-dung/trang-chinh');
+                        localStorage.setItem('token_nguoi_dung', token);
+                        localStorage.setItem('thong_tin_user', JSON.stringify(user));
                     }
+                    if (this.$toast) this.$toast.success('Đăng nhập thành công! Chào mừng bạn quay trở lại.');
+                    this.$router.push(redirect_to || (role === 'doi_tac' ? '/doi-tac/trang-chinh' : '/nguoi-dung/trang-chinh'));
                 } else {
                     if (this.$toast) this.$toast.error(res.data.message || 'Email hoặc mật khẩu không chính xác.');
                 }

@@ -28,77 +28,85 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // 1. Kiểm tra bảng NguoiDung trước
-        $user = NguoiDung::with(['chucVu', 'goi'])->where('email', $request->email)->first();
-        $role = null;
-        $token = null;
-        $type = null; // 'nguoi_dung' hoặc 'doi_tac' (table)
+        $doiTac = DoiTac::where('email', $request->email)->first();
 
-        if ($user) {
-            if (!Hash::check($request->password, $user->password)) {
+        if ($doiTac) {
+            if (!Hash::check($request->password, $doiTac->password)) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Email hoặc mật khẩu không đúng'
                 ], 401);
             }
 
-            if (!$user->trang_thai) {
+            if (!$doiTac->trang_thai) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Tài khoản đã bị khóa'
+                    'message' => 'Tài khoản của bạn đang bị khóa'
                 ], 403);
             }
 
-            $role = 'nguoi_dung';
-            if ($user->id_doi_tac) {
-                $doiTac = \App\Models\DoiTac::find($user->id_doi_tac);
-                if ($doiTac && $doiTac->id_admin == $user->id) {
-                    $role = 'doi_tac';
-                }
-            }
-            $type = 'nguoi_dung';
-            
-            // Cấp token chung
-            $token = $user->createToken('API Token')->plainTextToken;
-            
-        } else {
-            // 2. Nếu không tìm thấy, kiểm tra bảng DoiTac
-            $user = DoiTac::where('email', $request->email)->first();
-            
-            if ($user) {
-                if (!Hash::check($request->password, $user->password)) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Email hoặc mật khẩu không đúng'
-                    ], 401);
+            $ownerUser = $doiTac->id_admin
+                ? NguoiDung::find($doiTac->id_admin)
+                : NguoiDung::where('email', $doiTac->email)->first();
+
+            if ($ownerUser) {
+                if ((int) $ownerUser->id_doi_tac !== (int) $doiTac->id) {
+                    $ownerUser->id_doi_tac = $doiTac->id;
+                    $ownerUser->save();
                 }
 
-                if (!$user->trang_thai) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Tài khoản của bạn đang bị khóa'
-                    ], 403);
+                if ((int) $doiTac->id_admin !== (int) $ownerUser->id) {
+                    $doiTac->id_admin = $ownerUser->id;
+                    $doiTac->save();
                 }
-
-                $role = 'doi_tac';
-                $type = 'doi_tac';
-                $token = $user->createToken('token_doi_tac')->plainTextToken;
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Email hoặc mật khẩu không đúng'
-                ], 401);
             }
+
+            $doiTac->setAttribute('owner_user_id', $ownerUser?->id);
+            $doiTac->setAttribute('account_type', 'doi_tac');
+            $doiTac->setAttribute('is_doi_tac', true);
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Đăng nhập thành công',
+                'data'    => [
+                    'user'        => $doiTac,
+                    'token'       => $doiTac->createToken('token_doi_tac')->plainTextToken,
+                    'role'        => 'doi_tac',
+                    'type'        => 'doi_tac',
+                    'redirect_to' => '/doi-tac/trang-chinh',
+                ]
+            ]);
         }
+
+        $user = NguoiDung::with(['chucVu', 'goi', 'doiTac'])->where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email hoặc mật khẩu không đúng'
+            ], 401);
+        }
+
+        if (!$user->trang_thai) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Tài khoản đã bị khóa'
+            ], 403);
+        }
+
+        $role = ((int) $user->id_doi_tac > 0) ? 'thanh_vien_doi_tac' : 'nguoi_dung';
+        $user->setAttribute('account_type', $role);
+        $user->setAttribute('is_doi_tac', false);
 
         return response()->json([
             'status'  => true,
             'message' => 'Đăng nhập thành công',
             'data'    => [
-                'user'  => $user,
-                'token' => $token,
-                'role'  => $role,
-                'type'  => $type
+                'user'        => $user,
+                'token'       => $user->createToken('API Token')->plainTextToken,
+                'role'        => $role,
+                'type'        => 'nguoi_dung',
+                'redirect_to' => '/nguoi-dung/trang-chinh',
             ]
         ]);
     }

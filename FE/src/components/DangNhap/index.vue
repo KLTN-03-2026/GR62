@@ -128,6 +128,13 @@ export default {
     methods: {
         checkAlreadyLoggedIn() {
             const userStr = localStorage.getItem('thong_tin_user');
+            const doiTacStr = localStorage.getItem('thong_tin_doi_tac');
+            const tokenDoiTac = localStorage.getItem('token_doi_tac');
+            if (doiTacStr && tokenDoiTac) {
+                if (this.$toast) this.$toast.info('Ban da dang nhap voi tai khoan doi tac.');
+                this.$router.push('/doi-tac/trang-chinh');
+                return;
+            }
             if (userStr) {
                 try {
                     const user = JSON.parse(userStr);
@@ -148,30 +155,30 @@ export default {
             try {
                 const res = await axios.post(`${apiUrl}/login`, this.formData);
                 if (res.data.status) {
-                    const { token, user, role, type } = res.data.data;
+                    const { token, user, role, type, redirect_to } = res.data.data;
+                    localStorage.removeItem('token_nguoi_dung');
+                    localStorage.removeItem('token_doi_tac');
+                    localStorage.removeItem('thong_tin_user');
+                    localStorage.removeItem('thong_tin_doi_tac');
                     
                     // Lưu trữ token và thông tin tuỳ theo loại tài khoản
-                    if (type === 'nguoi_dung') {
-                        localStorage.setItem('token_nguoi_dung', token);
-                        localStorage.setItem('thong_tin_user', JSON.stringify(user));
+                    if (type === 'doi_tac' || role === 'doi_tac') {
+                        localStorage.setItem('token_doi_tac', token);
+                        localStorage.setItem('thong_tin_doi_tac', JSON.stringify(user));
                         if (role === 'doi_tac') {
                             // Người dùng mua gói doanh nghiệp -> Đối tác
                             localStorage.setItem('token_doi_tac', token);
                         }
-                    } else if (type === 'doi_tac') {
+                    } else {
                         // Tài khoản đối tác gốc
-                        localStorage.setItem('token_doi_tac', token);
-                        localStorage.setItem('thong_tin_doi_tac', JSON.stringify(user));
+                        localStorage.setItem('token_nguoi_dung', token);
+                        localStorage.setItem('thong_tin_user', JSON.stringify(user));
                     }
 
                     if (this.$toast) this.$toast.success('Đăng nhập thành công! Chào mừng bạn quay trở lại.');
                     
                     // Chuyển hướng
-                    if (role === 'doi_tac') {
-                        this.$router.push('/doi-tac/trang-chinh');
-                    } else {
-                        this.$router.push('/nguoi-dung/trang-chinh');
-                    }
+                    this.$router.push(redirect_to || (role === 'doi_tac' ? '/doi-tac/trang-chinh' : '/nguoi-dung/trang-chinh'));
                 } else {
                     if (this.$toast) this.$toast.error(res.data.message || 'Email hoặc mật khẩu không chính xác.');
                 }

@@ -269,7 +269,7 @@ export default {
                     headers: { Authorization: 'Bearer ' + token }
                 });
                 if (res.data.status) {
-                    this.partnerId = res.data.data.id;
+                    this.partnerId = res.data.data.owner_user_id || res.data.data.id_admin || res.data.data.id;
                     this.partnerName = res.data.data.ho_va_ten;
                     const hinh_anh = res.data.data.hinh_anh;
                     if (hinh_anh) {

@@ -76,6 +76,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/doi-tac/profile/update-face-data', [DoiTacController::class, 'updateFaceData']);
     Route::post('/doi-tac/profile/change-password', [DoiTacController::class, 'changePassword']);
     Route::get('/doi-tac/thong-ke', [DoiTacController::class, 'getStatistics']);
+    Route::get('/doi-tac/phong-hop', [PhongHopController::class, 'getPhongHopTheoDoiTac']);
     // Quản lý thành viên tổ chức
     Route::get('/doi-tac/thanh-vien', [DoiTacController::class, 'getDanhSachThanhVien']);
     Route::post('/doi-tac/thanh-vien/cap-quyen', [DoiTacController::class, 'capQuyenThanhVien']);

@@ -6,6 +6,8 @@ use App\Http\Requests\PhongHopCreateRequest;
 use App\Http\Requests\PhongHopSearchRequest;
 use App\Http\Requests\PhongHopUpdateRequest;
 use App\Models\ChiTietPhongHop;
+use App\Models\DoiTac;
+use App\Models\Goi;
 use App\Models\NguoiDung;
 use App\Models\PhongHop;
 use Illuminate\Http\Request;
@@ -39,17 +41,18 @@ class PhongHopController extends Controller
 
         $query = PhongHop::with('chuPhong')->where('trang_thai', 1);
 
-        if ($user->id_doi_tac > 0) {
+        if ((int) $user->id_doi_tac > 0) {
             // Xác định ID của Chủ Đối Tác
             // Nếu id_doi_tac == 1, nghĩa là user này chính là Chủ Đối Tác, do đó ID của chủ là $user->id
             // Nếu id_doi_tac > 1, nghĩa là user này là Thành viên, ID của chủ là $user->id_doi_tac
-            $ownerId = ($user->id_doi_tac == 1) ? $user->id : $user->id_doi_tac;
+            $doiTac = DoiTac::find((int) $user->id_doi_tac);
+            $ownerId = $doiTac?->id_admin;
             
             // Lấy ID của tất cả thành viên thuộc Đối Tác này
-            $memberIds = NguoiDung::where('id_doi_tac', $ownerId)->pluck('id')->toArray();
+            $memberIds = NguoiDung::where('id_doi_tac', (int) $user->id_doi_tac)->pluck('id')->toArray();
             
             // Bao gồm cả ID của Chủ Đối Tác và các thành viên
-            $companyUserIds = array_merge([$ownerId], $memberIds);
+            $companyUserIds = collect([$ownerId])->merge($memberIds)->filter()->unique()->values()->all();
 
             // Lọc ra các phòng họp do những người trong công ty/đối tác này tạo
             $query->whereIn('id_chu_phong', $companyUserIds);
@@ -75,7 +78,7 @@ class PhongHopController extends Controller
         } while (PhongHop::where('ma_phong', $ma_phong)->exists());
 
         $chuPhong = NguoiDung::find($request->id_chu_phong);
-        $isBasic = empty($chuPhong->id_doi_tac);
+        $isBasic = $this->isBasicHost($chuPhong);
 
         // 3. Lưu vào Database
         $phongHop = PhongHop::create([
@@ -243,7 +246,7 @@ class PhongHopController extends Controller
 
         // 1. Lấy thông tin chủ phòng để kiểm tra gói dịch vụ
         $chu_phong = NguoiDung::find($phong->id_chu_phong);
-        $isBasic = empty($chu_phong->id_doi_tac);
+        $isBasic = $this->isBasicHost($chu_phong);
 
         // Kiểm tra số lượng người tham gia nếu là gói Basic
         $soNguoiHienTai = ChiTietPhongHop::where('id_phong_hop', $phong->id)
@@ -327,6 +330,51 @@ class PhongHopController extends Controller
                         ->where('id_chu_phong', $request->id_chu_phong)
                         ->orderBy('id', 'desc')
                         ->get();
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ]);
+    }
+
+    public function getPhongHopTheoDoiTac(Request $request)
+    {
+        $doiTac = Auth::guard('sanctum')->user();
+        if (!$doiTac) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Token khong hop le'
+            ], 401);
+        }
+
+        if (!$doiTac instanceof DoiTac) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chi chu doi tac moi duoc xem danh sach phong hop to chuc.'
+            ], 403);
+        }
+
+        $ownerId = $doiTac->id_admin;
+        if (!$ownerId && $doiTac->email) {
+            $ownerId = NguoiDung::where('email', $doiTac->email)->value('id');
+        }
+
+        $memberIds = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [(int) $doiTac->id])
+            ->pluck('id');
+
+        $companyUserIds = collect([$ownerId])
+            ->merge($memberIds)
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        $data = empty($companyUserIds)
+            ? collect()
+            : PhongHop::with('chuPhong')
+                ->whereIn('id_chu_phong', $companyUserIds)
+                ->orderBy('id', 'desc')
+                ->get();
 
         return response()->json([
             'status' => true,
@@ -529,5 +577,28 @@ class PhongHopController extends Controller
                 'chart_data'     => $chart_data,
             ]
         ]);
+    }
+
+    private function isBasicHost(?NguoiDung $host): bool
+    {
+        if (!$host) {
+            return true;
+        }
+
+        $goi = $host->goi ?? ($host->id_goi ? Goi::find($host->id_goi) : null);
+
+        if (!$goi && (int) $host->id_doi_tac > 0) {
+            $doiTac = DoiTac::find((int) $host->id_doi_tac);
+            $owner = $doiTac?->id_admin ? NguoiDung::find($doiTac->id_admin) : null;
+            $goi = $owner?->goi ?? ($owner?->id_goi ? Goi::find($owner->id_goi) : null);
+        }
+
+        if (!$goi) {
+            return true;
+        }
+
+        $tenGoi = strtolower(trim($goi->ten_goi));
+
+        return $tenGoi === 'basic' || $tenGoi === 'starter' || (int) $goi->id === 1;
     }
 }

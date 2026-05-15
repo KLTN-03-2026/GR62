@@ -10,6 +10,7 @@ use App\Models\NguoiDung;
 use App\Models\HoaDon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -46,13 +47,19 @@ class DoiTacController extends Controller
         }
 
         $token = $doi_tac->createToken('token_doi_tac')->plainTextToken;
+        $this->ensureOwnerUser($doi_tac);
+        $doi_tac = $this->withPartnerMetadata($doi_tac->fresh());
 
         return response()->json([
             'status' => true,
             'message' => 'Đăng nhập thành công',
             'data' => [
                 'token' => $token,
-                'doi_tac' => $doi_tac
+                'doi_tac' => $doi_tac,
+                'user' => $doi_tac,
+                'role' => 'doi_tac',
+                'type' => 'doi_tac',
+                'redirect_to' => '/doi-tac/trang-chinh',
             ]
         ]);
     }
@@ -82,57 +89,59 @@ class DoiTacController extends Controller
             'password' => Hash::make($request->password),
             'trang_thai' => 1,
         ]);
+        $this->ensureOwnerUser($doi_tac);
 
         return response()->json([
             'status' => true,
             'message' => 'Đăng ký tài khoản đối tác thành công!',
-            'data' => $doi_tac
+            'data' => $this->withPartnerMetadata($doi_tac->fresh())
         ]);
     }
 
     public function getProfile(Request $request)
     {
-        $user = Auth::guard('sanctum')->user();
-        if (!$user) {
+        $doi_tac = Auth::guard('sanctum')->user();
+        if (!$doi_tac) {
             return response()->json([
                 'status' => false,
                 'message' => 'Token không hợp lệ hoặc đã hết hạn'
             ], 401);
         }
 
-        // Nếu là NguoiDung, phải có quyền Đối tác (id_doi_tac = 1) mới được vào
-        if ($user instanceof NguoiDung) {
-            if ($user->id_doi_tac != 1) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Tài khoản của bạn chưa được nâng cấp lên Đối tác!'
-                ], 403);
-            }
-            // Load liên kết chức vụ
-            $user->load('chucVu');
-            // Đồng nhất trường hinh_anh cho cả 2 loại model
-            $user->hinh_anh = $user->avatar;
+        if (!$doi_tac instanceof DoiTac) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Tài khoản này là thành viên/người dùng, không phải chủ đối tác.'
+            ], 403);
         }
+
+        $this->ensureOwnerUser($doi_tac);
 
         return response()->json([
             'status' => true,
-            'data' => $user
+            'data' => $this->withPartnerMetadata($doi_tac->fresh())
         ]);
     }
 
     public function updateAvatar(Request $request)
     {
-        $user = Auth::guard('sanctum')->user();
-        if (!$user) {
+        $doi_tac = Auth::guard('sanctum')->user();
+        if (!$doi_tac) {
             return response()->json([
                 'status' => false,
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
+        if (!$doi_tac instanceof DoiTac) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chỉ chủ đối tác mới được cập nhật hồ sơ đối tác.'
+            ], 403);
+        }
 
         if ($request->hasFile('hinh_anh')) {
             $file = $request->file('hinh_anh');
-            $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            $filename = time() . '_' . $doi_tac->id . '.' . $file->getClientOriginalExtension();
 
             $path = public_path('uploads/avatars');
             if (!file_exists($path)) {
@@ -141,24 +150,13 @@ class DoiTacController extends Controller
 
             $file->move($path, $filename);
 
-            // Xác định trường cần cập nhật dựa trên loại model
-            if ($user instanceof NguoiDung) {
-                // Xóa ảnh cũ của NguoiDung
-                if ($user->avatar && file_exists(public_path($user->avatar))) {
-                    unlink(public_path($user->avatar));
-                }
-                $user->avatar = 'uploads/avatars/' . $filename;
-                $user->save();
-                $return_filename = $user->avatar;
-            } else {
-                // Xóa ảnh cũ của DoiTac
-                if ($user->hinh_anh && file_exists(public_path($user->hinh_anh))) {
-                    unlink(public_path($user->hinh_anh));
-                }
-                $user->hinh_anh = 'uploads/avatars/' . $filename;
-                $user->save();
-                $return_filename = $user->hinh_anh;
+            if ($doi_tac->hinh_anh && file_exists(public_path($doi_tac->hinh_anh))) {
+                unlink(public_path($doi_tac->hinh_anh));
             }
+            $doi_tac->hinh_anh = 'uploads/avatars/' . $filename;
+            $doi_tac->save();
+            $this->ensureOwnerUser($doi_tac);
+            $return_filename = $doi_tac->hinh_anh;
 
             return response()->json([
                 'status' => true,
@@ -182,6 +180,12 @@ class DoiTacController extends Controller
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
+        if (!$doi_tac instanceof DoiTac) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chỉ chủ đối tác mới được cập nhật hồ sơ đối tác.'
+            ], 403);
+        }
 
         $validator = Validator::make($request->all(), [
             'ho_va_ten' => 'required|min:2',
@@ -198,6 +202,7 @@ class DoiTacController extends Controller
         $doi_tac->ho_va_ten = $request->ho_va_ten;
         $doi_tac->so_dien_thoai = $request->so_dien_thoai;
         $doi_tac->save();
+        $this->ensureOwnerUser($doi_tac);
 
         return response()->json([
             'status' => true,
@@ -213,6 +218,12 @@ class DoiTacController extends Controller
                 'status' => false,
                 'message' => 'Token không hợp lệ'
             ], 401);
+        }
+        if (!$doi_tac_hien_tai instanceof DoiTac) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chỉ chủ đối tác mới được đăng ký Face ID doanh nghiệp.'
+            ], 403);
         }
 
         // 1. Kiểm tra đầu vào
@@ -258,6 +269,7 @@ class DoiTacController extends Controller
             : $request->face_data;
 
         $doi_tac_hien_tai->save();
+        $this->ensureOwnerUser($doi_tac_hien_tai);
 
         return response()->json([
             'status' => true,
@@ -291,6 +303,12 @@ class DoiTacController extends Controller
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
+        if (!$doi_tac instanceof DoiTac) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chỉ chủ đối tác mới được đổi mật khẩu đối tác.'
+            ], 403);
+        }
 
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
@@ -314,6 +332,7 @@ class DoiTacController extends Controller
 
         $doi_tac->password = Hash::make($request->new_password);
         $doi_tac->save();
+        $this->ensureOwnerUser($doi_tac);
 
         return response()->json([
             'status' => true,
@@ -334,19 +353,15 @@ class DoiTacController extends Controller
     {
         $dataRequest = $request->validated();
 
-        if (isset($dataRequest['password'])) {
-            $dataRequest['password'] = Hash::make($dataRequest['password']);
-        }
-
         $dataRequest['password'] = Hash::make($request->password);
 
-
-        $data = NguoiDung::create($dataRequest);
+        $data = DoiTac::create($dataRequest);
+        $this->ensureOwnerUser($data);
 
         return response()->json([
             'status'  => true,
             'message' => 'Thêm mới thành công',
-            'data'    => $data
+            'data'    => $this->withPartnerMetadata($data->fresh())
         ]);
     }
 
@@ -373,11 +388,12 @@ class DoiTacController extends Controller
     }
 
     $data->update($updateData);
+    $this->ensureOwnerUser($data);
 
     return response()->json([
         'status'  => true,
         'message' => 'Cập nhật thành công',
-        'data'    => $data
+        'data'    => $this->withPartnerMetadata($data->fresh())
     ]);
 }
 
@@ -441,25 +457,35 @@ class DoiTacController extends Controller
     }
     public function getStatistics(Request $request)
     {
-        $user = Auth::guard('sanctum')->user();
-        if (!$user) {
+        $doi_tac = Auth::guard('sanctum')->user();
+        if (!$doi_tac) {
             return response()->json([
                 'status' => false,
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
 
-        $id_partner = $user->id;
+        if (!$doi_tac instanceof DoiTac) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Chi chu doi tac moi duoc xem thong ke to chuc.'
+            ], 403);
+        }
+
+        $ownerUser = $this->ensureOwnerUser($doi_tac);
+        $ownerUserId = $ownerUser?->id;
+        $memberIds = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$doi_tac->id])
+            ->when($ownerUserId, fn ($query) => $query->where('id', '!=', $ownerUserId))
+            ->pluck('id');
+        $companyUserIds = collect([$ownerUserId])->merge($memberIds)->filter()->unique()->values();
 
         // 1. Thống kê số lượng nhân viên (người dùng tham gia các phòng của đối tác này)
-        $phong_ids = \App\Models\PhongHop::where('id_chu_phong', $id_partner)->pluck('id');
+        $phong_ids = \App\Models\PhongHop::whereIn('id_chu_phong', $companyUserIds)->pluck('id');
 
-        $total_nhan_vien = \App\Models\ChiTietPhongHop::whereIn('id_phong_hop', $phong_ids)
-            ->distinct('id_nguoi_dung')
-            ->count('id_nguoi_dung');
+        $total_nhan_vien = $memberIds->count();
 
         // 2. Tổng giờ họp (Tính bằng phút rồi chia ra giờ)
-        $total_minutes = \App\Models\PhongHop::where('id_chu_phong', $id_partner)
+        $total_minutes = \App\Models\PhongHop::whereIn('id_chu_phong', $companyUserIds)
             ->whereNotNull('thoi_gian_ket_thuc')
             ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, thoi_gian_bat_dau, thoi_gian_ket_thuc)) as total')
             ->first()->total ?? 0;
@@ -470,7 +496,7 @@ class DoiTacController extends Controller
         $weekly_data = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = \Carbon\Carbon::now()->subDays($i);
-            $count = \App\Models\PhongHop::where('id_chu_phong', $id_partner)
+            $count = \App\Models\PhongHop::whereIn('id_chu_phong', $companyUserIds)
                 ->whereDate('created_at', $date->toDateString())
                 ->count();
 
@@ -483,7 +509,7 @@ class DoiTacController extends Controller
         }
 
         // 4. Danh sách các phòng ban (Lấy các phòng họp gần đây làm đại diện)
-        $rooms = \App\Models\PhongHop::where('id_chu_phong', $id_partner)
+        $rooms = \App\Models\PhongHop::whereIn('id_chu_phong', $companyUserIds)
             ->orderBy('id', 'desc')
             ->limit(3)
             ->get()
@@ -515,16 +541,22 @@ class DoiTacController extends Controller
      */
     public function getDanhSachThanhVien(Request $request)
     {
-        $user = Auth::guard('sanctum')->user();
-        if (!$user) {
+        $doi_tac = Auth::guard('sanctum')->user();
+        if (!$doi_tac) {
             return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
         }
 
         // id_doi_tac trong bảng nguoi_dungs lưu id của đối tác (kiểu integer thực tế)
         // Cast boolean trong model gây nhầm lẫn, dùng raw query để lấy đúng
-        $id_doi_tac = $user->id;
+        if (!$doi_tac instanceof DoiTac) {
+            return response()->json(['status' => false, 'message' => 'Chi chu doi tac moi duoc xem danh sach thanh vien.'], 403);
+        }
 
-        $danh_sach = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$id_doi_tac])
+        $ownerUser = $this->ensureOwnerUser($doi_tac);
+        $ownerUserId = $ownerUser?->id;
+
+        $danh_sach = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$doi_tac->id])
+            ->when($ownerUserId, fn ($query) => $query->where('id', '!=', $ownerUserId))
             ->select('id', 'ho_va_ten', 'email', 'so_dien_thoai', 'avatar', 'trang_thai', 'created_at', 'id_doi_tac')
             ->orderBy('created_at', 'desc')
             ->get()
@@ -553,8 +585,8 @@ class DoiTacController extends Controller
      */
     public function capQuyenThanhVien(Request $request)
     {
-        $user = Auth::guard('sanctum')->user();
-        if (!$user) {
+        $doi_tac = Auth::guard('sanctum')->user();
+        if (!$doi_tac) {
             return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
         }
 
@@ -573,19 +605,28 @@ class DoiTacController extends Controller
         }
 
         // Kiểm tra đã là thành viên của tổ chức khác chưa
+        if (!$doi_tac instanceof DoiTac) {
+            return response()->json(['status' => false, 'message' => 'Chi chu doi tac moi duoc cap quyen thanh vien.'], 403);
+        }
+
+        $ownerUser = $this->ensureOwnerUser($doi_tac);
+        if (($ownerUser && (int) $nguoi_dung->id === (int) $ownerUser->id) || $nguoi_dung->email === $doi_tac->email) {
+            return response()->json(['status' => false, 'message' => 'Tai khoan chu doi tac khong can cap quyen thanh vien.'], 409);
+        }
+
         $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
-        if ($current_id_doi_tac > 0 && $current_id_doi_tac !== $user->id) {
+        if ($current_id_doi_tac > 0 && $current_id_doi_tac !== $doi_tac->id) {
             return response()->json(['status' => false, 'message' => 'Người dùng này đã thuộc một tổ chức đối tác khác!'], 409);
         }
 
-        if ($current_id_doi_tac === $user->id) {
+        if ($current_id_doi_tac === $doi_tac->id) {
             return response()->json(['status' => false, 'message' => 'Người dùng này đã là thành viên của tổ chức bạn!'], 409);
         }
 
         // Cập nhật trực tiếp qua DB để bypass cast boolean
-        \Illuminate\Support\Facades\DB::table('nguoi_dungs')
+        DB::table('nguoi_dungs')
             ->where('id', $nguoi_dung->id)
-            ->update(['id_doi_tac' => $user->id]);
+            ->update(['id_doi_tac' => $doi_tac->id]);
 
         return response()->json([
             'status' => true,
@@ -603,8 +644,8 @@ class DoiTacController extends Controller
      */
     public function thuHoiQuyenThanhVien(Request $request)
     {
-        $user = Auth::guard('sanctum')->user();
-        if (!$user) {
+        $doi_tac = Auth::guard('sanctum')->user();
+        if (!$doi_tac) {
             return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
         }
 
@@ -623,13 +664,17 @@ class DoiTacController extends Controller
         }
 
         // Kiểm tra người dùng này có thuộc tổ chức của đối tác không
+        if (!$doi_tac instanceof DoiTac) {
+            return response()->json(['status' => false, 'message' => 'Chi chu doi tac moi duoc thu hoi quyen thanh vien.'], 403);
+        }
+
         $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
-        if ($current_id_doi_tac !== $user->id) {
+        if ($current_id_doi_tac !== $doi_tac->id) {
             return response()->json(['status' => false, 'message' => 'Người dùng này không thuộc tổ chức của bạn!'], 403);
         }
 
         // Thu hồi quyền (đặt id_doi_tac về 0)
-        \Illuminate\Support\Facades\DB::table('nguoi_dungs')
+        DB::table('nguoi_dungs')
             ->where('id', $nguoi_dung->id)
             ->update(['id_doi_tac' => 0]);
 
@@ -644,16 +689,21 @@ class DoiTacController extends Controller
      */
     public function getLichSuHoaDon(Request $request)
     {
-        $user = Auth::guard('sanctum')->user();
-        if (!$user) {
+        $doi_tac = Auth::guard('sanctum')->user();
+        if (!$doi_tac) {
             return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
         }
 
-        $id_doi_tac = $user->id;
+        if (!$doi_tac instanceof DoiTac) {
+            return response()->json(['status' => false, 'message' => 'Chi chu doi tac moi duoc xem lich su hoa don to chuc.'], 403);
+        }
+
+        $ownerUser = $this->ensureOwnerUser($doi_tac);
 
         // Lấy id các thành viên thuộc tổ chức
-        $member_ids = \Illuminate\Support\Facades\DB::table('nguoi_dungs')
-            ->whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$id_doi_tac])
+        $member_ids = DB::table('nguoi_dungs')
+            ->whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$doi_tac->id])
+            ->when($ownerUser, fn ($query) => $query->where('id', '!=', $ownerUser->id))
             ->pluck('id');
 
         // Lấy hóa đơn của tất cả thành viên
@@ -686,8 +736,8 @@ class DoiTacController extends Controller
      */
     public function capNhatThanhVien(Request $request)
     {
-        $user = Auth::guard('sanctum')->user();
-        if (!$user) {
+        $doi_tac = Auth::guard('sanctum')->user();
+        if (!$doi_tac) {
             return response()->json(['status' => false, 'message' => 'Token không hợp lệ'], 401);
         }
 
@@ -708,12 +758,16 @@ class DoiTacController extends Controller
         }
 
         // Chỉ cho phép cập nhật thành viên thuộc tổ chức của đối tác này
+        if (!$doi_tac instanceof DoiTac) {
+            return response()->json(['status' => false, 'message' => 'Chi chu doi tac moi duoc cap nhat thanh vien.'], 403);
+        }
+
         $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
-        if ($current_id_doi_tac !== $user->id) {
+        if ($current_id_doi_tac !== $doi_tac->id) {
             return response()->json(['status' => false, 'message' => 'Người dùng này không thuộc tổ chức của bạn!'], 403);
         }
 
-        \Illuminate\Support\Facades\DB::table('nguoi_dungs')
+        DB::table('nguoi_dungs')
             ->where('id', $nguoi_dung->id)
             ->update([
                 'ho_va_ten' => $request->ho_va_ten,
@@ -724,5 +778,80 @@ class DoiTacController extends Controller
             'status' => true,
             'message' => 'Đã cập nhật thông tin thành viên thành công!',
         ]);
+    }
+
+    private function ensureOwnerUser(DoiTac $doi_tac): ?NguoiDung
+    {
+        $owner = null;
+
+        if ($doi_tac->id_admin) {
+            $owner = NguoiDung::find($doi_tac->id_admin);
+        }
+
+        if (!$owner && $doi_tac->email) {
+            $owner = NguoiDung::where('email', $doi_tac->email)->first();
+        }
+
+        if (!$owner && $doi_tac->email && $doi_tac->password) {
+            $owner = NguoiDung::create([
+                'ho_va_ten' => $doi_tac->ho_va_ten ?: $doi_tac->email,
+                'so_dien_thoai' => $doi_tac->so_dien_thoai,
+                'email' => $doi_tac->email,
+                'password' => $doi_tac->password,
+                'id_doi_tac' => $doi_tac->id,
+                'du_lieu_khuon_mat' => $doi_tac->du_lieu_khuon_mat,
+                'avatar' => $doi_tac->hinh_anh,
+                'trang_thai' => $doi_tac->trang_thai ?? true,
+            ]);
+        }
+
+        if (!$owner) {
+            return null;
+        }
+
+        if (
+            $doi_tac->email &&
+            $owner->email !== $doi_tac->email &&
+            !NguoiDung::where('email', $doi_tac->email)->where('id', '!=', $owner->id)->exists()
+        ) {
+            $owner->email = $doi_tac->email;
+        }
+
+        $ownerUpdates = [
+            'id_doi_tac' => $doi_tac->id,
+            'ho_va_ten' => $doi_tac->ho_va_ten ?: $owner->ho_va_ten,
+            'so_dien_thoai' => $doi_tac->so_dien_thoai,
+            'avatar' => $doi_tac->hinh_anh,
+            'du_lieu_khuon_mat' => $doi_tac->du_lieu_khuon_mat,
+            'trang_thai' => $doi_tac->trang_thai ?? $owner->trang_thai,
+            'password' => $doi_tac->password,
+        ];
+
+        foreach ($ownerUpdates as $field => $value) {
+            if ($value !== null && $owner->{$field} !== $value) {
+                $owner->{$field} = $value;
+            }
+        }
+
+        if ($owner->isDirty()) {
+            $owner->save();
+        }
+
+        if ((int) $doi_tac->id_admin !== (int) $owner->id) {
+            $doi_tac->id_admin = $owner->id;
+            $doi_tac->save();
+        }
+
+        return $owner;
+    }
+
+    private function withPartnerMetadata(DoiTac $doi_tac): DoiTac
+    {
+        $owner = $this->ensureOwnerUser($doi_tac);
+        $doi_tac->setAttribute('owner_user_id', $owner?->id);
+        $doi_tac->setAttribute('account_type', 'doi_tac');
+        $doi_tac->setAttribute('is_doi_tac', true);
+
+        return $doi_tac;
     }
 }

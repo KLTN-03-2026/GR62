@@ -302,9 +302,9 @@ export default {
             if (userStr) {
                 this.isLoggedIn = true;
                 try {
-                    const user = JSON.parse(userStr);
+                    JSON.parse(userStr);
                     // Nếu id_doi_tac có giá trị (không phải null), coi là đối tác
-                    this.isDoiTac = user.id_doi_tac ? 1 : 0;
+                    this.isDoiTac = 0;
                 } catch (e) {
                     this.isDoiTac = 0;
                 }
@@ -322,8 +322,7 @@ export default {
                 try {
                     let isDoiTac = false;
                     if (userStr) {
-                        const user = JSON.parse(userStr);
-                        if (user.id_doi_tac) isDoiTac = true;
+                        JSON.parse(userStr);
                     }
                     if (doiTacStr) isDoiTac = true;
 

@@ -73,16 +73,7 @@ class SepayPollingController extends Controller
     {
         $order = Order::where('order_code', $orderCode)->firstOrFail();
 
-        if ($order->status === 'paid') {
-            return response()->json([
-                'success' => true,
-                'order_code' => $order->order_code,
-                'status' => $order->status,
-                'paid_at' => optional($order->paid_at)->toDateTimeString(),
-            ]);
-        }
-
-        $transaction = $this->findMatchingTransaction($order, $sepayApi);
+        $transaction = $order->status === 'paid' ? null : $this->findMatchingTransaction($order, $sepayApi);
 
         if ($transaction) {
             $order->update([
@@ -94,30 +85,82 @@ class SepayPollingController extends Controller
             ]);
 
             // Cập nhật trạng thái Đối tác (Partner) và id_goi cho NguoiDung dựa trên Email
-            $nguoiDung = NguoiDung::where('email', $order->customer_email)->first();
-            if ($nguoiDung) {
+
                 // Theo yêu cầu mới: id_doi_tac đóng vai trò là cờ True/False (1/0)
-                $nguoiDung->id_doi_tac = 1;
-                $nguoiDung->id_goi = $order->id_goi; 
-                $nguoiDung->save();
-            }
+                //
         }
 
         $order->refresh();
 
-        $id_doi_tac = null;
-        if ($order->status === 'paid') {
-            $user = NguoiDung::where('email', $order->customer_email)->first();
-            $id_doi_tac = $user ? $user->id_doi_tac : null;
-        }
+        $paymentResult = $order->status === 'paid'
+            ? $this->applyPaidPackage($order)
+            : ['id_doi_tac' => null, 'is_doi_tac' => false, 'role' => null, 'redirect_to' => null];
 
         return response()->json([
             'success' => true,
             'order_code' => $order->order_code,
             'status' => $order->status,
             'paid_at' => optional($order->paid_at)->toDateTimeString(),
-            'id_doi_tac' => $id_doi_tac,
+            'id_doi_tac' => $paymentResult['id_doi_tac'],
+            'is_doi_tac' => $paymentResult['is_doi_tac'],
+            'role' => $paymentResult['role'],
+            'redirect_to' => $paymentResult['redirect_to'],
         ]);
+    }
+
+    private function applyPaidPackage(Order $order): array
+    {
+        $nguoiDung = NguoiDung::where('email', $order->customer_email)->first();
+        $goi = $order->id_goi ? Goi::find($order->id_goi) : null;
+
+        if (!$nguoiDung || !$goi) {
+            return [
+                'id_doi_tac' => $nguoiDung?->id_doi_tac,
+                'is_doi_tac' => false,
+                'role' => $nguoiDung ? 'nguoi_dung' : null,
+                'redirect_to' => $nguoiDung ? '/nguoi-dung/trang-chinh' : null,
+            ];
+        }
+
+        $nguoiDung->id_goi = $goi->id;
+
+        if ($this->isBusinessPlan($goi)) {
+            $doiTac = DoiTac::firstOrNew(['email' => $nguoiDung->email]);
+            $doiTac->fill([
+                'id_admin' => $nguoiDung->id,
+                'ho_va_ten' => $nguoiDung->ho_va_ten,
+                'so_dien_thoai' => $nguoiDung->so_dien_thoai,
+                'password' => $nguoiDung->password,
+                'hinh_anh' => $nguoiDung->avatar,
+                'du_lieu_khuon_mat' => $nguoiDung->du_lieu_khuon_mat,
+                'trang_thai' => $nguoiDung->trang_thai,
+            ]);
+            $doiTac->save();
+
+            $nguoiDung->id_doi_tac = $doiTac->id;
+            $nguoiDung->save();
+
+            return [
+                'id_doi_tac' => $doiTac->id,
+                'is_doi_tac' => true,
+                'role' => 'doi_tac',
+                'redirect_to' => '/doi-tac/trang-chinh',
+            ];
+        }
+
+        $nguoiDung->save();
+
+        return [
+            'id_doi_tac' => $nguoiDung->id_doi_tac,
+            'is_doi_tac' => false,
+            'role' => ((int) $nguoiDung->id_doi_tac > 0) ? 'thanh_vien_doi_tac' : 'nguoi_dung',
+            'redirect_to' => '/nguoi-dung/trang-chinh',
+        ];
+    }
+
+    private function isBusinessPlan(Goi $goi): bool
+    {
+        return strtolower(trim($goi->ten_goi)) === 'business';
     }
 
     private function findMatchingTransaction(Order $order, SepayApiService $sepayApi): ?array
