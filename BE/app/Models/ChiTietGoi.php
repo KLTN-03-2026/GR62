@@ -27,4 +27,9 @@ class ChiTietGoi extends Model
             'is_nguoi_dung' => 'boolean',
         ];
     }
+
+    public function goi()
+    {
+        return $this->belongsTo(Goi::class, 'id_goi');
+    }
 }

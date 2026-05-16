@@ -50,4 +50,9 @@ class NguoiDung extends Authenticatable
     {
         return $this->belongsTo(Goi::class, 'id_goi');
     }
+
+    public function chiTietGois()
+    {
+        return $this->hasMany(ChiTietGoi::class, 'id_nguoi_dung');
+    }
 }

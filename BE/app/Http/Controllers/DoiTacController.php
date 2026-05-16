@@ -46,8 +46,12 @@ class DoiTacController extends Controller
             ], 403);
         }
 
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
+        }
+
         $token = $doi_tac->createToken('token_doi_tac')->plainTextToken;
-        $this->ensureOwnerUser($doi_tac);
+        $this->ensureOwnerUser($doi_tac, true);
         $doi_tac = $this->withPartnerMetadata($doi_tac->fresh());
 
         return response()->json([
@@ -89,7 +93,7 @@ class DoiTacController extends Controller
             'password' => Hash::make($request->password),
             'trang_thai' => 1,
         ]);
-        $this->ensureOwnerUser($doi_tac);
+        $this->ensureOwnerUser($doi_tac, true);
 
         return response()->json([
             'status' => true,
@@ -115,6 +119,10 @@ class DoiTacController extends Controller
             ], 403);
         }
 
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
+        }
+
         $this->ensureOwnerUser($doi_tac);
 
         return response()->json([
@@ -137,6 +145,10 @@ class DoiTacController extends Controller
                 'status' => false,
                 'message' => 'Chỉ chủ đối tác mới được cập nhật hồ sơ đối tác.'
             ], 403);
+        }
+
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
         }
 
         if ($request->hasFile('hinh_anh')) {
@@ -187,6 +199,10 @@ class DoiTacController extends Controller
             ], 403);
         }
 
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
+        }
+
         $validator = Validator::make($request->all(), [
             'ho_va_ten' => 'required|min:2',
             'so_dien_thoai' => 'required|numeric',
@@ -227,6 +243,10 @@ class DoiTacController extends Controller
         }
 
         // 1. Kiểm tra đầu vào
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac_hien_tai)) {
+            return $response;
+        }
+
         $request->validate([
             'face_data' => 'required'
         ]);
@@ -310,6 +330,10 @@ class DoiTacController extends Controller
             ], 403);
         }
 
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
+        }
+
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'new_password' => 'required|min:8',
@@ -356,7 +380,7 @@ class DoiTacController extends Controller
         $dataRequest['password'] = Hash::make($request->password);
 
         $data = DoiTac::create($dataRequest);
-        $this->ensureOwnerUser($data);
+        $this->ensureOwnerUser($data, true);
 
         return response()->json([
             'status'  => true,
@@ -472,6 +496,10 @@ class DoiTacController extends Controller
             ], 403);
         }
 
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
+        }
+
         $ownerUser = $this->ensureOwnerUser($doi_tac);
         $ownerUserId = $ownerUser?->id;
         $memberIds = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$doi_tac->id])
@@ -552,6 +580,10 @@ class DoiTacController extends Controller
             return response()->json(['status' => false, 'message' => 'Chi chu doi tac moi duoc xem danh sach thanh vien.'], 403);
         }
 
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
+        }
+
         $ownerUser = $this->ensureOwnerUser($doi_tac);
         $ownerUserId = $ownerUser?->id;
 
@@ -607,6 +639,10 @@ class DoiTacController extends Controller
         // Kiểm tra đã là thành viên của tổ chức khác chưa
         if (!$doi_tac instanceof DoiTac) {
             return response()->json(['status' => false, 'message' => 'Chi chu doi tac moi duoc cap quyen thanh vien.'], 403);
+        }
+
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
         }
 
         $ownerUser = $this->ensureOwnerUser($doi_tac);
@@ -668,6 +704,10 @@ class DoiTacController extends Controller
             return response()->json(['status' => false, 'message' => 'Chi chu doi tac moi duoc thu hoi quyen thanh vien.'], 403);
         }
 
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
+        }
+
         $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
         if ($current_id_doi_tac !== $doi_tac->id) {
             return response()->json(['status' => false, 'message' => 'Người dùng này không thuộc tổ chức của bạn!'], 403);
@@ -696,6 +736,10 @@ class DoiTacController extends Controller
 
         if (!$doi_tac instanceof DoiTac) {
             return response()->json(['status' => false, 'message' => 'Chi chu doi tac moi duoc xem lich su hoa don to chuc.'], 403);
+        }
+
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
         }
 
         $ownerUser = $this->ensureOwnerUser($doi_tac);
@@ -762,6 +806,10 @@ class DoiTacController extends Controller
             return response()->json(['status' => false, 'message' => 'Chi chu doi tac moi duoc cap nhat thanh vien.'], 403);
         }
 
+        if ($response = $this->phanHoiNeuDoiTacDaBiThuHoi($doi_tac)) {
+            return $response;
+        }
+
         $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
         if ($current_id_doi_tac !== $doi_tac->id) {
             return response()->json(['status' => false, 'message' => 'Người dùng này không thuộc tổ chức của bạn!'], 403);
@@ -780,17 +828,46 @@ class DoiTacController extends Controller
         ]);
     }
 
-    private function ensureOwnerUser(DoiTac $doi_tac): ?NguoiDung
+    private function timNguoiDungSoHuu(DoiTac $doi_tac): ?NguoiDung
     {
-        $owner = null;
-
         if ($doi_tac->id_admin) {
             $owner = NguoiDung::find($doi_tac->id_admin);
+            if ($owner) {
+                return $owner;
+            }
         }
 
-        if (!$owner && $doi_tac->email) {
-            $owner = NguoiDung::where('email', $doi_tac->email)->first();
+        if ($doi_tac->email) {
+            return NguoiDung::where('email', $doi_tac->email)->first();
         }
+
+        return null;
+    }
+
+    private function doiTacDaBiThuHoi(DoiTac $doi_tac, ?NguoiDung $owner = null): bool
+    {
+        $owner = $owner ?: $this->timNguoiDungSoHuu($doi_tac);
+
+        return $owner && (int) $owner->id_doi_tac !== (int) $doi_tac->id;
+    }
+
+    private function phanHoiNeuDoiTacDaBiThuHoi(DoiTac $doi_tac)
+    {
+        if (!$this->doiTacDaBiThuHoi($doi_tac)) {
+            return null;
+        }
+
+        $doi_tac->tokens()->delete();
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Tai khoan nay khong con goi doi tac.'
+        ], 403);
+    }
+
+    private function ensureOwnerUser(DoiTac $doi_tac, bool $bat_buoc_gan_quyen = false): ?NguoiDung
+    {
+        $owner = $this->timNguoiDungSoHuu($doi_tac);
 
         if (!$owner && $doi_tac->email && $doi_tac->password) {
             $owner = NguoiDung::create([
@@ -807,6 +884,10 @@ class DoiTacController extends Controller
 
         if (!$owner) {
             return null;
+        }
+
+        if (!$bat_buoc_gan_quyen && $this->doiTacDaBiThuHoi($doi_tac, $owner)) {
+            return $owner;
         }
 
         if (

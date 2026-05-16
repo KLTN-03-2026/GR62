@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router"; // cài vue-router: npm install vue-router@next --save
 
 import { createToaster } from "@meforma/vue-toaster";
+import axios from "axios";
 
 const toaster = createToaster({ position: "top-right" });
+const apiUrl = import.meta.env.VITE_API_URL;
 // middleware Admin
 const checkAdmin = (to, from, next) => {
     const tokenAdmin = localStorage.getItem('token_admin');
@@ -29,6 +31,41 @@ const checkUserMeeting = (to, from, next) => {
         next('/nguoi-dung/trang-chinh'); // Đuổi về trang chủ để quét Face ID lại
     } else {
         next(); // Cho phép qua cửa
+    }
+};
+
+const clearDoiTacSession = () => {
+    localStorage.removeItem('token_doi_tac');
+    localStorage.removeItem('thong_tin_doi_tac');
+};
+
+const checkDoiTac = async (to, from, next) => {
+    const tokenDoiTac = localStorage.getItem('token_doi_tac');
+
+    if (!tokenDoiTac) {
+        clearDoiTacSession();
+        toaster.error('Ban khong co quyen truy cap! Vui long dang nhap.');
+        next('/dang-nhap');
+        return;
+    }
+
+    try {
+        const res = await axios.get(`${apiUrl}/doi-tac/me`, {
+            headers: { Authorization: 'Bearer ' + tokenDoiTac }
+        });
+
+        if (res.data?.status) {
+            next();
+            return;
+        }
+
+        clearDoiTacSession();
+        toaster.warning('Phien dang nhap doi tac khong con hop le.');
+        next('/dang-nhap');
+    } catch (e) {
+        clearDoiTacSession();
+        toaster.warning('Phien dang nhap doi tac khong con hop le.');
+        next('/dang-nhap');
     }
 };
 
@@ -175,37 +212,44 @@ const routes = [
     {
         path: '/doi-tac/trang-chinh',
         component: () => import('../components/DoiTac/TrangChinhDoiTac/index.vue'),
-        meta: { layout: 'black' }
+        meta: { layout: 'black' },
+        beforeEnter: checkDoiTac
     },
     {
         path: '/doi-tac/phong-hop',
         component: () => import('../components/DoiTac/PhongHop/index.vue'),
-        meta: { layout: 'black' }
+        meta: { layout: 'black' },
+        beforeEnter: checkDoiTac
     },
     {
         path: '/doi-tac/bao-cao',
         component: () => import('../components/DoiTac/BaoCao/index.vue'),
-        meta: { layout: 'black' }
+        meta: { layout: 'black' },
+        beforeEnter: checkDoiTac
     },
     {
         path: '/doi-tac/profile',
         component: () => import('../components/DoiTac/Profile/index.vue'),
-        meta: { layout: 'black' }
+        meta: { layout: 'black' },
+        beforeEnter: checkDoiTac
     },
     {
     path: '/doi-tac/quan-ly-phong-hop',
     component: () => import('../components/DoiTac/QuanLyPhongHop/index.vue'),
-    meta: { layout: 'black' }
+    meta: { layout: 'black' },
+    beforeEnter: checkDoiTac
     },
     {
     path: '/doi-tac/quan-ly-thanh-vien',
     component: () => import('../components/DoiTac/QuanLyThanhVien/index.vue'),
-    meta: { layout: 'black' }
+    meta: { layout: 'black' },
+    beforeEnter: checkDoiTac
     },
     {
     path: '/doi-tac/hoa-don',
     component: () => import('../components/DoiTac/HoaDon/index.vue'),
-    meta: { layout: 'black' }
+    meta: { layout: 'black' },
+    beforeEnter: checkDoiTac
     },
 
 ]

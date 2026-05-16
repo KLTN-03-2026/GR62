@@ -50,7 +50,7 @@
                 <!-- Pro Plan -->
                 <div class="p-4 mt-auto">
                     <!-- Chưa có gói -->
-                    <div v-if="!la_doi_tac" class="p-3 rounded-4 pt-4 text-center"
+                    <div v-if="!co_goi_dich_vu" class="p-3 rounded-4 pt-4 text-center"
                         style="background-color: #fff7ed; border: 1px solid #ffedd5;">
                         <div class="text-start mb-2">
                             <h6 class="fw-bolder mb-1"
@@ -66,7 +66,7 @@
                         </router-link>
                     </div>
                     
-                    <!-- Đã có gói Đối tác -->
+                    <!-- Đã có gói -->
                     <div v-else class="p-3 rounded-4 pt-4 text-center"
                         style="background-color: #f0fdf4; border: 1px solid #dcfce7;">
                         <div class="text-start mb-2">
@@ -75,7 +75,7 @@
                                 <i class="bx bx-check-shield me-1"></i> GÓI ĐANG DÙNG</h6>
                             <p class="small text-muted mb-3 lh-sm fw-bold text-truncate"
                                 style="font-size: 0.85rem; color: #15803d !important;">
-                                {{ thong_tin_dang_nhap?.goi?.ten_goi || 'Gói Doanh Nghiệp (Đối Tác)' }}</p>
+                                {{ goi_hien_tai?.ten_goi || 'Gói đã kích hoạt' }}</p>
                         </div>
                         <button class="btn w-100 fw-bold text-white shadow-sm" disabled
                             style="background-color: #22c55e; font-size: 0.85rem; padding: 10px 0; border-radius: 8px;">
@@ -949,6 +949,7 @@ export default {
                 email: '',
                 hinh_anh: ''
             },
+            nguoi_dung_hien_tai: null,
             dem_thoi_gian: 0, // Biến đếm thời gian quét
             giay_can_thiet: 15,
             settings: {
@@ -1001,8 +1002,9 @@ export default {
         }
     },
     mounted() {
+        this.dongBoNguoiDungTuLocalStorage();
         this.layThongTinHoSo();
-        const user = JSON.parse(localStorage.getItem('thong_tin_user'));
+        const user = this.thong_tin_dang_nhap;
         if (user && user.du_lieu_khuon_mat) {
             this.da_xac_minh_phu = true;
         }
@@ -1033,8 +1035,7 @@ export default {
         },
         // 1. Lấy toàn bộ thông tin người dùng từ LocalStorage
         thong_tin_dang_nhap() {
-            const du_lieu = localStorage.getItem('thong_tin_user');
-            return du_lieu ? JSON.parse(du_lieu) : null;
+            return this.nguoi_dung_hien_tai;
         },
 
         // 2. Lấy tên người dùng
@@ -1050,10 +1051,31 @@ export default {
         },
         // 4. Kiểm tra quyền Đối tác
         la_doi_tac() {
-            return this.thong_tin_dang_nhap ? (!!this.thong_tin_dang_nhap.id_doi_tac) : false;
+            return this.thong_tin_dang_nhap ? Number(this.thong_tin_dang_nhap.id_doi_tac || 0) > 0 : false;
+        },
+        goi_hien_tai() {
+            const user = this.thong_tin_dang_nhap || {};
+            const danh_sach_goi = user.goi_dang_so_huu || user.goiDangSoHuu || [];
+
+            if (danh_sach_goi.length > 0) {
+                return danh_sach_goi[0];
+            }
+
+            return user.goi || null;
+        },
+        co_goi_dich_vu() {
+            return !!this.goi_hien_tai;
         }
     },
     methods: {
+        dongBoNguoiDungTuLocalStorage() {
+            try {
+                const du_lieu = localStorage.getItem('thong_tin_user');
+                this.nguoi_dung_hien_tai = du_lieu ? JSON.parse(du_lieu) : null;
+            } catch (e) {
+                this.nguoi_dung_hien_tai = null;
+            }
+        },
         moModalNhapMaPhong() {
             this.roomCodeToJoin = '';
             this.showJoinInputModal = true;
@@ -1217,6 +1239,13 @@ export default {
 
                 if (response.data.status) {
                     const data = response.data.data;
+                    const nguoiDungMoi = {
+                        ...(this.thong_tin_dang_nhap || {}),
+                        ...data,
+                    };
+                    this.nguoi_dung_hien_tai = nguoiDungMoi;
+                    localStorage.setItem('thong_tin_user', JSON.stringify(nguoiDungMoi));
+
                     this.settings.ho_va_ten = data.ho_va_ten;
                     this.settings.email = data.email;
                     this.user.ho_va_ten = data.ho_va_ten;

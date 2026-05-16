@@ -35,7 +35,6 @@
                                 <th class="text-center">Họ Và Tên</th>
                                 <th class="text-center">Email</th>
                                 <th class="text-center">Số Điện Thoại</th>
-                                <th class="text-center">Chức Vụ</th>
                                 <th class="text-center">Gói Dịch Vụ</th>
                                 <th class="text-center">Trạng Thái</th>
                                 <th class="text-center">Action</th>
@@ -49,10 +48,12 @@
                                     <td class="align-middle">{{ value.email }}</td>
                                     <td class="align-middle text-center">{{ value.so_dien_thoai }}</td>
                                     <td class="align-middle text-center">
-                                        {{ value.chuc_vu ? value.chuc_vu.ten_chuc_vu : 'N/A' }}
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <span v-if="value.goi" class="badge bg-success shadow-sm px-2 py-1">{{ value.goi.ten_goi }}</span>
+                                        <template v-if="goiDangSoHuu(value).length">
+                                            <span v-for="goi in goiDangSoHuu(value)" :key="goi.id"
+                                                class="badge bg-success shadow-sm px-2 py-1 me-1 mb-1">
+                                                {{ goi.ten_goi }}
+                                            </span>
+                                        </template>
                                         <span v-else class="badge bg-secondary shadow-sm px-2 py-1" style="opacity: 0.7;">Chưa đăng ký</span>
                                     </td>
                                     <td class="align-middle text-center" v-on:click="doiTrangThai(value)">
@@ -65,7 +66,7 @@
                                         </button>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <button v-on:click="edit_nguoi_dung = Object.assign({}, value)"
+                                        <button v-on:click="chonNguoiDung(value)"
                                             class="btn btn-success me-2" data-bs-toggle="modal"
                                             data-bs-target="#updateModal">
                                             Cập nhật
@@ -121,15 +122,6 @@
                             <input v-model="create_nguoi_dung.so_dien_thoai" type="text" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Chức Vụ</label>
-                            <select v-model="create_nguoi_dung.id_chuc_vu" class="form-select">
-                                <option value="">Chọn chức vụ</option>
-                                <template v-for="(v, k) in list_chuc_vu" :key="k">
-                                    <option :value="v.id">{{ v.ten_chuc_vu }}</option>
-                                </template>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng Thái</label>
                             <select v-model="create_nguoi_dung.trang_thai" class="form-select">
                                 <option value="1">Hoạt động</option>
@@ -175,15 +167,6 @@
                             <input v-model="edit_nguoi_dung.re_password" type="password" class="form-control" />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Chức Vụ</label>
-                            <select v-model="edit_nguoi_dung.id_chuc_vu" class="form-select">
-                                <option value="">Chọn chức vụ</option>
-                                <template v-for="(v, k) in list_chuc_vu" :key="k">
-                                    <option :value="v.id">{{ v.ten_chuc_vu }}</option>
-                                </template>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
                             <label class="form-label">Số Điện Thoại</label>
                             <input v-model="edit_nguoi_dung.so_dien_thoai" type="text" class="form-control" />
                         </div>
@@ -192,6 +175,15 @@
                             <select v-model="edit_nguoi_dung.trang_thai" class="form-select">
                                 <option value="1">Hoạt động</option>
                                 <option value="0">Tạm tắt</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Gói Dịch Vụ</label>
+                            <select v-model="edit_nguoi_dung.id_goi" class="form-select">
+                                <option :value="null">Chưa sử dụng gói</option>
+                                <template v-for="goi in list_goi" :key="goi.id">
+                                    <option :value="goi.id">{{ goi.ten_goi }}</option>
+                                </template>
                             </select>
                         </div>
                     </div>
@@ -241,7 +233,7 @@ export default {
             list_nguoi_dung: [],
             list_nguoi_dung_goc: [],
             list_doi_tac: [],
-            list_chuc_vu: [],
+            list_goi: [],
             create_nguoi_dung: {
                 ho_va_ten: "",
                 email: "",
@@ -249,7 +241,6 @@ export default {
                 password: "",
                 re_password: "",
                 so_dien_thoai: "",
-                id_chuc_vu: "",
                 trang_thai: "1",
             },
             edit_nguoi_dung: {
@@ -259,7 +250,7 @@ export default {
                 password: "",
                 re_password: "",
                 so_dien_thoai: "",
-                id_chuc_vu: "",
+                id_goi: null,
                 trang_thai: "",
             },
             del_nguoi_dung: {},
@@ -271,11 +262,27 @@ export default {
     mounted() {
         this.loadData();
         this.loadDataPartner();
-        this.loadDataChucVu();
+        this.loadDataGoi();
     },
     methods: {
         headers() {
             return { Authorization: 'Bearer ' + localStorage.getItem('token_admin') };
+        },
+        goiDangSoHuu(nguoiDung) {
+            const danhSachGoi = nguoiDung.goi_dang_so_huu || [];
+            if (danhSachGoi.length > 0) {
+                return danhSachGoi;
+            }
+            return nguoiDung.goi ? [nguoiDung.goi] : [];
+        },
+        chonNguoiDung(value) {
+            const goiHienTai = this.goiDangSoHuu(value)[0];
+            this.edit_nguoi_dung = {
+                ...value,
+                password: "",
+                re_password: "",
+                id_goi: goiHienTai?.id ?? value.id_goi ?? null,
+            };
         },
         timKiem() {
             const ds = this.list_nguoi_dung_goc || [];
@@ -308,7 +315,7 @@ export default {
                 .then((res) => {
                     this.list_nguoi_dung = res.data.data || [];
                     this.list_nguoi_dung_goc = [...this.list_nguoi_dung];
-                    if (this.tu_khoa) this.timKiem();
+                    if (this.tu_khoa || this.loc_loai_tai_khoan !== 'all' || this.loc_trang_thai !== 'all') this.timKiem();
                 });
         },
         loadDataPartner() {
@@ -317,10 +324,12 @@ export default {
                     this.list_doi_tac = res.data.data || [];
                 });
         },
-        loadDataChucVu() {
-            axios.get(`${API}/chuc-vu/data`, { headers: this.headers() })
+        loadDataGoi() {
+            axios.get(`${API}/goi/data`, { headers: this.headers() })
                 .then((res) => {
-                    this.list_chuc_vu = res.data.data || [];
+                    this.list_goi = (res.data.data || []).filter(goi =>
+                        goi.is_nguoi_dung != 0 && goi.trang_thai != 0 && goi.is_open != 0
+                    );
                 });
         },
         themNguoiDung() {
@@ -332,7 +341,7 @@ export default {
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);
-                        this.create_nguoi_dung = { ho_va_ten: "", email: "", password: "", re_password: "", so_dien_thoai: "", id_chuc_vu: "", trang_thai: "1" };
+                        this.create_nguoi_dung = { ho_va_ten: "", email: "", password: "", re_password: "", so_dien_thoai: "", trang_thai: "1" };
                         this.loadData();
                     } else {
                         this.$toast.error(res.data.message);
@@ -348,7 +357,21 @@ export default {
                 this.$toast.error("Mật khẩu xác nhận không khớp!");
                 return;
             }
-            axios.post(`${API}/nguoi-dung/update`, this.edit_nguoi_dung, { headers: this.headers() })
+            const payload = {
+                id: this.edit_nguoi_dung.id,
+                ho_va_ten: this.edit_nguoi_dung.ho_va_ten,
+                email: this.edit_nguoi_dung.email,
+                so_dien_thoai: this.edit_nguoi_dung.so_dien_thoai,
+                trang_thai: this.edit_nguoi_dung.trang_thai,
+                id_goi: this.edit_nguoi_dung.id_goi,
+            };
+
+            if (this.edit_nguoi_dung.password) {
+                payload.password = this.edit_nguoi_dung.password;
+                payload.re_password = this.edit_nguoi_dung.re_password;
+            }
+
+            axios.post(`${API}/nguoi-dung/update`, payload, { headers: this.headers() })
                 .then((res) => {
                     if (res.data.status) {
                         this.$toast.success(res.data.message);

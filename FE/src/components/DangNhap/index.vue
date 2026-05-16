@@ -126,21 +126,32 @@ export default {
         this.checkAlreadyLoggedIn();
     },
     methods: {
-        checkAlreadyLoggedIn() {
+        async checkAlreadyLoggedIn() {
             const userStr = localStorage.getItem('thong_tin_user');
             const doiTacStr = localStorage.getItem('thong_tin_doi_tac');
             const tokenDoiTac = localStorage.getItem('token_doi_tac');
             if (doiTacStr && tokenDoiTac) {
-                if (this.$toast) this.$toast.info('Ban da dang nhap voi tai khoan doi tac.');
-                this.$router.push('/doi-tac/trang-chinh');
-                return;
+                try {
+                    const res = await axios.get(`${apiUrl}/doi-tac/me`, {
+                        headers: { Authorization: 'Bearer ' + tokenDoiTac }
+                    });
+
+                    if (res.data?.status) {
+                        if (this.$toast) this.$toast.info('Ban da dang nhap voi tai khoan doi tac.');
+                        this.$router.push('/doi-tac/trang-chinh');
+                        return;
+                    }
+                } catch (e) {
+                    localStorage.removeItem('token_doi_tac');
+                    localStorage.removeItem('thong_tin_doi_tac');
+                }
             }
             if (userStr) {
                 try {
                     const user = JSON.parse(userStr);
                     if (user.is_doi_tac == 1) {
-                        if (this.$toast) this.$toast.info('Bạn đã đăng nhập với tài khoản đối tác!');
-                        this.$router.push('/doi-tac/trang-chinh');
+                        localStorage.removeItem('token_nguoi_dung');
+                        localStorage.removeItem('thong_tin_user');
                     } else {
                         if (this.$toast) this.$toast.info('Bạn đã đăng nhập!');
                         this.$router.push('/nguoi-dung/trang-chinh');

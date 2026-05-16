@@ -29,8 +29,9 @@ class AuthController extends Controller
         }
 
         $doiTac = DoiTac::where('email', $request->email)->first();
+        $ownerUser = $doiTac ? $this->timNguoiDungSoHuuDoiTac($doiTac) : null;
 
-        if ($doiTac) {
+        if ($doiTac && $this->doiTacConHieuLuc($doiTac, $ownerUser)) {
             if (!Hash::check($request->password, $doiTac->password)) {
                 return response()->json([
                     'status' => false,
@@ -45,16 +46,7 @@ class AuthController extends Controller
                 ], 403);
             }
 
-            $ownerUser = $doiTac->id_admin
-                ? NguoiDung::find($doiTac->id_admin)
-                : NguoiDung::where('email', $doiTac->email)->first();
-
             if ($ownerUser) {
-                if ((int) $ownerUser->id_doi_tac !== (int) $doiTac->id) {
-                    $ownerUser->id_doi_tac = $doiTac->id;
-                    $ownerUser->save();
-                }
-
                 if ((int) $doiTac->id_admin !== (int) $ownerUser->id) {
                     $doiTac->id_admin = $ownerUser->id;
                     $doiTac->save();
@@ -109,5 +101,30 @@ class AuthController extends Controller
                 'redirect_to' => '/nguoi-dung/trang-chinh',
             ]
         ]);
+    }
+
+    private function timNguoiDungSoHuuDoiTac(DoiTac $doiTac): ?NguoiDung
+    {
+        if ($doiTac->id_admin) {
+            $ownerUser = NguoiDung::find($doiTac->id_admin);
+            if ($ownerUser) {
+                return $ownerUser;
+            }
+        }
+
+        if ($doiTac->email) {
+            return NguoiDung::where('email', $doiTac->email)->first();
+        }
+
+        return null;
+    }
+
+    private function doiTacConHieuLuc(DoiTac $doiTac, ?NguoiDung $ownerUser): bool
+    {
+        if (!$ownerUser) {
+            return true;
+        }
+
+        return (int) $ownerUser->id_doi_tac === (int) $doiTac->id;
     }
 }

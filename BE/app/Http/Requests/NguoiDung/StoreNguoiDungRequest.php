@@ -31,7 +31,6 @@ class StoreNguoiDungRequest extends FormRequest
                 'unique:nguoi_dungs,email',
             ],
             'password'      => 'required|string|min:8',
-            'id_chuc_vu'    => 'nullable|exists:chuc_vus,id',
         ];
     }
 

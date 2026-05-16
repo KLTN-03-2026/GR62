@@ -34,7 +34,9 @@ class UpdateNguoiDungRequest extends FormRequest
             Rule::unique('nguoi_dungs', 'email')->ignore($this->id),
         ],
 
-        'id_chuc_vu'    => 'nullable|exists:chuc_vus,id',
+        'password'      => 'nullable|string|min:8',
+        're_password'   => 'nullable|same:password',
+        'id_goi'        => 'nullable|exists:gois,id',
         'trang_thai'    => 'required|boolean',
     ];
 }
@@ -59,7 +61,10 @@ class UpdateNguoiDungRequest extends FormRequest
             'email.regex'            => 'Email phải có tên miền đầy đủ',
             'email.unique'           => 'Email đã tồn tại trong hệ thống',
 
-            'id_chuc_vu.exists'      => 'Chức vụ không tồn tại',
+            'password.min'           => 'Mật khẩu phải có ít nhất 8 ký tự',
+            're_password.same'       => 'Mật khẩu xác nhận không khớp',
+            'id_goi.exists'          => 'Gói dịch vụ không tồn tại',
+
         ];
     }
 
