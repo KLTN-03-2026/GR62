@@ -98,7 +98,7 @@
         </section>
 
         <!-- Features -->
-        <section class="py-5 my-5">
+        <section id="features" class="py-5 my-5">
             <div class="container py-4">
                 <div class="text-center mb-5">
                     <h2 class="display-6 fw-bold mb-3 text-dark" style="letter-spacing: -1px;">Đẳng cấp công nghệ AI</h2>
@@ -184,7 +184,7 @@
         </section>
 
         <!-- Pricing -->
-        <section class="py-5 my-5" style="background-color: #FDF3ED;">
+        <section id="pricing" class="py-5 my-5" style="background-color: #FDF3ED;">
             <div class="container py-5">
                 <div class="text-center mb-5 pb-3">
                     <h2 class="display-6 fw-bold mb-3 text-dark" style="letter-spacing: -1px;">Lựa chọn gói dịch vụ</h2>
@@ -255,7 +255,7 @@
         </section>
 
         <!-- CTA Section -->
-        <section class="container mb-5 pb-5 mt-5 pt-3">
+        <section id="contact" class="container mb-5 pb-5 mt-5 pt-3">
             <div class="cta-section p-5 text-center text-white shadow-lg d-flex align-items-center justify-content-center flex-column" style="border-radius: 32px; min-height: 400px;">
                 <div class="cta-bg-shape" style="width: 400px; height: 400px; top: -150px; left: -100px;"></div>
                 <div class="cta-bg-shape" style="width: 500px; height: 500px; bottom: -250px; right: -150px;"></div>
@@ -362,6 +362,12 @@ export default {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #1a1e29;
     overflow-x: hidden;
+}
+
+#features,
+#pricing,
+#contact {
+    scroll-margin-top: 96px;
 }
 
 .text-gradient {

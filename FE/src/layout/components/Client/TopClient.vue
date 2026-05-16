@@ -15,9 +15,9 @@
       </div>
       <nav class="nav-links d-none d-md-flex gap-4">
         <router-link to="/" class="nav-link-item active">Trang chủ</router-link>
-        <a href="#features" class="nav-link-item">Tính năng</a>
-        <a href="#pricing" class="nav-link-item">Bảng giá</a>
-        <a href="#" class="nav-link-item">Liên hệ</a>
+        <a href="/#features" class="nav-link-item">Tính năng</a>
+        <a href="/#pricing" class="nav-link-item">Bảng giá</a>
+        <a href="/#contact" class="nav-link-item">Liên hệ</a>
       </nav>
       <div class="auth-buttons d-flex gap-2 align-items-center">
         <template v-if="!isLoggedIn">

@@ -103,12 +103,12 @@
                     <!-- Right Actions -->
                     <div class="d-flex align-items-center gap-3">
                         <button
-                            class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border position-relative shadow-sm"
+                            class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border position-relative shadow-sm top-action-btn"
                             style="width: 44px; height: 44px; border-color: #e2e8f0 !important;">
                             <i class='bx bxs-bell fs-5' style="color: #334155;"></i>
                         </button>
                         <button
-                            class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border shadow-sm"
+                            class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center bg-white border shadow-sm top-action-btn"
                             style="width: 44px; height: 44px; border-color: #e2e8f0 !important;">
                             <i class='bx bxs-message-square-dots fs-5' style="color: #334155;"></i>
                         </button>
@@ -1835,6 +1835,18 @@ export default {
 .user-profile-link:hover h6 {
     color: #ea580c !important;
     /* Đổi màu tên khi rê chuột vào */
+}
+
+.top-action-btn {
+    line-height: 1;
+}
+
+.top-action-btn i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    margin: 0;
 }
 
 .dropdown-item {
