@@ -99,20 +99,20 @@ export default {
         loadProfile() {
             const token = localStorage.getItem('token_admin');
             if (!token) return;
-            
+
             axios.get(`${import.meta.env.VITE_API_URL}/admin/profile/data`, {
                 headers: {
                     Authorization: "Bearer " + token,
                 },
             })
-            .then(res => {
-                if (res.data.status) {
-                    this.profile = res.data.data;
-                }
-            })
-            .catch((err) => {
-                console.error('Lỗi khi tải profile InAppTop:', err);
-            });
+                .then(res => {
+                    if (res.data.status) {
+                        this.profile = res.data.data;
+                    }
+                })
+                .catch((err) => {
+                    console.error('Lỗi khi tải profile InAppTop:', err);
+                });
         },
         async logout() {
             try {
