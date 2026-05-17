@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
             NguoiDungSeeder::class,
             ChiTietPhanQuyenSeeder::class,
             GoiSeeder::class,
-            ChiTietGoiSeeder::class,
+            DangKyGoiSeeder::class,
             PhongHopSeeder::class,
             ChiTietPhongHopSeeder::class,
             ChatRoomSeeder::class,

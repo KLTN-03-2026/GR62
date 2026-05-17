@@ -53,6 +53,17 @@ class NguoiDung extends Authenticatable
 
     public function chiTietGois()
     {
-        return $this->hasMany(ChiTietGoi::class, 'id_nguoi_dung');
+        return $this->dangKyGois();
+    }
+
+    public function dangKyGois()
+    {
+        return $this->hasMany(DangKyGoi::class, 'subscriber_id')
+            ->where('subscriber_type', DangKyGoi::LOAI_NGUOI_DUNG);
+    }
+
+    public function doiTacThanhViens()
+    {
+        return $this->hasMany(DoiTacThanhVien::class, 'nguoi_dung_id');
     }
 }

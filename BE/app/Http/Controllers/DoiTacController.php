@@ -6,8 +6,11 @@ use App\Http\Requests\DoiTacRegisterRequest;
 use App\Http\Requests\DoiTacStoreRequest;
 use App\Http\Requests\DoiTacUpdateRequest;
 use App\Models\DoiTac;
+use App\Models\DoiTacThanhVien;
 use App\Models\NguoiDung;
 use App\Models\HoaDon;
+use App\Services\DangKyGoiService;
+use App\Services\DoiTacThanhVienService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -500,12 +503,10 @@ class DoiTacController extends Controller
             return $response;
         }
 
-        $ownerUser = $this->ensureOwnerUser($doi_tac);
-        $ownerUserId = $ownerUser?->id;
-        $memberIds = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$doi_tac->id])
-            ->when($ownerUserId, fn ($query) => $query->where('id', '!=', $ownerUserId))
-            ->pluck('id');
-        $companyUserIds = collect([$ownerUserId])->merge($memberIds)->filter()->unique()->values();
+        $this->ensureOwnerUser($doi_tac);
+        $thanhVienService = app(DoiTacThanhVienService::class);
+        $memberIds = $thanhVienService->layIdsNguoiDungCuaDoiTac($doi_tac, false);
+        $companyUserIds = $thanhVienService->layIdsNguoiDungCuaDoiTac($doi_tac, true);
 
         // 1. Thống kê số lượng nhân viên (người dùng tham gia các phòng của đối tác này)
         $phong_ids = \App\Models\PhongHop::whereIn('id_chu_phong', $companyUserIds)->pluck('id');
@@ -584,11 +585,10 @@ class DoiTacController extends Controller
             return $response;
         }
 
-        $ownerUser = $this->ensureOwnerUser($doi_tac);
-        $ownerUserId = $ownerUser?->id;
+        $this->ensureOwnerUser($doi_tac);
+        $memberIds = app(DoiTacThanhVienService::class)->layIdsNguoiDungCuaDoiTac($doi_tac, false);
 
-        $danh_sach = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$doi_tac->id])
-            ->when($ownerUserId, fn ($query) => $query->where('id', '!=', $ownerUserId))
+        $danh_sach = NguoiDung::whereIn('id', $memberIds)
             ->select('id', 'ho_va_ten', 'email', 'so_dien_thoai', 'avatar', 'trang_thai', 'created_at', 'id_doi_tac')
             ->orderBy('created_at', 'desc')
             ->get()
@@ -650,19 +650,18 @@ class DoiTacController extends Controller
             return response()->json(['status' => false, 'message' => 'Tai khoan chu doi tac khong can cap quyen thanh vien.'], 409);
         }
 
+        $thanhVienService = app(DoiTacThanhVienService::class);
         $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
-        if ($current_id_doi_tac > 0 && $current_id_doi_tac !== $doi_tac->id) {
+        if ($thanhVienService->coThanhVienActiveKhac($doi_tac, $nguoi_dung) || ($current_id_doi_tac > 0 && $current_id_doi_tac !== $doi_tac->id)) {
             return response()->json(['status' => false, 'message' => 'Người dùng này đã thuộc một tổ chức đối tác khác!'], 409);
         }
 
-        if ($current_id_doi_tac === $doi_tac->id) {
+        if ($thanhVienService->laThanhVien($doi_tac, $nguoi_dung, DoiTacThanhVien::VAI_TRO_MEMBER)) {
             return response()->json(['status' => false, 'message' => 'Người dùng này đã là thành viên của tổ chức bạn!'], 409);
         }
 
         // Cập nhật trực tiếp qua DB để bypass cast boolean
-        DB::table('nguoi_dungs')
-            ->where('id', $nguoi_dung->id)
-            ->update(['id_doi_tac' => $doi_tac->id]);
+        $thanhVienService->capQuyenThanhVien($doi_tac, $nguoi_dung);
 
         return response()->json([
             'status' => true,
@@ -708,15 +707,13 @@ class DoiTacController extends Controller
             return $response;
         }
 
-        $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
-        if ($current_id_doi_tac !== $doi_tac->id) {
+        $thanhVienService = app(DoiTacThanhVienService::class);
+        if (!$thanhVienService->laThanhVien($doi_tac, $nguoi_dung, DoiTacThanhVien::VAI_TRO_MEMBER)) {
             return response()->json(['status' => false, 'message' => 'Người dùng này không thuộc tổ chức của bạn!'], 403);
         }
 
         // Thu hồi quyền (đặt id_doi_tac về 0)
-        DB::table('nguoi_dungs')
-            ->where('id', $nguoi_dung->id)
-            ->update(['id_doi_tac' => 0]);
+        $thanhVienService->thuHoiThanhVien($doi_tac, $nguoi_dung);
 
         return response()->json([
             'status' => true,
@@ -742,13 +739,10 @@ class DoiTacController extends Controller
             return $response;
         }
 
-        $ownerUser = $this->ensureOwnerUser($doi_tac);
+        $this->ensureOwnerUser($doi_tac);
 
         // Lấy id các thành viên thuộc tổ chức
-        $member_ids = DB::table('nguoi_dungs')
-            ->whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [$doi_tac->id])
-            ->when($ownerUser, fn ($query) => $query->where('id', '!=', $ownerUser->id))
-            ->pluck('id');
+        $member_ids = app(DoiTacThanhVienService::class)->layIdsNguoiDungCuaDoiTac($doi_tac, false);
 
         // Lấy hóa đơn của tất cả thành viên
         $hoa_don = HoaDon::with(['goi', 'nguoiDung'])
@@ -810,8 +804,7 @@ class DoiTacController extends Controller
             return $response;
         }
 
-        $current_id_doi_tac = (int) $nguoi_dung->getAttributes()['id_doi_tac'];
-        if ($current_id_doi_tac !== $doi_tac->id) {
+        if (!app(DoiTacThanhVienService::class)->laThanhVien($doi_tac, $nguoi_dung, DoiTacThanhVien::VAI_TRO_MEMBER)) {
             return response()->json(['status' => false, 'message' => 'Người dùng này không thuộc tổ chức của bạn!'], 403);
         }
 
@@ -848,7 +841,15 @@ class DoiTacController extends Controller
     {
         $owner = $owner ?: $this->timNguoiDungSoHuu($doi_tac);
 
-        return $owner && (int) $owner->id_doi_tac !== (int) $doi_tac->id;
+        if (!$owner) {
+            return false;
+        }
+
+        if (app(DangKyGoiService::class)->layGoiDoiTacHieuLuc($doi_tac)) {
+            return false;
+        }
+
+        return (int) $owner->id_doi_tac !== (int) $doi_tac->id;
     }
 
     private function phanHoiNeuDoiTacDaBiThuHoi(DoiTac $doi_tac)
@@ -923,15 +924,22 @@ class DoiTacController extends Controller
             $doi_tac->save();
         }
 
+        app(DoiTacThanhVienService::class)->ganChuSoHuu($doi_tac, $owner);
+
         return $owner;
     }
 
     private function withPartnerMetadata(DoiTac $doi_tac): DoiTac
     {
         $owner = $this->ensureOwnerUser($doi_tac);
+        $dangKyGoiService = app(DangKyGoiService::class);
+        $goi = $dangKyGoiService->layGoiDoiTacHieuLuc($doi_tac);
+
         $doi_tac->setAttribute('owner_user_id', $owner?->id);
         $doi_tac->setAttribute('account_type', 'doi_tac');
         $doi_tac->setAttribute('is_doi_tac', true);
+        $doi_tac->setAttribute('goi', $goi);
+        $doi_tac->setAttribute('goi_dang_so_huu', $goi ? [$goi] : []);
 
         return $doi_tac;
     }

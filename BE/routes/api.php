@@ -9,7 +9,7 @@ use App\Http\Controllers\ChiTietPhanQuyenController;
 use App\Http\Controllers\DoiTacController;
 use App\Http\Controllers\NguoiDungController;
 use App\Http\Controllers\GoiController;
-use App\Http\Controllers\ChiTietGoiController;
+use App\Http\Controllers\DangKyGoiController;
 use App\Http\Controllers\PhongHopController;
 use App\Http\Controllers\ChiTietPhongHopController;
 use App\Http\Controllers\ChatRoomController;
@@ -119,11 +119,17 @@ Route::post('/goi/tim-kiem', [GoiController::class, 'search']);
 Route::post('/goi/change-status', [GoiController::class, 'changeStatus']);
 
 // 7. Chi Tiết Gói
-Route::get('/chi-tiet-goi/data', [ChiTietGoiController::class, 'index']);
-Route::post('/chi-tiet-goi/create', [ChiTietGoiController::class, 'store']);
-Route::post('/chi-tiet-goi/update', [ChiTietGoiController::class, 'update']);
-Route::post('/chi-tiet-goi/delete', [ChiTietGoiController::class, 'destroy']);
-Route::post('/chi-tiet-goi/change-status', [ChiTietGoiController::class, 'changeStatus']);
+Route::get('/dang-ky-goi/data', [DangKyGoiController::class, 'index']);
+Route::post('/dang-ky-goi/create', [DangKyGoiController::class, 'store']);
+Route::post('/dang-ky-goi/update', [DangKyGoiController::class, 'update']);
+Route::post('/dang-ky-goi/delete', [DangKyGoiController::class, 'destroy']);
+Route::post('/dang-ky-goi/change-status', [DangKyGoiController::class, 'changeStatus']);
+
+Route::get('/chi-tiet-goi/data', [DangKyGoiController::class, 'index']);
+Route::post('/chi-tiet-goi/create', [DangKyGoiController::class, 'store']);
+Route::post('/chi-tiet-goi/update', [DangKyGoiController::class, 'update']);
+Route::post('/chi-tiet-goi/delete', [DangKyGoiController::class, 'destroy']);
+Route::post('/chi-tiet-goi/change-status', [DangKyGoiController::class, 'changeStatus']);
 
 // 8. Phòng Họp
 Route::get('/phong-hop/data', [PhongHopController::class, 'index']);

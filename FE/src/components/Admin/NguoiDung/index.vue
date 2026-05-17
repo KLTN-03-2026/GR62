@@ -48,8 +48,8 @@
                                     <td class="align-middle">{{ value.email }}</td>
                                     <td class="align-middle text-center">{{ value.so_dien_thoai }}</td>
                                     <td class="align-middle text-center">
-                                        <template v-if="goiDangSoHuu(value).length">
-                                            <span v-for="goi in goiDangSoHuu(value)" :key="goi.id"
+                                        <template v-if="goiDangHienThi(value).length">
+                                            <span v-for="goi in goiDangHienThi(value)" :key="goi.id"
                                                 class="badge bg-success shadow-sm px-2 py-1 me-1 mb-1">
                                                 {{ goi.ten_goi }}
                                             </span>
@@ -270,18 +270,27 @@ export default {
         },
         goiDangSoHuu(nguoiDung) {
             const danhSachGoi = nguoiDung.goi_dang_so_huu || [];
-            if (danhSachGoi.length > 0) {
+            if (Array.isArray(danhSachGoi)) {
                 return danhSachGoi;
             }
-            return nguoiDung.goi ? [nguoiDung.goi] : [];
+            return [];
+        },
+        goiDangHienThi(nguoiDung) {
+            const danhSachGoi = [...this.goiDangSoHuu(nguoiDung)];
+            if (nguoiDung.goi_to_chuc && !danhSachGoi.some(goi => goi.id === nguoiDung.goi_to_chuc.id)) {
+                danhSachGoi.unshift(nguoiDung.goi_to_chuc);
+            }
+            return danhSachGoi;
         },
         chonNguoiDung(value) {
-            const goiHienTai = this.goiDangSoHuu(value)[0];
+            const goiCaNhan = this.goiDangSoHuu(value)[0];
+            const goiToChuc = value.goi_to_chuc;
+            const goiHienTai = goiCaNhan || (goiToChuc && value.id_goi === goiToChuc.id ? goiToChuc : null);
             this.edit_nguoi_dung = {
                 ...value,
                 password: "",
                 re_password: "",
-                id_goi: goiHienTai?.id ?? value.id_goi ?? null,
+                id_goi: goiHienTai?.id ?? null,
             };
         },
         timKiem() {

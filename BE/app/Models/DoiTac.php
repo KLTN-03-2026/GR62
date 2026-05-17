@@ -45,4 +45,15 @@ class DoiTac extends Authenticatable
     {
         return $this->hasMany(NguoiDung::class, 'id_doi_tac');
     }
+
+    public function thanhViens()
+    {
+        return $this->hasMany(DoiTacThanhVien::class, 'doi_tac_id');
+    }
+
+    public function dangKyGois()
+    {
+        return $this->hasMany(DangKyGoi::class, 'subscriber_id')
+            ->where('subscriber_type', DangKyGoi::LOAI_DOI_TAC);
+    }
 }

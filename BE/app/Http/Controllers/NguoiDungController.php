@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ChiTietGoi;
-use App\Models\DoiTac;
 use App\Models\Goi;
 use App\Models\NguoiDung;
+use App\Services\DangKyGoiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\PhanQuyen;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\QuenMatKhauMail;
 use Illuminate\Support\Str;
@@ -31,19 +29,8 @@ class NguoiDungController extends Controller
         $data = NguoiDung::with([
             'doiTac',
             'goi',
-            'chiTietGois' => function ($query) use ($today) {
-                $query->with('goi')
-                    ->where('is_nguoi_dung', true)
-                    ->where('is_active', true)
-                    ->where('trang_thai', true)
-                    ->where(function ($q) use ($today) {
-                        $q->whereNull('ngay_bat_dau')
-                          ->orWhereDate('ngay_bat_dau', '<=', $today);
-                    })
-                    ->where(function ($q) use ($today) {
-                        $q->whereNull('ngay_ket_thuc')
-                          ->orWhereDate('ngay_ket_thuc', '>=', $today);
-                    });
+            'dangKyGois' => function ($query) use ($today) {
+                $query->with('goi')->conHieuLuc($today);
             },
         ])
             ->whereNull('id_chuc_vu')
@@ -139,19 +126,8 @@ class NguoiDungController extends Controller
         $query = NguoiDung::with([
             'doiTac',
             'goi',
-            'chiTietGois' => function ($query) use ($today) {
-                $query->with('goi')
-                    ->where('is_nguoi_dung', true)
-                    ->where('is_active', true)
-                    ->where('trang_thai', true)
-                    ->where(function ($q) use ($today) {
-                        $q->whereNull('ngay_bat_dau')
-                          ->orWhereDate('ngay_bat_dau', '<=', $today);
-                    })
-                    ->where(function ($q) use ($today) {
-                        $q->whereNull('ngay_ket_thuc')
-                          ->orWhereDate('ngay_ket_thuc', '>=', $today);
-                    });
+            'dangKyGois' => function ($query) use ($today) {
+                $query->with('goi')->conHieuLuc($today);
             },
         ])
             ->whereNull('id_chuc_vu');
@@ -376,22 +352,12 @@ class NguoiDungController extends Controller
         $today = now()->toDateString();
         $user->load([
             'goi',
-            'chiTietGois' => function ($query) use ($today) {
-                $query->with('goi')
-                    ->where('is_nguoi_dung', true)
-                    ->where('is_active', true)
-                    ->where('trang_thai', true)
-                    ->where(function ($q) use ($today) {
-                        $q->whereNull('ngay_bat_dau')
-                          ->orWhereDate('ngay_bat_dau', '<=', $today);
-                    })
-                    ->where(function ($q) use ($today) {
-                        $q->whereNull('ngay_ket_thuc')
-                          ->orWhereDate('ngay_ket_thuc', '>=', $today);
-                    });
+            'dangKyGois' => function ($query) use ($today) {
+                $query->with('goi')->conHieuLuc($today);
             },
         ]);
         $this->ganGoiDangSoHuu(collect([$user]));
+        $goi_to_chuc = $this->layGoiToChucNeuLaThanhVienDoiTac($user, $today);
 
         return response()->json([
             'status' => true,
@@ -402,8 +368,9 @@ class NguoiDungController extends Controller
                 'so_dien_thoai' => $user->so_dien_thoai,
                 'id_goi'    => $user->id_goi,
                 'id_doi_tac' => $user->id_doi_tac,
-                'goi'       => $user->goi,
+                'goi'       => $user->goiDangSoHuu->first(),
                 'goi_dang_so_huu' => $user->goiDangSoHuu,
+                'goi_to_chuc' => $goi_to_chuc,
                 'avatar'    => $user->avatar ? url($user->avatar) : null
             ]
         ]);
@@ -523,95 +490,28 @@ class NguoiDungController extends Controller
     private function ganGoiDangSoHuu($danh_sach_nguoi_dung): void
     {
         $danh_sach_nguoi_dung->each(function ($nguoi_dung) {
-            $goi_dang_so_huu = $nguoi_dung->chiTietGois
+            $dang_ky_gois = $nguoi_dung->relationLoaded('dangKyGois')
+                ? $nguoi_dung->dangKyGois
+                : $nguoi_dung->dangKyGois()->with('goi')->conHieuLuc()->get();
+
+            $goi_dang_so_huu = $dang_ky_gois
                 ->pluck('goi')
                 ->filter()
                 ->unique('id')
                 ->values();
 
-            if ($goi_dang_so_huu->isEmpty() && $nguoi_dung->goi) {
-                $goi_dang_so_huu->push($nguoi_dung->goi);
-            }
-
             $nguoi_dung->setRelation('goiDangSoHuu', $goi_dang_so_huu);
+            $nguoi_dung->setRelation('goiToChuc', $this->layGoiToChucNeuLaThanhVienDoiTac($nguoi_dung, now()->toDateString()));
         });
+    }
+
+    private function layGoiToChucNeuLaThanhVienDoiTac(NguoiDung $nguoi_dung, string $today)
+    {
+        return app(DangKyGoiService::class)->layGoiToChucHieuLuc($nguoi_dung);
     }
 
     private function capNhatGoiNguoiDung(NguoiDung $nguoi_dung, ?Goi $goi): void
     {
-        ChiTietGoi::where('id_nguoi_dung', $nguoi_dung->id)
-            ->where('is_nguoi_dung', true)
-            ->update([
-                'trang_thai' => false,
-                'is_active' => false,
-            ]);
-
-        if (!$goi) {
-            $this->thuHoiDoiTacNeuLaChu($nguoi_dung);
-            $nguoi_dung->id_goi = null;
-            $nguoi_dung->save();
-            return;
-        }
-
-        $ngay_bat_dau = now()->toDateString();
-        $ngay_ket_thuc = $goi->thoi_han > 0
-            ? now()->addDays($goi->thoi_han)->toDateString()
-            : null;
-
-        ChiTietGoi::updateOrCreate(
-            [
-                'id_goi' => $goi->id,
-                'id_nguoi_dung' => $nguoi_dung->id,
-                'is_nguoi_dung' => true,
-            ],
-            [
-                'id_doi_tac' => null,
-                'ngay_bat_dau' => $ngay_bat_dau,
-                'ngay_ket_thuc' => $ngay_ket_thuc,
-                'trang_thai' => true,
-                'is_active' => true,
-            ]
-        );
-
-        $nguoi_dung->id_goi = $goi->id;
-
-        if ($this->laGoiDoiTac($goi)) {
-            $doi_tac = DoiTac::firstOrNew(['email' => $nguoi_dung->email]);
-            $doi_tac->fill([
-                'id_admin' => $nguoi_dung->id,
-                'ho_va_ten' => $nguoi_dung->ho_va_ten,
-                'so_dien_thoai' => $nguoi_dung->so_dien_thoai,
-                'password' => $nguoi_dung->password,
-                'hinh_anh' => $nguoi_dung->avatar,
-                'du_lieu_khuon_mat' => $nguoi_dung->du_lieu_khuon_mat,
-                'trang_thai' => $nguoi_dung->trang_thai,
-            ]);
-            $doi_tac->save();
-
-            $nguoi_dung->id_doi_tac = $doi_tac->id;
-        } else {
-            $this->thuHoiDoiTacNeuLaChu($nguoi_dung);
-        }
-
-        $nguoi_dung->save();
-    }
-
-    private function thuHoiDoiTacNeuLaChu(NguoiDung $nguoi_dung): void
-    {
-        $doi_tac = DoiTac::where('id_admin', $nguoi_dung->id)
-            ->orWhere('email', $nguoi_dung->email)
-            ->first();
-
-        if ($doi_tac && (int) $nguoi_dung->id_doi_tac === (int) $doi_tac->id) {
-            $nguoi_dung->id_doi_tac = 0;
-            $doi_tac->tokens()->delete();
-        }
-    }
-
-    private function laGoiDoiTac(Goi $goi): bool
-    {
-        $ten_goi = Str::lower(Str::ascii(trim($goi->ten_goi)));
-
-        return in_array($ten_goi, ['business', 'doi tac', 'partner'], true);
+        app(DangKyGoiService::class)->capNhatGoiChoNguoiDung($nguoi_dung, $goi);
     }
 }

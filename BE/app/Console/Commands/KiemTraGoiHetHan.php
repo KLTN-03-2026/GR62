@@ -2,88 +2,113 @@
 
 namespace App\Console\Commands;
 
-use App\Models\HoaDon;
+use App\Models\DangKyGoi;
+use App\Models\DoiTac;
 use App\Models\NguoiDung;
-use App\Models\Goi;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class KiemTraGoiHetHan extends Command
 {
-    /**
-     * Tên lệnh artisan
-     */
     protected $signature = 'goi:kiem-tra-het-han';
 
-    /**
-     * Mô tả lệnh
-     */
-    protected $description = 'Kiểm tra và thu hồi quyền Đối tác của những user đã hết hạn gói Business';
+    protected $description = 'Kiem tra va vo hieu hoa cac dang ky goi da het han';
 
     public function handle(): int
     {
-        $this->info('[' . now() . '] Bắt đầu kiểm tra gói hết hạn...');
+        $this->info('[' . now() . '] Bat dau kiem tra goi het han...');
 
-        // Lấy tất cả user đang có quyền Đối tác (id_doi_tac khác null/0)
-        $danh_sach_doi_tac = NguoiDung::whereNotNull('id_doi_tac')
-            ->where('id_doi_tac', '>', 0)
+        $today = Carbon::now()->toDateString();
+        $dangKyHetHan = DangKyGoi::where('is_active', true)
+            ->where('trang_thai', true)
+            ->whereNotNull('ngay_ket_thuc')
+            ->whereDate('ngay_ket_thuc', '<', $today)
             ->get();
 
-        $so_luong_thu_hoi = 0;
+        $soLuongThuHoi = 0;
 
-        foreach ($danh_sach_doi_tac as $user) {
-            // Lấy hóa đơn gói Business thanh toán thành công gần nhất của user
-            $hoa_don_moi_nhat = HoaDon::where('id_nguoi_dung', $user->id)
-                ->where('trang_thai_thanh_toan', 'completed')
-                ->latest('created_at')
-                ->first();
+        foreach ($dangKyHetHan as $dangKy) {
+            $dangKy->update([
+                'trang_thai' => false,
+                'is_active' => false,
+            ]);
 
-            // Nếu không có hóa đơn hợp lệ nào -> thu hồi quyền ngay
-            if (!$hoa_don_moi_nhat) {
-                $this->warn("  User #{$user->id} ({$user->email}): Không có hóa đơn hợp lệ -> Thu hồi quyền.");
-                $this->thuHoiQuyenDoiTac($user);
-                $so_luong_thu_hoi++;
-                continue;
+            if ($dangKy->subscriber_type === DangKyGoi::LOAI_DOI_TAC && $dangKy->subscriber_id) {
+                $this->thuHoiQuyenDoiTac($dangKy);
+                $soLuongThuHoi++;
             }
 
-            // Lấy thông tin gói để biết thời hạn (số ngày)
-            $goi = Goi::find($hoa_don_moi_nhat->id_goi);
-
-            // Nếu gói không có thời hạn (thoi_han = 0) -> bỏ qua (gói vĩnh viễn)
-            if (!$goi || $goi->thoi_han <= 0) {
-                continue;
-            }
-
-            // Tính ngày hết hạn = ngày thanh toán + số ngày gói
-            $ngay_het_han = Carbon::parse($hoa_don_moi_nhat->created_at)
-                ->addDays($goi->thoi_han);
-
-            if (Carbon::now()->greaterThan($ngay_het_han)) {
-                // Gói đã hết hạn -> thu hồi quyền
-                $this->warn("  User #{$user->id} ({$user->email}): Gói hết hạn {$ngay_het_han->toDateString()} -> Thu hồi quyền.");
-                $this->thuHoiQuyenDoiTac($user);
-                $so_luong_thu_hoi++;
-            } else {
-                $con_lai = Carbon::now()->diffInDays($ngay_het_han);
-                $this->line("  User #{$user->id} ({$user->email}): Còn hạn {$con_lai} ngày (hết {$ngay_het_han->toDateString()}).");
+            if ($dangKy->subscriber_type === DangKyGoi::LOAI_NGUOI_DUNG && $dangKy->subscriber_id) {
+                $this->dongBoCacheGoiNguoiDung((int) $dangKy->subscriber_id);
             }
         }
 
-        $this->info("Hoàn thành. Đã thu hồi quyền: {$so_luong_thu_hoi} tài khoản.");
-        Log::info("KiemTraGoiHetHan: Thu hồi {$so_luong_thu_hoi} tài khoản hết hạn gói Business.");
+        $this->info("Hoan thanh. Da vo hieu hoa {$dangKyHetHan->count()} dang ky, thu hoi {$soLuongThuHoi} doi tac.");
+        Log::info("KiemTraGoiHetHan: Vo hieu hoa {$dangKyHetHan->count()} dang ky, thu hoi {$soLuongThuHoi} doi tac.");
 
         return Command::SUCCESS;
     }
 
-    /**
-     * Thu hồi quyền Đối tác: đặt id_doi_tac về 0 (không dùng NULL vì cột NOT NULL)
-     */
-    private function thuHoiQuyenDoiTac(NguoiDung $user): void
+    private function thuHoiQuyenDoiTac(DangKyGoi $dangKy): void
     {
-        DB::table('nguoi_dungs')
-            ->where('id', $user->id)
-            ->update(['id_doi_tac' => 0]);
+        $doiTacId = (int) $dangKy->subscriber_id;
+        $doiTac = DoiTac::find($doiTacId);
+
+        if (!$this->dangKyQuanLyQuyenDoiTac($dangKy, $doiTac)) {
+            return;
+        }
+
+        if ($doiTac) {
+            $doiTac->tokens()->delete();
+        }
+
+        $nguoiDungQuery = NguoiDung::where('id_doi_tac', $doiTacId);
+
+        if ($doiTac) {
+            $nguoiDungQuery->where(function ($query) use ($doiTac) {
+                if ($doiTac?->id_admin) {
+                    $query->where('id', $doiTac->id_admin);
+                }
+
+                if ($doiTac?->email) {
+                    $query->orWhere('email', $doiTac->email);
+                }
+            });
+        }
+
+        $nguoiDungIds = $nguoiDungQuery->pluck('id');
+
+        if ($nguoiDungIds->isEmpty()) {
+            return;
+        }
+
+        NguoiDung::whereIn('id', $nguoiDungIds)->update(['id_doi_tac' => 0, 'id_goi' => null]);
+
+        $nguoiDungIds->each(fn ($id) => $this->dongBoCacheGoiNguoiDung((int) $id));
+    }
+
+    private function dangKyQuanLyQuyenDoiTac(DangKyGoi $dangKy, ?DoiTac $doiTac): bool
+    {
+        if (!$doiTac || !$doiTac->id_admin) {
+            return true;
+        }
+
+        return (int) $dangKy->purchased_by_user_id === (int) $doiTac->id_admin;
+    }
+
+    private function dongBoCacheGoiNguoiDung(int $nguoiDungId): void
+    {
+        if ($nguoiDungId <= 0) {
+            return;
+        }
+
+        $goiId = DangKyGoi::cuaNguoiDung($nguoiDungId)
+            ->conHieuLuc()
+            ->latest('ngay_bat_dau')
+            ->latest('id')
+            ->value('id_goi');
+
+        NguoiDung::where('id', $nguoiDungId)->update(['id_goi' => $goiId]);
     }
 }

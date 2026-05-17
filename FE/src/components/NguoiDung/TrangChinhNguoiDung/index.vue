@@ -988,6 +988,8 @@ export default {
             authError: false,
             authStream: null,
             authInterval: null,
+            authScanAttempts: 0,
+            authScanMaxAttempts: 80,
             isMatched: false, // biến này để tránh quét trúng nhiều lần
             list_goi: [],
             chi_tiet_phong_hop: [],
@@ -1055,13 +1057,17 @@ export default {
         },
         goi_hien_tai() {
             const user = this.thong_tin_dang_nhap || {};
+            if (user.goi_to_chuc) {
+                return user.goi_to_chuc;
+            }
+
             const danh_sach_goi = user.goi_dang_so_huu || user.goiDangSoHuu || [];
 
             if (danh_sach_goi.length > 0) {
                 return danh_sach_goi[0];
             }
 
-            return user.goi || null;
+            return null;
         },
         co_goi_dich_vu() {
             return !!this.goi_hien_tai;
@@ -1645,8 +1651,11 @@ export default {
 
                 if (response.data.status) {
                     // NẾU PHÒNG TỒN TẠI -> Mở Modal và kích hoạt Camera
+                    this.dongModalXacThucJoin(false);
                     this.showJoinAuthModal = true;
                     this.authError = false;
+                    this.isMatched = false;
+                    this.authScanAttempts = 0;
                     this.authScanStatus = 'Đang tải dữ liệu sinh trắc học...';
 
                     this.$nextTick(() => {
@@ -1668,7 +1677,11 @@ export default {
 
         async batDauXacThucJoin() {
             const tai_xong = await this.tai_mo_hinh_ai();
-            if (!tai_xong) return;
+            if (!tai_xong) {
+                this.authError = true;
+                this.authScanStatus = 'Lỗi tải dữ liệu AI!';
+                return;
+            }
 
             this.authScanStatus = 'Đang kết nối camera...';
 
@@ -1677,10 +1690,21 @@ export default {
                 const video = this.$refs.authVideo;
                 video.srcObject = this.authStream;
 
-                video.onloadedmetadata = () => {
-                    video.play();
-                    this.tienHanhSoSanhKhuonMat(video);
+                const batDauQuet = async () => {
+                    try {
+                        await video.play();
+                        this.tienHanhSoSanhKhuonMat(video);
+                    } catch (loi) {
+                        this.authError = true;
+                        this.authScanStatus = 'Không thể phát video camera!';
+                    }
                 };
+
+                if (video.readyState >= 2) {
+                    batDauQuet();
+                } else {
+                    video.onloadeddata = batDauQuet;
+                }
             } catch (loi) {
                 this.authError = true;
                 this.authScanStatus = 'Lỗi truy cập camera!';
@@ -1689,64 +1713,108 @@ export default {
 
         tienHanhSoSanhKhuonMat(video) {
             // Lấy véc-tơ chuẩn đã lưu trong LocalStorage (được đồng bộ từ DB)
-            const userData = JSON.parse(localStorage.getItem('thong_tin_user'));
-            const savedVectorArray = JSON.parse(userData.du_lieu_khuon_mat);
-            const savedDescriptor = new Float32Array(savedVectorArray);
+            let savedDescriptor = null;
+            try {
+                const userData = JSON.parse(localStorage.getItem('thong_tin_user'));
+                const savedVectorArray = JSON.parse(userData?.du_lieu_khuon_mat || 'null');
+                if (!Array.isArray(savedVectorArray) || savedVectorArray.length !== 128) {
+                    throw new Error('Invalid Face ID data');
+                }
+                savedDescriptor = new Float32Array(savedVectorArray);
+            } catch (loi) {
+                this.authError = true;
+                this.authScanStatus = 'Không tìm thấy dữ liệu Face ID hợp lệ!';
+                return;
+            }
 
             this.authScanStatus = 'Vui lòng nhìn thẳng vào camera...';
             this.isMatched = false;
+            this.authScanAttempts = 0;
 
-            this.authInterval = setInterval(async () => {
-                // 1. CHẶN NGAY TỪ ĐẦU: Nếu đã khớp rồi thì dừng mọi xử lý quét mặt
-                if (this.isMatched) return;
+            const detectorOptions = new faceapi.TinyFaceDetectorOptions({
+                inputSize: 416,
+                scoreThreshold: 0.35
+            });
 
-                // Lấy véc-tơ của khuôn mặt hiện tại trên camera
-                const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
-                    .withFaceLandmarks()
-                    .withFaceDescriptors();
+            const quetKhuonMat = async () => {
+                if (this.isMatched || !this.showJoinAuthModal || !this.authStream) return;
 
-                if (detections.length === 1) {
-                    const liveDescriptor = detections[0].descriptor;
+                if (!video || video.readyState < 2 || video.videoWidth === 0) {
+                    this.authInterval = window.setTimeout(quetKhuonMat, 300);
+                    return;
+                }
 
-                    // SO SÁNH: Tính khoảng cách Euclidean giữa 2 véc-tơ
-                    const distance = faceapi.euclideanDistance(savedDescriptor, liveDescriptor);
+                try {
+                    // Lấy véc-tơ của khuôn mặt hiện tại trên camera
+                    const detections = await faceapi.detectAllFaces(video, detectorOptions)
+                        .withFaceLandmarks()
+                        .withFaceDescriptors();
 
-                    // Ngưỡng 0.5 là mức độ an toàn cao (càng nhỏ càng giống)
-                    if (distance < 0.50) {
-                        this.isMatched = true; // Đánh dấu đã quét trúng
-                        clearInterval(this.authInterval); // Dừng vòng lặp
-                        this.authInterval = null;
+                    if (detections.length === 1) {
+                        const liveDescriptor = detections[0].descriptor;
 
-                        this.authError = false;
-                        this.authScanStatus = "Xác nhận thành công!";
+                        // SO SÁNH: Tính khoảng cách Euclidean giữa 2 véc-tơ
+                        const distance = faceapi.euclideanDistance(savedDescriptor, liveDescriptor);
 
-                        // Tắt camera modal
-                        this.dongModalXacThucJoin(false);
+                        // Ngưỡng 0.5 là mức độ an toàn cao (càng nhỏ càng giống)
+                        if (distance < 0.50) {
+                            this.isMatched = true; // Đánh dấu đã quét trúng
+                            if (this.authInterval) {
+                                clearTimeout(this.authInterval);
+                                this.authInterval = null;
+                            }
 
+                            this.authError = false;
+                            this.authScanStatus = "Xác nhận thành công!";
 
-                        // Đợi 800ms để nhả camera phần cứng, sau đó mới gọi API và chuyển trang
+                            // Tắt camera modal
+                            this.dongModalXacThucJoin(false);
 
+                            // Đợi một nhịp để nhả camera phần cứng, sau đó mới gọi API và chuyển trang
+                            setTimeout(() => {
+                                this.thamGiaPhongHop();
+                            }, 800);
+                            return;
+                        }
 
-                        // ĐÃ XÓA CÁC DÒNG CODE BỊ LẶP Ở ĐÂY
-                    }
-                    else {
                         this.authError = true;
                         this.authScanStatus = "Khuôn mặt không khớp dữ liệu gốc!";
+                    } else if (detections.length > 1) {
+                        this.authError = true;
+                        this.authScanStatus = "Phát hiện nhiều hơn 1 khuôn mặt!";
+                    } else {
+                        this.authScanAttempts++;
+                        this.authError = false;
+                        this.authScanStatus = 'Đang tìm kiếm khuôn mặt...';
+
+                        if (this.authScanAttempts >= this.authScanMaxAttempts) {
+                            this.authError = true;
+                            this.authScanStatus = 'Không nhận diện được khuôn mặt. Vui lòng kiểm tra ánh sáng và thử lại!';
+                            return;
+                        }
                     }
-                } else if (detections.length > 1) {
+                } catch (loi) {
                     this.authError = true;
-                    this.authScanStatus = "Phát hiện nhiều hơn 1 khuôn mặt!";
-                } else {
-                    this.authError = false;
-                    this.authScanStatus = 'Đang tìm kiếm khuôn mặt...';
+                    this.authScanStatus = 'Lỗi nhận diện khuôn mặt, vui lòng thử lại!';
+                    console.error(loi);
+                    return;
                 }
-            }, 300); // Quét 300ms một lần
+
+                this.authInterval = window.setTimeout(quetKhuonMat, 300);
+            };
+
+            quetKhuonMat();
         },
 
         dongModalXacThucJoin(an_modal = true) {
             if (this.authInterval) {
-                clearInterval(this.authInterval);
+                clearTimeout(this.authInterval);
                 this.authInterval = null;
+            }
+            const authVideo = this.$refs.authVideo;
+            if (authVideo) {
+                authVideo.onloadeddata = null;
+                authVideo.srcObject = null;
             }
             if (this.authStream) {
                 this.authStream.getTracks().forEach(track => track.stop());
@@ -1754,10 +1822,14 @@ export default {
             }
             if (an_modal) {
                 this.showJoinAuthModal = false;
+                this.isMatched = false;
+                this.authError = false;
+                this.authScanAttempts = 0;
             }
         },
         // Sửa lại hàm thamGiaPhongHop cũ một chút: Bỏ phần check da_xac_minh đi vì đã check ở hàm trên rồi
         async thamGiaPhongHop() {
+            if (this.isJoining) return;
             this.isJoining = true;
             try {
                 const payload = {
@@ -1824,6 +1896,7 @@ export default {
     },
     // Dam bao tat camera neu nguoi dung chuyen Tab hoac dong trinh duyet
     beforeUnmount() {
+        this.dongModalXacThucJoin(true);
         this.stopFaceScan();
     }
 }

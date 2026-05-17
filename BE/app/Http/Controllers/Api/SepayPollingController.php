@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Goi;
-use App\Models\DoiTac;
 use App\Models\NguoiDung;
+use App\Services\DangKyGoiService;
 use App\Services\SepayApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -122,33 +122,25 @@ class SepayPollingController extends Controller
             ];
         }
 
-        $nguoiDung->id_goi = $goi->id;
+        $dangKyGoiService = app(DangKyGoiService::class);
+        $paymentMeta = $order->payment_meta ?: [];
 
-        if ($this->isBusinessPlan($goi)) {
-            $doiTac = DoiTac::firstOrNew(['email' => $nguoiDung->email]);
-            $doiTac->fill([
-                'id_admin' => $nguoiDung->id,
-                'ho_va_ten' => $nguoiDung->ho_va_ten,
-                'so_dien_thoai' => $nguoiDung->so_dien_thoai,
-                'password' => $nguoiDung->password,
-                'hinh_anh' => $nguoiDung->avatar,
-                'du_lieu_khuon_mat' => $nguoiDung->du_lieu_khuon_mat,
-                'trang_thai' => $nguoiDung->trang_thai,
-            ]);
-            $doiTac->save();
+        if (empty($paymentMeta['package_applied_at'])) {
+            $dangKyGoiService->capNhatGoiChoNguoiDung($nguoiDung, $goi);
+            $paymentMeta['package_applied_at'] = now()->toDateTimeString();
+            $order->payment_meta = $paymentMeta;
+            $order->save();
+            $nguoiDung->refresh();
+        }
 
-            $nguoiDung->id_doi_tac = $doiTac->id;
-            $nguoiDung->save();
-
+        if ($dangKyGoiService->laGoiDoiTac($goi)) {
             return [
-                'id_doi_tac' => $doiTac->id,
+                'id_doi_tac' => $nguoiDung->id_doi_tac,
                 'is_doi_tac' => true,
                 'role' => 'doi_tac',
                 'redirect_to' => '/doi-tac/trang-chinh',
             ];
         }
-
-        $nguoiDung->save();
 
         return [
             'id_doi_tac' => $nguoiDung->id_doi_tac,
@@ -156,11 +148,6 @@ class SepayPollingController extends Controller
             'role' => ((int) $nguoiDung->id_doi_tac > 0) ? 'thanh_vien_doi_tac' : 'nguoi_dung',
             'redirect_to' => '/nguoi-dung/trang-chinh',
         ];
-    }
-
-    private function isBusinessPlan(Goi $goi): bool
-    {
-        return strtolower(trim($goi->ten_goi)) === 'business';
     }
 
     private function findMatchingTransaction(Order $order, SepayApiService $sepayApi): ?array

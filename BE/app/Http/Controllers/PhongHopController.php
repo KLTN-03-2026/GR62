@@ -18,6 +18,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MoiThamGiaMail;
+use App\Services\DangKyGoiService;
+use App\Services\DoiTacThanhVienService;
 use Illuminate\Support\Str;
 use LiveKit\RoomServiceClient;
 
@@ -41,18 +43,18 @@ class PhongHopController extends Controller
 
         $query = PhongHop::with('chuPhong')->where('trang_thai', 1);
 
-        if ((int) $user->id_doi_tac > 0) {
+        $doiTac = app(DoiTacThanhVienService::class)->layDoiTacCuaNguoiDung($user);
+        if ($doiTac) {
             // Xác định ID của Chủ Đối Tác
             // Nếu id_doi_tac == 1, nghĩa là user này chính là Chủ Đối Tác, do đó ID của chủ là $user->id
             // Nếu id_doi_tac > 1, nghĩa là user này là Thành viên, ID của chủ là $user->id_doi_tac
-            $doiTac = DoiTac::find((int) $user->id_doi_tac);
-            $ownerId = $doiTac?->id_admin;
             
             // Lấy ID của tất cả thành viên thuộc Đối Tác này
-            $memberIds = NguoiDung::where('id_doi_tac', (int) $user->id_doi_tac)->pluck('id')->toArray();
             
             // Bao gồm cả ID của Chủ Đối Tác và các thành viên
-            $companyUserIds = collect([$ownerId])->merge($memberIds)->filter()->unique()->values()->all();
+            $companyUserIds = app(DoiTacThanhVienService::class)
+                ->layIdsNguoiDungCuaDoiTac($doiTac, true)
+                ->all();
 
             // Lọc ra các phòng họp do những người trong công ty/đối tác này tạo
             $query->whereIn('id_chu_phong', $companyUserIds);
@@ -615,20 +617,8 @@ class PhongHopController extends Controller
 
     private function getCompanyUserIdsForPartner(DoiTac $doiTac): array
     {
-        $ownerId = $doiTac->id_admin;
-        if (!$ownerId && $doiTac->email) {
-            $ownerId = NguoiDung::where('email', $doiTac->email)->value('id');
-        }
-
-        $memberIds = NguoiDung::whereRaw('CAST(id_doi_tac AS UNSIGNED) = ?', [(int) $doiTac->id])
-            ->pluck('id');
-
-        return collect([$ownerId])
-            ->merge($memberIds)
-            ->filter()
-            ->map(fn ($id) => (int) $id)
-            ->unique()
-            ->values()
+        return app(DoiTacThanhVienService::class)
+            ->layIdsNguoiDungCuaDoiTac($doiTac, true)
             ->all();
     }
 
@@ -638,12 +628,16 @@ class PhongHopController extends Controller
             return true;
         }
 
-        $goi = $host->goi ?? ($host->id_goi ? Goi::find($host->id_goi) : null);
+        $goi = app(DangKyGoiService::class)->layGoiHieuLucChoNguoiDung($host)
+            ?: ($host->goi ?? ($host->id_goi ? Goi::find($host->id_goi) : null));
 
         if (!$goi && (int) $host->id_doi_tac > 0) {
             $doiTac = DoiTac::find((int) $host->id_doi_tac);
             $owner = $doiTac?->id_admin ? NguoiDung::find($doiTac->id_admin) : null;
-            $goi = $owner?->goi ?? ($owner?->id_goi ? Goi::find($owner->id_goi) : null);
+            $goi = $owner
+                ? (app(DangKyGoiService::class)->layGoiHieuLucChoNguoiDung($owner)
+                    ?: ($owner->goi ?? ($owner->id_goi ? Goi::find($owner->id_goi) : null)))
+                : null;
         }
 
         if (!$goi) {

@@ -160,25 +160,6 @@
             </div>
         </div>
 
-        <!-- Thống kê Chat Room -->
-        <div class="col-xl-3 col-sm-6 mb-4">
-            <div @click="selectCard('chat-room')"
-                class="card radius-10 border-start border-0 border-4 border-secondary shadow-sm h-100 summary-card clickable"
-                :class="{ 'active-card': selectedCategory === 'chat-room' }">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div>
-                            <p class="mb-0 text-secondary fw-semibold">Tổng Chat Room</p>
-                            <h4 class="my-1 text-secondary">{{ list_chat_room.length }}</h4>
-                        </div>
-                        <div class="widgets-icons-2 rounded-circle bg-light-secondary text-secondary ms-auto">
-                            <i class="fa-solid fa-comments"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Thống kê Chức Vụ -->
         <div class="col-xl-3 col-sm-6 mb-4">
             <div @click="selectCard('chuc-vu')"
@@ -240,7 +221,6 @@ export default {
             list_phong_hop: [],
             list_goi: [],
             list_hoa_don: [],
-            list_chat_room: [],
             list_chuc_vu: [],
             list_chuc_nang: [],
             goc_nguoi_dung: [],
@@ -248,7 +228,6 @@ export default {
             goc_phong_hop: [],
             goc_goi: [],
             goc_hoa_don: [],
-            goc_chat_room: [],
             goc_chuc_vu: [],
             goc_chuc_nang: [],
             tu_ngay: '',
@@ -338,7 +317,6 @@ export default {
                 axios.get(`${baseUrl}/phong-hop/data`).catch(() => ({ data: { data: [] } })),
                 axios.get(`${baseUrl}/goi/data`).catch(() => ({ data: { data: [] } })),
                 axios.get(`${baseUrl}/hoa-don/data`).catch(() => ({ data: { data: [] } })),
-                axios.get(`${baseUrl}/chat-room/data`).catch(() => ({ data: { data: [] } })),
                 axios.get(`${baseUrl}/chuc-vu/data`).catch(() => ({ data: { data: [] } })),
                 axios.get(`${baseUrl}/chuc-nang/data`).catch(() => ({ data: { data: [] } }))
             ]).then((responses) => {
@@ -347,9 +325,8 @@ export default {
                 this.goc_phong_hop = responses[2].data.data || [];
                 this.goc_goi = responses[3].data.data || [];
                 this.goc_hoa_don = responses[4].data.data || [];
-                this.goc_chat_room = responses[5].data.data || [];
-                this.goc_chuc_vu = responses[6].data.data || [];
-                this.goc_chuc_nang = responses[7].data.data || [];
+                this.goc_chuc_vu = responses[5].data.data || [];
+                this.goc_chuc_nang = responses[6].data.data || [];
 
                 this.locDuLieu();
                 this.loadingCount = 0;
@@ -375,7 +352,6 @@ export default {
             this.list_phong_hop = filterByDate(this.goc_phong_hop);
             this.list_goi = filterByDate(this.goc_goi);
             this.list_hoa_don = filterByDate(this.goc_hoa_don);
-            this.list_chat_room = filterByDate(this.goc_chat_room);
             this.list_chuc_vu = filterByDate(this.goc_chuc_vu);
             this.list_chuc_nang = filterByDate(this.goc_chuc_nang);
 
@@ -394,7 +370,6 @@ export default {
             csvContent += `Phòng họp,${this.list_phong_hop.length}\n`;
             csvContent += `Gói dịch vụ,${this.list_goi.length}\n`;
             csvContent += `Hóa đơn,${this.list_hoa_don.length}\n`;
-            csvContent += `Phòng chat,${this.list_chat_room.length}\n`;
             
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -425,15 +400,14 @@ export default {
                         this.list_doi_tac.length,
                         this.list_phong_hop.length,
                         this.list_goi.length,
-                        this.list_hoa_don.length,
-                        this.list_chat_room.length
+                        this.list_hoa_don.length
                     ]
                 }];
                 newOptions.xaxis = {
-                    categories: ['Người Dùng', 'Đối Tác', 'Phòng Họp', 'Gói', 'Hóa Đơn', 'Chat'],
+                    categories: ['Người Dùng', 'Đối Tác', 'Phòng Họp', 'Gói', 'Hóa Đơn'],
                     labels: {
                         style: {
-                            colors: ['#0dcaf0', '#dc3545', '#198754', '#ffc107', '#0d6efd', '#6c757d'],
+                            colors: ['#0dcaf0', '#dc3545', '#198754', '#ffc107', '#0d6efd'],
                             fontSize: '13px',
                             fontWeight: 600
                         }
@@ -513,7 +487,6 @@ export default {
             else {
                 this.chartType = 'line';
                 const map = {
-                    'chat-room': { list: this.list_chat_room, label: 'Chat Room', icon: 'fa-solid fa-comments' },
                     'chuc-vu': { list: this.list_chuc_vu, label: 'Chức Vụ', icon: 'fa-solid fa-user-shield' },
                     'chuc-nang': { list: this.list_chuc_nang, label: 'Chức Năng', icon: 'fa-solid fa-screwdriver-wrench' }
                 };
