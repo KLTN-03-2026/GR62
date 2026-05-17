@@ -438,7 +438,7 @@
                                                     <label class="form-label fw-bold mb-2 text-muted"
                                                         style="font-size: 0.75rem; letter-spacing: 1px;">MỜI NGƯỜI THAM
                                                         GIA</label>
-                                                    <button type="submit" class="btn btn-sm" style="background-color: rgba(234, 88, 12, 0.1); color: #ea580c; border: 1px solid #ea580c; border-radius: 6px; font-weight: 600;">
+                                                    <button type="button" @click="moModalMoiNguoi" class="btn btn-sm" style="background-color: rgba(234, 88, 12, 0.1); color: #ea580c; border: 1px solid #ea580c; border-radius: 6px; font-weight: 600;">
                                                         <i class='bx bx-paper-plane me-1'></i>Mời Người
                                                     </button>
                                                 </div>
@@ -447,6 +447,8 @@
                                                         style="left: 1rem; color: #94a3b8;"></i>
                                                     <input type="text" v-model="formTaoPhong.email_khach_moi"
                                                         @input="handleEmailInput"
+                                                        @keydown.enter.prevent="chuanHoaEmailKhachMoi"
+                                                        @blur="chuanHoaEmailKhachMoi"
                                                         class="form-control form-control-lg bg-light border-0 shadow-none ps-5 py-3"
                                                         placeholder="Thêm địa chỉ email được phân tách bằng dấu phẩy"
                                                         style="border-radius: 12px; font-size: 0.95rem; color: #475569;">
@@ -930,6 +932,76 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal mời người tham gia -->
+    <div v-if="showInviteModal"
+        class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3"
+        style="background-color: rgba(15, 23, 42, 0.85); backdrop-filter: blur(5px);">
+        <div class="card border-0 shadow-lg p-4 animate__animated animate__zoomIn"
+            style="border-radius: 20px; width: 520px; max-width: calc(100% - 32px); background-color: #ffffff;">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex justify-content-center align-items-center me-3"
+                        style="width: 52px; height: 52px; background-color: #fff7ed; color: #ea580c;">
+                        <i class='bx bx-paper-plane fs-4'></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bolder mb-1 text-dark">Mời người tham gia</h4>
+                        <p class="text-muted small mb-0">Nhập một hoặc nhiều email để thêm vào lời mời.</p>
+                    </div>
+                </div>
+                <button @click="dongModalMoiNguoi" class="btn btn-light rounded-circle d-flex align-items-center justify-content-center"
+                    style="width: 36px; height: 36px;">
+                    <i class='bx bx-x fs-5'></i>
+                </button>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold text-muted mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">
+                    EMAIL NGƯỜI ĐƯỢC MỜI
+                </label>
+                <textarea v-model="inviteEmailInput"
+                    @input="handleInviteEmailInput"
+                    @keydown.enter.prevent="commitInviteEmailInput(true)"
+                    class="form-control bg-light border-0 shadow-none px-3 py-3"
+                    rows="3"
+                    placeholder="email1@example.com, email2@example.com"
+                    style="border-radius: 12px; font-size: 0.95rem; color: #475569; resize: none;"></textarea>
+            </div>
+
+            <div class="rounded-3 p-3 mb-4" style="background-color: #f8fafc; min-height: 84px;">
+                <div v-if="inviteEmails.length" class="d-flex flex-wrap gap-2">
+                    <span v-for="(email, index) in inviteEmails" :key="email"
+                        class="badge d-inline-flex align-items-center gap-2 px-3 py-2"
+                        style="background-color: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; border-radius: 999px; font-size: 0.82rem;">
+                        {{ email }}
+                        <button type="button" @click="xoaEmailMoi(index)" class="btn p-0 border-0 bg-transparent d-inline-flex"
+                            style="color: #c2410c; line-height: 1;">
+                            <i class='bx bx-x fs-6'></i>
+                        </button>
+                    </span>
+                </div>
+                <div v-else class="h-100 d-flex align-items-center text-muted small">
+                    Chưa có email nào trong danh sách mời.
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button @click="xoaTatCaEmailMoi" class="btn btn-light fw-bold px-4 py-2"
+                    style="border-radius: 10px;">
+                    Xóa hết
+                </button>
+                <button @click="dongModalMoiNguoi" class="btn btn-light fw-bold px-4 py-2 ms-auto"
+                    style="border-radius: 10px;">
+                    Hủy
+                </button>
+                <button @click="luuDanhSachMoi" class="btn text-white fw-bold px-4 py-2"
+                    style="background-color: #ea580c; border-radius: 10px;">
+                    Lưu danh sách
+                </button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -998,6 +1070,9 @@ export default {
             showRoomModal: false,
             createdRoomCode: '',
             showJoinInputModal: false,
+            showInviteModal: false,
+            inviteEmailInput: '',
+            inviteEmails: [],
             roomCodeToJoin: '',
             searchResults: [],
             searchTimeout: null,
@@ -1095,7 +1170,94 @@ export default {
             this.showJoinInputModal = false;
             this.kiemTraTruocKhiJoin();
         },
+        tachEmail(value) {
+            return (value || '')
+                .split(/[\s,;]+/)
+                .map(email => email.trim())
+                .filter(email => email.length > 0);
+        },
+        laEmailHopLe(email) {
+            return /^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/.test(email);
+        },
+        locEmailHopLeKhongTrung(emails) {
+            const emailMap = new Map();
+            emails.forEach(email => {
+                if (this.laEmailHopLe(email)) {
+                    emailMap.set(email.toLowerCase(), email);
+                }
+            });
+            return Array.from(emailMap.values());
+        },
+        chuanHoaEmailKhachMoi() {
+            this.formTaoPhong.email_khach_moi = this
+                .locEmailHopLeKhongTrung(this.tachEmail(this.formTaoPhong.email_khach_moi))
+                .join(', ');
+        },
+        moModalMoiNguoi() {
+            this.inviteEmails = this.locEmailHopLeKhongTrung(this.tachEmail(this.formTaoPhong.email_khach_moi));
+            this.inviteEmailInput = '';
+            this.showInviteModal = true;
+        },
+        dongModalMoiNguoi() {
+            this.showInviteModal = false;
+            this.inviteEmailInput = '';
+        },
+        dongBoDanhSachEmailMoi() {
+            this.formTaoPhong.email_khach_moi = this.inviteEmails.join(', ');
+        },
+        commitInviteEmailInput(showWarning = false) {
+            const tokens = this.tachEmail(this.inviteEmailInput);
+            if (tokens.length === 0) return true;
+
+            const invalidEmails = tokens.filter(email => !this.laEmailHopLe(email));
+            const validEmails = tokens.filter(email => this.laEmailHopLe(email));
+            const emailMap = new Map(this.inviteEmails.map(email => [email.toLowerCase(), email]));
+
+            validEmails.forEach(email => {
+                emailMap.set(email.toLowerCase(), email);
+            });
+
+            this.inviteEmails = Array.from(emailMap.values());
+            this.inviteEmailInput = invalidEmails.join(', ');
+            this.dongBoDanhSachEmailMoi();
+
+            if (invalidEmails.length > 0 && showWarning && this.$toast) {
+                this.$toast.warning("Một số email chưa đúng định dạng, vui lòng kiểm tra lại.");
+            }
+
+            return invalidEmails.length === 0;
+        },
+        handleInviteEmailInput() {
+            const value = this.inviteEmailInput || '';
+            const tokens = this.tachEmail(value);
+            if (/[,\s;]$/.test(value) || tokens.length > 1) {
+                this.commitInviteEmailInput(false);
+            }
+        },
+        xoaEmailMoi(index) {
+            this.inviteEmails.splice(index, 1);
+            this.dongBoDanhSachEmailMoi();
+        },
+        xoaTatCaEmailMoi() {
+            this.inviteEmails = [];
+            this.inviteEmailInput = '';
+            this.dongBoDanhSachEmailMoi();
+        },
+        luuDanhSachMoi() {
+            const hopLe = this.commitInviteEmailInput(true);
+            if (!hopLe) return;
+            this.dongBoDanhSachEmailMoi();
+            this.dongModalMoiNguoi();
+        },
         async handleEmailInput() {
+            const value = this.formTaoPhong.email_khach_moi || '';
+            const tokens = this.tachEmail(value);
+            const validEmails = tokens.filter(email => this.laEmailHopLe(email));
+            const invalidEmails = tokens.filter(email => !this.laEmailHopLe(email));
+            if ((/[,\s;]$/.test(value) || validEmails.length > 1) && validEmails.length > 0 && invalidEmails.length === 0) {
+                this.formTaoPhong.email_khach_moi = this.locEmailHopLeKhongTrung(validEmails).join(', ') + ', ';
+            }
+
             const emails = this.formTaoPhong.email_khach_moi.split(',');
             const lastPart = emails[emails.length - 1].trim();
 
@@ -1567,6 +1729,9 @@ export default {
                     this.formTaoPhong.ten_phong = '';
                     this.formTaoPhong.mo_ta = '';
                     this.formTaoPhong.email_khach_moi = '';
+                    this.inviteEmails = [];
+                    this.inviteEmailInput = '';
+                    this.showInviteModal = false;
                 }
             } catch (error) {
                 console.error("Lỗi khi tạo phòng:", error);
