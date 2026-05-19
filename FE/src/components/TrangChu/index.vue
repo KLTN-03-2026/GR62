@@ -23,14 +23,7 @@
                             <template v-else>
                                 <router-link v-if="isDoiTac == 0" to="/nguoi-dung/trang-chinh" class="btn btn-orange px-4 py-3 fw-bold rounded-pill shadow-sm d-flex align-items-center gap-2">Trang của tôi <i class='bx bx-right-arrow-alt fs-5'></i></router-link>
                                 <router-link v-else-if="isDoiTac == 1" to="/doi-tac/trang-chinh" class="btn btn-orange px-4 py-3 fw-bold rounded-pill shadow-sm d-flex align-items-center gap-2">Trang đối tác <i class='bx bx-right-arrow-alt fs-5'></i></router-link>
-                            </template>
-
-                            <a href="#" class="btn btn-orange-light px-4 py-3 fw-bold rounded-pill d-flex align-items-center gap-2">
-                                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
-                                    <i class='bx bx-play text-orange ms-1' style="font-size: 18px;"></i>
-                                </div>
-                                Xem Demo
-                            </a>
+                            </template> 
                         </div>
                         
                         <div class="mt-5 pt-3 d-flex align-items-center gap-3">
